@@ -242,16 +242,16 @@
       <div style="color:#6c7480;margin-bottom:16px">${escapeHtml(month)}</div>
       <div style="display:grid;gap:12px">
         ${metric("Score cumulé", winner.totalScore)}
-        ${metric("Score moyen", winner.avgScore)}
-        ${metric("Services évalués", winner.services)}
-        ${metric("Questions basiques moyennes", winner.avgBasicScore)}
-        ${metric("Critères pondérés moyens", winner.avgWeightedScore)}
-        ${metric("Productivité moyenne", winner.avgProductivity + " / 5")}
-        ${metric("Score de production moyen", winner.avgProduction10 + " / 10")}
-        ${metric("Polyvalence moyenne", winner.avgVersatility + " / 5")}
-        ${metric("Esprit d’équipe moyen", winner.avgTeamwork + " / 5")}
-        ${metric("Satisfaction client moyenne", winner.avgCustomer + " / 5")}
-        ${metric("Casse moyenne", winner.avgBreakage5 + " / 5")}
+        ${metric("Score moyen des services", winner.avgScore)}
+        ${metric("NBR Services évalués", winner.services)}
+        ${metric("Score des éléments essentiels du quotidien / moyenne", winner.avgBasicScore)}
+        ${metric("Critères pondérés / moyenne", winner.avgWeightedScore)}
+        ${metric("Productivité / moyenne", winner.avgProductivity + " / 5")}
+        ${metric("Score de production / moyenne", winner.avgProduction10 + " / 10")}
+        ${metric("Polyvalence / moyenne", winner.avgVersatility + " / 5")}
+        ${metric("Esprit d’équipe / moyenne", winner.avgTeamwork + " / 5")}
+        ${metric("Satisfaction client / moyenne", winner.avgCustomer + " / 5")}
+        ${metric("Respect et manipulation du matériel / moyenne", winner.avgBreakage5 + " / 5")}
       </div>
     `;
   }
