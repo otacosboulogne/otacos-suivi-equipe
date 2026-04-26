@@ -165,7 +165,7 @@
         <img src="./otacos-logo.png" alt="Logo O'TACOS" />
         <div>
           <h1>ÉVALUATION EQUIPIER DU MOIS</h1>
-          <div class="sub">Préparation de l’équipe présente, évaluation par manager, sauvegarde locale illimitée jusqu’à effacement manuel.</div>
+          <div class="sub">O'TACOS BOULOGNE SUR MER</div>
         </div>
       </div>
     </section>
@@ -213,33 +213,31 @@
     </section>
 
     <section class="card">
-      <div class="section-title">Critere d’evaluation de l’equipier</div>
+      <div class="section-title">Critères à prendre en compte pour évaluer l’équipe</div>
       <div class="muted">
-        Questions basiques = <b>15 points maximum</b>.  
-        Critères de performance = <b>85 points maximum</b>.  
-        Score total = <b>100</b>.
+        Questions basiques & Critères de performance
       </div>
 
       <div style="margin-top:14px" class="grid-2">
         <div class="question">
-          <div><b>Questions basiques (15 pts max)</b></div>
+          <div><b>Questions basiques (15 pts)</b></div>
           <div class="tiny" style="margin-top:8px">
-            • L’équipier se lave les mains régulièrement et l’hygiène au travail est acceptable : Oui +2 / Non -1<br>
-            • L’équipier a le tablier et est prêt à l’heure pile : Oui +5 / Non -4<br>
-            • L’équipier a-t-il fait une erreur dans le service : Oui -2 / Non +3<br>
-            • La tenue / l’odeur de l’équipier est acceptable : Oui +3 / Non -2<br>
-            • L’équipier est souriant : Oui +2 / Non -1
+            • L’équipier se lave les mains régulièrement et son hygiène dans le service est acceptable<br>
+            • L’équipier porte son tablier et sa charlotte, et il est prêt à l’heure exacte du début de service à son poste <br>
+            • L’équipier a-t-il fait une erreur dans le service<br>
+            • La tenue / l’odeur de l’équipier est acceptable<br>
+            • L’équipier est concentré dans son travail 
           </div>
         </div>
         <div class="question">
-          <div><b>Critères de performance (85 pts max)</b></div>
+          <div><b>Critères de performance (85 pts)</b></div>
           <div class="tiny" style="margin-top:8px">
             • Productivité : 20%<br>
-            • Score de production saisi sur 10 : 20%<br>
+            • Score de production à saisi : 20%<br>
             • Polyvalence : 15%<br>
             • Esprit d’équipe : 15%<br>
             • Satisfaction client : 20%<br>
-            • Casse : 10%
+            • Respect et manipulation du matériel : 10%
           </div>
         </div>
       </div>
@@ -263,11 +261,11 @@
     const DRAFT_KEY = "otacos_eval_draft_v3";
 
     const QUESTION_CONFIG = [
-      { key: "q_hands", label: "L’équipier se lave les mains régulièrement et l’hygiène au travail est acceptable ?", yes: 2, no: -1 },
-      { key: "q_apron", label: "L’équipier a le tablier et est prêt à l’heure pile ?", yes: 5, no: -4 },
+      { key: "q_hands", label: "L’équipier se lave les mains régulièrement et son hygiène dans le service est acceptable ?", yes: 2, no: -1 },
+      { key: "q_apron", label: "L’équipier porte son tablier et sa charlotte, et il est prêt à l’heure exacte du début de service à son poste ?", yes: 5, no: -4 },
       { key: "q_error", label: "L’équipier a-t-il fait une erreur dans le service ?", yes: -2, no: 3 },
       { key: "q_uniform", label: "La tenue / l’odeur de l’équipier est acceptable ?", yes: 3, no: -2 },
-      { key: "q_smile", label: "L’équipier est souriant ?", yes: 2, no: -1 }
+      { key: "q_smile", label: "L’équipier est concentré dans son travail ?", yes: 2, no: -1 }
     ];
 
     const MANAGER_OPTIONS = ["Imane", "Guillaume", "Pape", "Omar"];
@@ -468,21 +466,21 @@
           <div class="grid-3">
             <div class="criterion">
               <label>Productivité</label>
-              <small>Cadence, efficacité, tenue du poste sur le flux du service — 20%</small>
+              <small>Cadence, efficacité, tenue du poste pendant le rush, proactive — 20%</small>
               <select name="productivity">
                 ${score5Options(data.productivity)}
               </select>
             </div>
 
             <div class="criterion">
-              <label>Score de production à saisir</label>
-              <small>Note sur 10 — 20% (10/10 = 5/5)</small>
+              <label>Score de challenge production à saisir</label>
+              <small> 20%</small>
               <input type="number" min="0" max="10" step="1" name="productionScore10" value="${escapeHtmlAttr(data.productionScore10 || '')}">
             </div>
 
             <div class="criterion">
               <label>Polyvalence</label>
-              <small>Aide sur plusieurs postes, flexibilité sur le service — 15%</small>
+              <small>Aide sur plusieurs postes, flexibilité sur le service, autonome — 15%</small>
               <select name="versatility">
                 ${score5Options(data.versatility)}
               </select>
@@ -490,7 +488,7 @@
 
             <div class="criterion">
               <label>Esprit d’équipe</label>
-              <small>Aide les collègues, communique bien, attitude positive — 15%</small>
+              <small>Aide ses collègues, communique bien, attitude positive — 15%</small>
               <select name="teamwork">
                 ${score5Options(data.teamwork)}
               </select>
@@ -498,7 +496,7 @@
 
             <div class="criterion">
               <label>Satisfaction client</label>
-              <small>Accueil, relation client, avis, réclamations, erreurs de service — 20%</small>
+              <small>Accueil, relation client, avis, réclamations, erreurs de service, relation avec les clients au toaster & bornes — 20%</small>
               <select name="customer">
                 ${score5Options(data.customer)}
               </select>
@@ -506,7 +504,7 @@
 
             <div class="criterion">
               <label>Casse</label>
-              <small>Pas de casse matériel dans le service — 10%</small>
+              <small>Pas de casse & mauvaise manipulation du matériel dans le service — 10%</small>
               <div class="answers">
                 <label>
                   <input type="radio" name="breakage" value="yes" ${data.breakage === 'yes' ? 'checked' : ''}>
