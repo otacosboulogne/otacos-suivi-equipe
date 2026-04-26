@@ -103,7 +103,7 @@
 
     <div class="grid">
       <div class="stat"><div class="k">Gagnant(provisoire si le mois en cours n’est pas terminé)</div><div class="v" id="winnerName">—</div></div>
-      <div class="stat"><div class="k">Score gagnant (provisoire si le mois en cours n’est pas terminé)</div><div class="v" id="winnerScore">0</div></div>
+      <div class="stat"><div class="k">Score cumulé gagnant (provisoire si le mois en cours n’est pas terminé)</div><div class="v" id="winnerScore">0</div></div>
       <div class="stat"><div class="k">Services évalués</div><div class="v" id="servicesCount">0</div></div>
       <div class="stat"><div class="k">Équipiers évalués</div><div class="v" id="staffCount">0</div></div>
     </div>
@@ -119,7 +119,7 @@
             <tr>
               <th>Rang</th>
               <th>Équipier</th>
-              <th>Score moyen</th>
+              <th>Score cumulé</th>
               <th>Nombre de services faits</th>
               <th>Tendance</th>
             </tr>
@@ -213,51 +213,52 @@
     }
 
     function renderDashboard(data, month){
-      const ranking = data.ranking || [];
-      const winner = ranking[0];
+  const ranking = data.ranking || [];
+  const winner = ranking[0];
 
-      document.getElementById('winnerName').textContent = winner ? winner.staff : '—';
-      document.getElementById('winnerScore').textContent = winner ? winner.avgScore : '0';
-      document.getElementById('servicesCount').textContent = String(data.totalServiceRows || 0);
-      document.getElementById('staffCount').textContent = String(ranking.length);
+  document.getElementById('winnerName').textContent = winner ? winner.staff : '—';
+  document.getElementById('winnerScore').textContent = winner ? winner.totalScore : '0';
+  document.getElementById('servicesCount').textContent = String(data.totalServiceRows || 0);
+  document.getElementById('staffCount').textContent = String(ranking.length);
 
-      const body = document.getElementById('rankingBody');
+  const body = document.getElementById('rankingBody');
 
-      if(!ranking.length){
-        body.innerHTML=`<tr><td colspan="5" class="empty">Aucune donnée pour ${escapeHtml(month)}.</td></tr>`;
-        document.getElementById('winnerCard').innerHTML=`<div class="empty">Aucune donnée pour ${escapeHtml(month)}.</div>`;
-      }else{
-        body.innerHTML = ranking.map((r,idx)=>`
-          <tr>
-            <td>${idx+1}</td>
-            <td>${escapeHtml(r.staff)}</td>
-            <td><b>${r.avgScore}</b></td>
-            <td>${r.services}</td>
-            <td><div class="bar"><div class="fill" style="width:${Math.max(0, Math.min(100, Number(r.avgScore)||0))}%"></div></div></td>
-          </tr>
-        `).join("");
+  if(!ranking.length){
+    body.innerHTML=`<tr><td colspan="5" class="empty">Aucune donnée pour ${escapeHtml(month)}.</td></tr>`;
+    document.getElementById('winnerCard').innerHTML=`<div class="empty">Aucune donnée pour ${escapeHtml(month)}.</div>`;
+  }else{
+    body.innerHTML = ranking.map((r,idx)=>`
+      <tr>
+        <td>${idx+1}</td>
+        <td>${escapeHtml(r.staff)}</td>
+        <td><b>${r.totalScore}</b></td>
+        <td>${r.services}</td>
+        <td><div class="bar"><div class="fill" style="width:${Math.max(0, Math.min(100, Number(r.avgScore)||0))}%"></div></div></td>
+      </tr>
+    `).join("");
 
-        document.getElementById('winnerCard').innerHTML = `
-          <div style="font-size:30px;font-weight:900;margin-bottom:8px">${escapeHtml(winner.staff)}</div>
-          <div style="color:#6c7480;margin-bottom:16px">${escapeHtml(month)}</div>
-          <div style="display:grid;gap:12px">
-            ${metric("Score moyen", winner.avgScore)}
-            ${metric("Services évalués", winner.services)}
-            ${metric("Questions basiques", winner.avgBasicScore)}
-            ${metric("Critères pondérés", winner.avgWeightedScore)}
-            ${metric("Productivité", winner.avgProductivity + " / 5")}
-            ${metric("Score de production", winner.avgProduction10 + " / 10")}
-            ${metric("Polyvalence", winner.avgVersatility + " / 5")}
-            ${metric("Esprit d’équipe", winner.avgTeamwork + " / 5")}
-            ${metric("Satisfaction client", winner.avgCustomer + " / 5")}
-            ${metric("Casse", winner.avgBreakage5 + " / 5")}
-          </div>
-        `;
-      }
+    document.getElementById('winnerCard').innerHTML = `
+      <div style="font-size:30px;font-weight:900;margin-bottom:8px">${escapeHtml(winner.staff)}</div>
+      <div style="color:#6c7480;margin-bottom:16px">${escapeHtml(month)}</div>
+      <div style="display:grid;gap:12px">
+        ${metric("Score cumulé", winner.totalScore)}
+        ${metric("Score moyen", winner.avgScore)}
+        ${metric("Services évalués", winner.services)}
+        ${metric("Questions basiques moyennes", winner.avgBasicScore)}
+        ${metric("Critères pondérés moyens", winner.avgWeightedScore)}
+        ${metric("Productivité moyenne", winner.avgProductivity + " / 5")}
+        ${metric("Score de production moyen", winner.avgProduction10 + " / 10")}
+        ${metric("Polyvalence moyenne", winner.avgVersatility + " / 5")}
+        ${metric("Esprit d’équipe moyen", winner.avgTeamwork + " / 5")}
+        ${metric("Satisfaction client moyenne", winner.avgCustomer + " / 5")}
+        ${metric("Casse moyenne", winner.avgBreakage5 + " / 5")}
+      </div>
+    `;
+  }
 
-      renderLatestEntries(data.latestDailyEntries || []);
-    }
-
+  renderLatestEntries(data.latestDailyEntries || []);
+}
+    
     function renderLatestEntries(entries){
       const box = document.getElementById('latestEntries');
       if(!box) return;
