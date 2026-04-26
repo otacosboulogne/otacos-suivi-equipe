@@ -53,9 +53,7 @@
     .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
     .field{display:flex;flex-direction:column;gap:8px}
     label{font-size:14px;font-weight:700}
-    input,select,textarea,button{
-      font:inherit
-    }
+    input,select,textarea,button{font:inherit}
     input[type="date"], select, textarea, input[type="number"]{
       width:100%;
       padding:12px 14px;
@@ -259,6 +257,7 @@
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQzbs9zVUQXHpc1DmMXI4JAUlh2naT0dCLDIKVfas2UL3hmgXj8VOGJ51S2_phrbm3/exec";
     const DRAFT_KEY = "otacos_eval_draft_v3";
+    let currentOverrideCode = "";
 
     const QUESTION_CONFIG = [
       { key: "q_hands", label: "L’équipier se lave les mains régulièrement et son hygiène dans le service est acceptable ?", yes: 2, no: -1 },
@@ -267,8 +266,6 @@
       { key: "q_uniform", label: "La tenue / l’odeur de l’équipier est acceptable ?", yes: 3, no: -2 },
       { key: "q_smile", label: "L’équipier est concentré dans son travail ?", yes: 2, no: -1 }
     ];
-
-    const MANAGER_OPTIONS = ["Imane", "Guillaume", "Pape", "Omar"];
 
     function qs(id){ return document.getElementById(id); }
 
@@ -474,7 +471,7 @@
 
             <div class="criterion">
               <label>Score de challenge production à saisir</label>
-              <small> 20%</small>
+              <small>20%</small>
               <input type="number" min="0" max="10" step="1" name="productionScore10" value="${escapeHtmlAttr(data.productionScore10 || '')}">
             </div>
 
@@ -668,6 +665,102 @@
       });
     }
 
+    async function fetchExistingServiceData(serviceDate, serviceType){
+      if(!serviceDate || !serviceType) return [];
+
+      const url = `${APPS_SCRIPT_URL}?mode=serviceData&date=${encodeURIComponent(serviceDate)}&service=${encodeURIComponent(serviceType)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if(!data.ok){
+        throw new Error(data.error || "Impossible de vérifier le service existant.");
+      }
+
+      return data.serviceData || [];
+    }
+
+    function mapQuestionScoreToYesNo(key, score){
+      const n = Number(score || 0);
+
+      if(key === 'q_hands'){
+        if(n === 2) return 'yes';
+        if(n === -1) return 'no';
+      }
+      if(key === 'q_apron'){
+        if(n === 5) return 'yes';
+        if(n === -4) return 'no';
+      }
+      if(key === 'q_error'){
+        if(n === -2) return 'yes';
+        if(n === 3) return 'no';
+      }
+      if(key === 'q_uniform'){
+        if(n === 3) return 'yes';
+        if(n === -2) return 'no';
+      }
+      if(key === 'q_smile'){
+        if(n === 2) return 'yes';
+        if(n === -1) return 'no';
+      }
+
+      return "";
+    }
+
+    function mergeExistingServiceDataIntoDraft(existingRows, currentDraft){
+      const merged = JSON.parse(JSON.stringify(currentDraft));
+
+      existingRows.forEach(row => {
+        const staff = row.staff;
+        if(!staff) return;
+
+        if(!merged.selectedTeam.includes(staff)){
+          merged.selectedTeam.push(staff);
+        }
+
+        merged.membersData[staff] = {
+          q_hands: mapQuestionScoreToYesNo('q_hands', row.q_hands),
+          q_apron: mapQuestionScoreToYesNo('q_apron', row.q_apron),
+          q_error: mapQuestionScoreToYesNo('q_error', row.q_error),
+          q_uniform: mapQuestionScoreToYesNo('q_uniform', row.q_uniform),
+          q_smile: mapQuestionScoreToYesNo('q_smile', row.q_smile),
+
+          productivity: row.productivity ?? "",
+          productionScore10: row.productionScore10 ?? "",
+          versatility: row.versatility ?? "",
+          teamwork: row.teamwork ?? "",
+          customer: row.customer ?? "",
+          breakage: Number(row.breakage5) === 5 ? 'yes' : 'no',
+          comment: row.comment || ""
+        };
+      });
+
+      return merged;
+    }
+
+    async function ensureValidationCodeIfClosed(serviceDate, serviceType){
+      const existing = await fetchExistingServiceData(serviceDate, serviceType);
+
+      if(!existing.length){
+        currentOverrideCode = "";
+        return existing;
+      }
+
+      if(currentOverrideCode){
+        return existing;
+      }
+
+      const code = window.prompt(
+        "Ce service est déjà clôturé.\n\nPour modifier les saisies existantes, merci de saisir le code de validation :"
+      );
+
+      if(code === null){
+        throw new Error("Modification annulée.");
+      }
+
+      currentOverrideCode = String(code).trim();
+      return existing;
+    }
+
     async function submitService(){
       clearStatus('topStatus');
       clearStatus('bottomStatus');
@@ -686,19 +779,20 @@
 
       const payload = {
         action: "submitScores",
-        rows: buildPayloadRows()
+        rows: buildPayloadRows(),
+        overrideCode: currentOverrideCode || ""
       };
 
       try{
         showOverlay(true);
 
-        const res = await fetch(APPS_SCRIPT_URL, {
+        let res = await fetch(APPS_SCRIPT_URL, {
           method: "POST",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload)
         });
 
-        const text = await res.text();
+        let text = await res.text();
         let data;
         try{
           data = JSON.parse(text);
@@ -706,12 +800,46 @@
           throw new Error("Réponse invalide du serveur.");
         }
 
+        if(data.code === 'VALIDATION_REQUIRED'){
+          const code = window.prompt(
+            "Ce service est déjà clôturé.\n\nMerci de saisir le code de validation pour autoriser les modifications :"
+          );
+
+          if(code === null){
+            throw new Error("Modification annulée.");
+          }
+
+          currentOverrideCode = String(code).trim();
+          payload.overrideCode = currentOverrideCode;
+
+          res = await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+          });
+
+          text = await res.text();
+          try{
+            data = JSON.parse(text);
+          }catch{
+            throw new Error("Réponse invalide du serveur.");
+          }
+        }
+
         if(!data.ok){
           throw new Error(data.error || "Enregistrement impossible.");
         }
 
         saveDraft();
-        showStatus('bottomStatus', 'ok', `Service enregistré avec succès. ${data.inserted} ligne(s) envoyée(s). Le brouillon reste conservé jusqu’à effacement manuel.`);
+
+        const inserted = Number(data.inserted || 0);
+        const updated = Number(data.updated || 0);
+
+        showStatus(
+          'bottomStatus',
+          'ok',
+          `Service enregistré avec succès. ${inserted} ajout(s), ${updated} mise(s) à jour. Le brouillon reste conservé jusqu’à effacement manuel.`
+        );
       }catch(error){
         saveDraft();
         showStatus('bottomStatus', 'err', error.message || "Erreur lors de l’enregistrement.");
@@ -725,6 +853,7 @@
       if(!ok) return;
 
       clearDraftStorage();
+      currentOverrideCode = "";
 
       const draft = defaultDraft();
       applyDraftToHeader(draft);
@@ -744,14 +873,50 @@
         const roster = await loadRoster();
         renderTeamList(roster, draft);
 
-        qs('serviceDate').addEventListener('change', saveDraft);
-        qs('serviceType').addEventListener('change', saveDraft);
+        qs('serviceDate').addEventListener('change', () => {
+          currentOverrideCode = "";
+          saveDraft();
+        });
+
+        qs('serviceType').addEventListener('change', () => {
+          currentOverrideCode = "";
+          saveDraft();
+        });
+
         qs('managerName').addEventListener('change', saveDraft);
 
-        qs('prepareBtn').addEventListener('click', () => {
-          const currentDraft = collectDraftFromUI();
-          prepareEvaluationFromDraft(currentDraft);
-          showStatus('topStatus', 'ok', "Les fiches des équipiers présents sont prêtes.");
+        qs('prepareBtn').addEventListener('click', async () => {
+          try{
+            clearStatus('topStatus');
+
+            const currentDraft = collectDraftFromUI();
+
+            if(!currentDraft.serviceDate){
+              showStatus('topStatus', 'err', "Merci de choisir une date.");
+              return;
+            }
+
+            if(!currentDraft.serviceType){
+              showStatus('topStatus', 'err', "Merci de choisir le service.");
+              return;
+            }
+
+            const existing = await ensureValidationCodeIfClosed(currentDraft.serviceDate, currentDraft.serviceType);
+            const mergedDraft = mergeExistingServiceDataIntoDraft(existing, currentDraft);
+
+            renderTeamList(await loadRoster(), mergedDraft);
+            prepareEvaluationFromDraft(mergedDraft);
+
+            showStatus(
+              'topStatus',
+              'ok',
+              existing.length
+                ? "Service existant chargé. Vous pouvez modifier les équipiers concernés."
+                : "Les fiches des équipiers présents sont prêtes."
+            );
+          }catch(error){
+            showStatus('topStatus', 'err', error.message || "Impossible de préparer l’évaluation.");
+          }
         });
 
         qs('saveBtn').addEventListener('click', submitService);
