@@ -58,9 +58,9 @@
       border-radius:999px;overflow:hidden
     }
     .fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-2))}
-    select,a.btn{
+    select{
       padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.08);
-      background:#10151d;color:var(--text);text-decoration:none
+      background:#10151d;color:var(--text)
     }
     .empty{color:var(--muted)}
     .err{
@@ -68,8 +68,24 @@
       background:#2a1111;border:1px solid #6a2323;color:#ffd3d3;
       white-space:pre-wrap
     }
+    .entry{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:16px;
+      margin-bottom:14px;
+      background:#1b202a
+    }
+    .service-box{
+      padding:12px;border-radius:14px;background:#10151d;
+      border:1px solid rgba(255,255,255,.06)
+    }
+    .service-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px
+    }
     @media(max-width:980px){
-      .grid,.main{grid-template-columns:1fr}
+      .grid,.main,.service-grid{grid-template-columns:1fr}
       .wrap{padding:14px}
     }
   </style>
@@ -84,7 +100,6 @@
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <select id="monthSelect"></select>
-          <a class="btn" href="./index.html">Retour saisie</a>
         </div>
       </div>
     </section>
@@ -122,58 +137,75 @@
         <div id="winnerCard" class="empty">Charge un mois pour voir les résultats.</div>
       </section>
     </div>
+
+    <section class="card" style="margin-top:20px">
+      <div style="font-size:20px;font-weight:800;margin-bottom:12px">Dernière saisie par équipier</div>
+      <div id="latestEntries"></div>
+    </section>
   </div>
 
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHcDOxq9rUP1lEY24KGR9lZ4Z713sllK3kVaQDs_LaUulI-IZWwmNPoU8wD6XL6TAV/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRVPh9ZBhggLjNWhWR8R92XhTR-CuPBi7HpggCXpwqF4ga_QBT0lyClkarEseKpr-B/exec";
 
-    function monthOptions(n=12){
-      const arr=[];
-      const now=new Date();
-      for(let i=0;i<n;i++){
-        const d=new Date(now.getFullYear(), now.getMonth()-i, 1);
-        const y=d.getFullYear();
-        const m=String(d.getMonth()+1).padStart(2,'0');
-        arr.push(`${y}-${m}`);
+    async function initMonths(){
+      const sel = document.getElementById('monthSelect');
+      sel.innerHTML = '';
+
+      try{
+        const url = `${APPS_SCRIPT_URL}?mode=months`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const months = (data.months || []).sort().reverse();
+
+        if(!months.length){
+          const now = new Date();
+          const fallback = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+          addMonthOption(sel, fallback);
+          sel.value = fallback;
+        }else{
+          months.forEach(m => addMonthOption(sel, m));
+          sel.value = months[0];
+        }
+
+        sel.addEventListener('change', loadDashboard);
+        loadDashboard();
+      }catch(err){
+        const now = new Date();
+        const fallback = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+        addMonthOption(sel, fallback);
+        sel.value = fallback;
+        sel.addEventListener('change', loadDashboard);
+        loadDashboard();
       }
-      return arr;
     }
 
-    function initMonths(){
-      const sel=document.getElementById('monthSelect');
-      const months=monthOptions(12);
-      months.forEach(m=>{
-        const opt=document.createElement('option');
-        opt.value=m;
-        opt.textContent=m;
-        sel.appendChild(opt);
-      });
-      sel.value='2026-04';
-      sel.addEventListener('change',loadDashboard);
+    function addMonthOption(select, value){
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = value;
+      select.appendChild(opt);
     }
 
     async function loadDashboard(){
-      const month=document.getElementById('monthSelect').value;
-      document.getElementById('selectedMonthLabel').textContent=month;
-      document.getElementById('errorBox').innerHTML='';
+      const month = document.getElementById('monthSelect').value;
+      document.getElementById('selectedMonthLabel').textContent = month;
+      document.getElementById('errorBox').innerHTML = '';
 
       try{
         const url = `${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`;
-        console.log('Dashboard URL:', url);
-
         const res = await fetch(url);
         const text = await res.text();
-        console.log('Raw response:', text);
 
         let data;
         try{
           data = JSON.parse(text);
-        }catch(parseErr){
-          throw new Error('Réponse JSON invalide : ' + text);
+        }catch{
+          throw new Error('Réponse backend invalide');
         }
 
         if(data.ok === false){
-          throw new Error(data.error || 'Erreur backend inconnue');
+          throw new Error(data.error || 'Erreur backend');
         }
 
         renderDashboard(data, month);
@@ -189,10 +221,9 @@
       document.getElementById('winnerScore').textContent='0';
       document.getElementById('servicesCount').textContent='0';
       document.getElementById('staffCount').textContent='0';
-      document.getElementById('rankingBody').innerHTML =
-        `<tr><td colspan="5" class="empty">${escapeHtml(message)}</td></tr>`;
-      document.getElementById('winnerCard').innerHTML =
-        `<div class="empty">${escapeHtml(message)}</div>`;
+      document.getElementById('rankingBody').innerHTML=`<tr><td colspan="5" class="empty">${escapeHtml(message)}</td></tr>`;
+      document.getElementById('winnerCard').innerHTML=`<div class="empty">${escapeHtml(message)}</div>`;
+      document.getElementById('latestEntries').innerHTML=`<div class="empty">${escapeHtml(message)}</div>`;
     }
 
     function renderDashboard(data, month){
@@ -207,49 +238,90 @@
       const body = document.getElementById('rankingBody');
 
       if(!ranking.length){
-        body.innerHTML = `<tr><td colspan="5" class="empty">Aucune donnée pour ${escapeHtml(month)}.</td></tr>`;
-        document.getElementById('winnerCard').innerHTML = `<div class="empty">Aucune donnée pour ${escapeHtml(month)}.</div>`;
+        body.innerHTML=`<tr><td colspan="5" class="empty">Aucune donnée pour ${escapeHtml(month)}.</td></tr>`;
+        document.getElementById('winnerCard').innerHTML=`<div class="empty">Aucune donnée pour ${escapeHtml(month)}.</div>`;
+      }else{
+        body.innerHTML = ranking.map((r,idx)=>`
+          <tr>
+            <td>${idx+1}</td>
+            <td>${escapeHtml(r.staff)}</td>
+            <td><b>${r.avgScore}</b></td>
+            <td>${r.services}</td>
+            <td><div class="bar"><div class="fill" style="width:${Math.max(0, Math.min(100, Number(r.avgScore)||0))}%"></div></div></td>
+          </tr>
+        `).join("");
+
+        document.getElementById('winnerCard').innerHTML = `
+          <div style="font-size:30px;font-weight:900;margin-bottom:8px">${escapeHtml(winner.staff)}</div>
+          <div style="color:#a9b0bd;margin-bottom:16px">${escapeHtml(month)}</div>
+          <div style="display:grid;gap:12px">
+            ${metric("Score moyen", winner.avgScore)}
+            ${metric("Services évalués", winner.services)}
+            ${metric("Productivité", winner.avgProductivity)}
+            ${metric("Qualité", winner.avgQuality)}
+            ${metric("Ponctualité", winner.avgPunctuality)}
+            ${metric("Polyvalence", winner.avgVersatility)}
+            ${metric("Esprit d’équipe", winner.avgTeamwork)}
+            ${metric("Satisfaction client", winner.avgCustomer)}
+            ${metric("Pertes / casse", winner.avgLosses)}
+          </div>
+        `;
+      }
+
+      renderLatestEntries(data.latestDailyEntries || []);
+    }
+
+    function renderLatestEntries(entries){
+      const box = document.getElementById('latestEntries');
+      if(!box) return;
+
+      if(!entries.length){
+        box.innerHTML = `<div class="empty">Aucune dernière saisie disponible.</div>`;
         return;
       }
 
-      body.innerHTML = ranking.map((r,idx)=>`
-        <tr>
-          <td>${idx+1}</td>
-          <td>${escapeHtml(r.staff)}</td>
-          <td><b>${r.avgScore}</b></td>
-          <td>${r.services}</td>
-          <td>
-            <div class="bar">
-              <div class="fill" style="width:${Math.max(0, Math.min(100, Number(r.avgScore)||0))}%"></div>
-            </div>
-          </td>
-        </tr>
-      `).join('');
+      box.innerHTML = entries.map(entry => {
+        const matin = entry.services?.Matin;
+        const soir = entry.services?.Soir;
 
-      document.getElementById('winnerCard').innerHTML = `
-        <div style="font-size:30px;font-weight:900;margin-bottom:8px">${escapeHtml(winner.staff)}</div>
-        <div style="color:#a9b0bd;margin-bottom:16px">${escapeHtml(month)}</div>
-        <div style="display:grid;gap:12px">
-          ${metric("Score moyen", winner.avgScore)}
-          ${metric("Services évalués", winner.services)}
-          ${metric("Productivité", winner.avgProductivity)}
-          ${metric("Qualité", winner.avgQuality)}
-          ${metric("Ponctualité", winner.avgPunctuality)}
-          ${metric("Polyvalence", winner.avgVersatility)}
-          ${metric("Esprit d’équipe", winner.avgTeamwork)}
-          ${metric("Satisfaction client", winner.avgCustomer)}
-          ${metric("Pertes / casse", winner.avgLosses)}
+        return `
+          <div class="entry">
+            <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+              <div>
+                <div style="font-size:20px;font-weight:800">${escapeHtml(entry.staff)}</div>
+                <div style="color:#a9b0bd">Date : ${escapeHtml(entry.date)} • Responsable : ${escapeHtml(entry.manager || '—')}</div>
+              </div>
+            </div>
+
+            <div style="display:grid;gap:12px">
+              ${matin ? serviceBlock('Matin', matin) : ''}
+              ${soir ? serviceBlock('Soir', soir) : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function serviceBlock(label, s){
+      return `
+        <div class="service-box">
+          <div style="font-weight:800;margin-bottom:8px">${escapeHtml(label)} — Score ${escapeHtml(String(s.score))}</div>
+          <div class="service-grid">
+            <div><span style="color:#a9b0bd">Prod.</span><br>${escapeHtml(String(s.productivity))}</div>
+            <div><span style="color:#a9b0bd">Qualité</span><br>${escapeHtml(String(s.quality))}</div>
+            <div><span style="color:#a9b0bd">Ponctualité</span><br>${escapeHtml(String(s.punctuality))}</div>
+            <div><span style="color:#a9b0bd">Polyvalence</span><br>${escapeHtml(String(s.versatility))}</div>
+            <div><span style="color:#a9b0bd">Équipe</span><br>${escapeHtml(String(s.teamwork))}</div>
+            <div><span style="color:#a9b0bd">Client</span><br>${escapeHtml(String(s.customer))}</div>
+            <div><span style="color:#a9b0bd">Pertes</span><br>${escapeHtml(String(s.losses))}</div>
+          </div>
+          ${s.comment ? `<div style="margin-top:10px;color:#d7dbe3"><span style="color:#a9b0bd">Commentaire :</span> ${escapeHtml(s.comment)}</div>` : ''}
         </div>
       `;
     }
 
     function metric(label, value){
-      return `
-        <div>
-          <div style="font-size:13px;color:#a9b0bd">${escapeHtml(label)}</div>
-          <div style="font-size:22px;font-weight:800">${escapeHtml(String(value))}</div>
-        </div>
-      `;
+      return `<div><div style="font-size:13px;color:#a9b0bd">${escapeHtml(label)}</div><div style="font-size:22px;font-weight:800">${escapeHtml(String(value))}</div></div>`;
     }
 
     function escapeHtml(str){
@@ -262,7 +334,6 @@
     }
 
     initMonths();
-    loadDashboard();
   </script>
 </body>
 </html>
