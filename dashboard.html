@@ -3,81 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>O'TACOS — Dashboard Équipier du Mois</title>
+  <title>ÉVALUATION EQUIPIER DU MOIS — Dashboard</title>
   <style>
     :root{
-      --bg:#0f1115;--card:#171a21;--text:#f5f7fb;--muted:#a9b0bd;
-      --gold:#f6b319;--gold-2:#ffd36a;--line:#2b3140;
-      --shadow:0 16px 40px rgba(0,0,0,.28)
+      --bg:#fff8f1;--card:#ffffff;--text:#1f2430;--muted:#6c7480;
+      --orange:#f08a00;--orange-2:#ffb347;--line:#ece2d6;
+      --shadow:0 16px 40px rgba(240,138,0,.12)
     }
     *{box-sizing:border-box}
     body{
       margin:0;font-family:Inter,Arial,sans-serif;
-      background:linear-gradient(180deg,#0c0f14 0%, #12161f 100%);
+      background:linear-gradient(180deg,#fff8f1 0%, #fffdf9 100%);
       color:var(--text)
     }
     .wrap{max-width:1280px;margin:0 auto;padding:24px}
     .hero,.card{
       background:var(--card);
-      border:1px solid rgba(255,255,255,.06);
+      border:1px solid var(--line);
       border-radius:24px;
       box-shadow:var(--shadow)
     }
     .hero{
       padding:24px;margin-bottom:20px;
       background:
-        radial-gradient(circle at top right, rgba(246,179,25,.15), transparent 28%),
-        linear-gradient(135deg, rgba(246,179,25,.12), rgba(255,255,255,.03))
+        radial-gradient(circle at top right, rgba(240,138,0,.15), transparent 28%),
+        linear-gradient(135deg, rgba(255,179,71,.16), rgba(255,255,255,.9))
     }
-    .card{padding:20px}
     .top{
-      display:flex;justify-content:space-between;align-items:center;
-      gap:12px;flex-wrap:wrap
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap
     }
-    .grid{
-      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:16px;margin-bottom:20px
+    .logo-title{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .logo-title img{
+      width:54px;height:54px;object-fit:contain;border-radius:14px;background:#fff;
+      border:1px solid var(--line);padding:6px
     }
-    .stat{
-      padding:18px;border-radius:18px;background:#1f2430;
-      border:1px solid rgba(255,255,255,.05)
-    }
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:20px}
+    .stat{padding:18px;border-radius:18px;background:#fff7ed;border:1px solid #ffe0b2}
     .k{font-size:13px;color:var(--muted)}
     .v{font-size:30px;font-weight:900;margin-top:8px}
     .main{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
+    .card{padding:20px}
     table{width:100%;border-collapse:collapse}
     th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left}
-    th{color:#dbe3f1;font-size:13px}
+    th{color:#5e6570;font-size:13px}
     .badge{
       display:inline-block;padding:8px 12px;border-radius:999px;
-      background:linear-gradient(135deg,var(--gold),var(--gold-2));
-      color:#111;font-weight:900
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:#fff;font-weight:900
     }
     .bar{
-      height:10px;background:#10151d;border:1px solid rgba(255,255,255,.08);
+      height:10px;background:#fff;border:1px solid #ffd8a8;
       border-radius:999px;overflow:hidden
     }
-    .fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-2))}
+    .fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--orange-2))}
     select{
-      padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.08);
-      background:#10151d;color:var(--text)
+      padding:12px 14px;border-radius:14px;border:1px solid var(--line);
+      background:#fff;color:var(--text)
     }
     .empty{color:var(--muted)}
-    .err{
-      margin-top:12px;padding:12px 14px;border-radius:14px;
-      background:#2a1111;border:1px solid #6a2323;color:#ffd3d3;
-      white-space:pre-wrap
-    }
     .entry{
-      border:1px solid rgba(255,255,255,.08);
+      border:1px solid var(--line);
       border-radius:18px;
       padding:16px;
       margin-bottom:14px;
-      background:#1b202a
+      background:#fffdf9
     }
     .service-box{
-      padding:12px;border-radius:14px;background:#10151d;
-      border:1px solid rgba(255,255,255,.06)
+      padding:12px;border-radius:14px;background:#fff;
+      border:1px solid var(--line)
     }
     .service-grid{
       display:grid;
@@ -94,10 +87,14 @@
   <div class="wrap">
     <section class="hero">
       <div class="top">
-        <div>
-          <h1 style="margin:0 0 8px 0">Dashboard Équipier du mois</h1>
-          <div style="color:var(--muted)">O'TACOS BOULOGNE SUR MER</div>
+        <div class="logo-title">
+          <img src="./otacos-logo.png" alt="Logo O'TACOS" />
+          <div>
+            <h1 style="margin:0 0 8px 0">ÉVALUATION EQUIPIER DU MOIS</h1>
+            <div style="color:var(--muted)">Dashboard</div>
+          </div>
         </div>
+
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <select id="monthSelect"></select>
         </div>
@@ -129,7 +126,6 @@
           </thead>
           <tbody id="rankingBody"></tbody>
         </table>
-        <div id="errorBox"></div>
       </section>
 
       <section class="card">
@@ -145,7 +141,7 @@
   </div>
 
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRVPh9ZBhggLjNWhWR8R92XhTR-CuPBi7HpggCXpwqF4ga_QBT0lyClkarEseKpr-B/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHcDOxq9rUP1lEY24KGR9lZ4Z713sllK3kVaQDs_LaUulI-IZWwmNPoU8wD6XL6TAV/exec";
 
     async function initMonths(){
       const sel = document.getElementById('monthSelect');
@@ -190,19 +186,11 @@
     async function loadDashboard(){
       const month = document.getElementById('monthSelect').value;
       document.getElementById('selectedMonthLabel').textContent = month;
-      document.getElementById('errorBox').innerHTML = '';
 
       try{
         const url = `${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`;
         const res = await fetch(url);
-        const text = await res.text();
-
-        let data;
-        try{
-          data = JSON.parse(text);
-        }catch{
-          throw new Error('Réponse backend invalide');
-        }
+        const data = await res.json();
 
         if(data.ok === false){
           throw new Error(data.error || 'Erreur backend');
@@ -211,8 +199,6 @@
         renderDashboard(data, month);
       }catch(err){
         renderEmpty(err.message);
-        document.getElementById('errorBox').innerHTML =
-          `<div class="err">${escapeHtml(err.message)}</div>`;
       }
     }
 
@@ -253,17 +239,18 @@
 
         document.getElementById('winnerCard').innerHTML = `
           <div style="font-size:30px;font-weight:900;margin-bottom:8px">${escapeHtml(winner.staff)}</div>
-          <div style="color:#a9b0bd;margin-bottom:16px">${escapeHtml(month)}</div>
+          <div style="color:#6c7480;margin-bottom:16px">${escapeHtml(month)}</div>
           <div style="display:grid;gap:12px">
             ${metric("Score moyen", winner.avgScore)}
             ${metric("Services évalués", winner.services)}
-            ${metric("Productivité", winner.avgProductivity)}
-            ${metric("Qualité", winner.avgQuality)}
-            ${metric("Ponctualité", winner.avgPunctuality)}
-            ${metric("Polyvalence", winner.avgVersatility)}
-            ${metric("Esprit d’équipe", winner.avgTeamwork)}
-            ${metric("Satisfaction client", winner.avgCustomer)}
-            ${metric("Pertes / casse", winner.avgLosses)}
+            ${metric("Questions basiques", winner.avgBasicScore)}
+            ${metric("Critères pondérés", winner.avgWeightedScore)}
+            ${metric("Productivité", winner.avgProductivity + " / 5")}
+            ${metric("Score de production", winner.avgProduction10 + " / 10")}
+            ${metric("Polyvalence", winner.avgVersatility + " / 5")}
+            ${metric("Esprit d’équipe", winner.avgTeamwork + " / 5")}
+            ${metric("Satisfaction client", winner.avgCustomer + " / 5")}
+            ${metric("Casse", winner.avgBreakage5 + " / 5")}
           </div>
         `;
       }
@@ -289,7 +276,7 @@
             <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px">
               <div>
                 <div style="font-size:20px;font-weight:800">${escapeHtml(entry.staff)}</div>
-                <div style="color:#a9b0bd">Date : ${escapeHtml(entry.date)} • Responsable : ${escapeHtml(entry.manager || '—')}</div>
+                <div style="color:#6c7480">Date : ${escapeHtml(entry.date)} • Responsable : ${escapeHtml(entry.manager || '—')}</div>
               </div>
             </div>
 
@@ -305,23 +292,24 @@
     function serviceBlock(label, s){
       return `
         <div class="service-box">
-          <div style="font-weight:800;margin-bottom:8px">${escapeHtml(label)} — Score ${escapeHtml(String(s.score))}</div>
+          <div style="font-weight:800;margin-bottom:8px">${escapeHtml(label)} — Score ${escapeHtml(String(s.total))}</div>
           <div class="service-grid">
-            <div><span style="color:#a9b0bd">Prod.</span><br>${escapeHtml(String(s.productivity))}</div>
-            <div><span style="color:#a9b0bd">Qualité</span><br>${escapeHtml(String(s.quality))}</div>
-            <div><span style="color:#a9b0bd">Ponctualité</span><br>${escapeHtml(String(s.punctuality))}</div>
-            <div><span style="color:#a9b0bd">Polyvalence</span><br>${escapeHtml(String(s.versatility))}</div>
-            <div><span style="color:#a9b0bd">Équipe</span><br>${escapeHtml(String(s.teamwork))}</div>
-            <div><span style="color:#a9b0bd">Client</span><br>${escapeHtml(String(s.customer))}</div>
-            <div><span style="color:#a9b0bd">Pertes</span><br>${escapeHtml(String(s.losses))}</div>
+            <div><span style="color:#6c7480">Questions</span><br>${escapeHtml(String(s.basic))} / 15</div>
+            <div><span style="color:#6c7480">Pondérés</span><br>${escapeHtml(String(s.weighted))} / 85</div>
+            <div><span style="color:#6c7480">Productivité</span><br>${escapeHtml(String(s.productivity))} / 5</div>
+            <div><span style="color:#6c7480">Production</span><br>${escapeHtml(String(s.production10))} / 10</div>
+            <div><span style="color:#6c7480">Polyvalence</span><br>${escapeHtml(String(s.versatility))} / 5</div>
+            <div><span style="color:#6c7480">Équipe</span><br>${escapeHtml(String(s.teamwork))} / 5</div>
+            <div><span style="color:#6c7480">Client</span><br>${escapeHtml(String(s.customer))} / 5</div>
+            <div><span style="color:#6c7480">Casse</span><br>${escapeHtml(String(s.breakage5))} / 5</div>
           </div>
-          ${s.comment ? `<div style="margin-top:10px;color:#d7dbe3"><span style="color:#a9b0bd">Commentaire :</span> ${escapeHtml(s.comment)}</div>` : ''}
+          ${s.comment ? `<div style="margin-top:10px;color:#1f2430"><span style="color:#6c7480">Commentaire :</span> ${escapeHtml(s.comment)}</div>` : ''}
         </div>
       `;
     }
 
     function metric(label, value){
-      return `<div><div style="font-size:13px;color:#a9b0bd">${escapeHtml(label)}</div><div style="font-size:22px;font-weight:800">${escapeHtml(String(value))}</div></div>`;
+      return `<div><div style="font-size:13px;color:#6c7480">${escapeHtml(label)}</div><div style="font-size:22px;font-weight:800">${escapeHtml(String(value))}</div></div>`;
     }
 
     function escapeHtml(str){
