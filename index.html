@@ -3,90 +3,793 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>O'TACOS — Évaluation par service</title>
+  <title>ÉVALUATION EQUIPIER DU MOIS</title>
   <style>
-    :root{--bg:#0f1115;--card:#171a21;--card-2:#1f2430;--gold:#f6b319;--gold-2:#ffd36a;--text:#f5f7fb;--muted:#a9b0bd;--ok:#2ecc71;--bad:#ff5c75;--line:#2b3140;--shadow:0 16px 40px rgba(0,0,0,.28);--radius:20px}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#0c0f14 0%, #12161f 100%);color:var(--text)}
-    .wrap{max-width:1280px;margin:0 auto;padding:24px}.hero{background:radial-gradient(circle at top right, rgba(246,179,25,.15), transparent 28%),linear-gradient(135deg, rgba(246,179,25,.12), rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow);border-radius:28px;padding:24px;margin-bottom:20px}
-    .brand{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#111;display:grid;place-items:center;font-weight:900;font-size:24px;box-shadow:0 10px 24px rgba(246,179,25,.28)}
-    h1{margin:0;font-size:clamp(28px,4vw,42px)} .sub{color:var(--muted);margin-top:6px}.top-actions{display:flex;gap:12px;flex-wrap:wrap}
-    a.btn,button.btn{appearance:none;border:0;cursor:pointer;text-decoration:none;color:#111;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold-2));padding:14px 18px;border-radius:14px;box-shadow:0 10px 22px rgba(246,179,25,.22);transition:transform .15s ease, opacity .15s ease}
-    button.btn.secondary,a.btn.secondary{background:#272d3a;color:var(--text);box-shadow:none;border:1px solid rgba(255,255,255,.08)} .btn:hover{transform:translateY(-1px)}
-    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-    .card .hd{padding:18px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg, rgba(255,255,255,.03), transparent);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.card .bd{padding:20px}
-    .meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:8px} label{font-weight:700;color:#e9edf7;font-size:14px}
-    input,select,textarea{width:100%;border-radius:14px;border:1px solid #3a4253;background:#10151d;color:var(--text);padding:13px 14px;font-size:15px;outline:none} input:focus,select:focus,textarea:focus{border-color:var(--gold)}
-    .table-wrap{overflow:auto} table{width:100%;border-collapse:collapse;min-width:980px} th,td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top} th{text-align:left;color:#dbe3f1;font-size:13px;background:#151a23;position:sticky;top:0}
-    tr:hover td{background:rgba(255,255,255,.015)} .small{width:84px}.score-col{width:120px}.name-col{min-width:220px}.row-actions{display:flex;gap:8px;align-items:center}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:#121722;border:1px solid rgba(255,255,255,.06);color:#d9e0ed;font-size:13px}
-    .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.stat{background:var(--card-2);border:1px solid rgba(255,255,255,.05);border-radius:18px;padding:16px}.stat .k{font-size:13px;color:var(--muted)}.stat .v{font-size:28px;font-weight:900;margin-top:6px}
-    .criteria{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.criterion{padding:14px;border-radius:16px;background:#121722;border:1px solid rgba(255,255,255,.06)}.criterion b{display:block;margin-bottom:6px}.criterion span{font-size:13px;color:var(--muted)}
-    .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px}.status{font-weight:700}.ok{color:var(--ok)} .bad{color:var(--bad)}
-    .total-bar{height:12px;border-radius:999px;background:#10151d;border:1px solid rgba(255,255,255,.08);overflow:hidden}.total-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-2));transition:width .2s ease}
-    .muted{color:var(--muted)} .note{margin-top:12px;padding:12px 14px;border-radius:14px;background:#121722;border:1px solid rgba(255,255,255,.06);font-size:13px;color:#dbe3f1}.mini{font-size:12px;color:var(--muted)}
-    @media (max-width: 980px){.grid{grid-template-columns:1fr}.meta-grid,.stats,.criteria{grid-template-columns:1fr}.wrap{padding:14px}}
+    :root{
+      --bg:#fff8f1;
+      --card:#ffffff;
+      --text:#1f2430;
+      --muted:#6c7480;
+      --orange:#f08a00;
+      --orange-2:#ffb347;
+      --orange-3:#fff1dd;
+      --line:#e9e0d3;
+      --shadow:0 16px 40px rgba(240,138,0,.12);
+      --danger:#b42318;
+      --ok:#067647;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,Arial,sans-serif;
+      background:linear-gradient(180deg,#fff8f1 0%, #fffdf9 100%);
+      color:var(--text)
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:20px}
+    .hero,.card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:var(--shadow)
+    }
+    .hero{
+      padding:24px;
+      margin-bottom:18px;
+      background:
+        radial-gradient(circle at top right, rgba(240,138,0,.15), transparent 30%),
+        linear-gradient(135deg, rgba(255,179,71,.16), rgba(255,255,255,.9))
+    }
+    .card{padding:20px;margin-bottom:18px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    h1,h2,h3{margin:0}
+    .logo-title{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .logo-title img{
+      width:54px;height:54px;object-fit:contain;border-radius:14px;background:#fff;
+      border:1px solid var(--line);padding:6px
+    }
+    .sub{color:var(--muted);margin-top:6px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .field{display:flex;flex-direction:column;gap:8px}
+    label{font-size:14px;font-weight:700}
+    input,select,textarea,button{
+      font:inherit
+    }
+    input[type="date"], select, textarea, input[type="number"]{
+      width:100%;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      color:var(--text)
+    }
+    textarea{min-height:82px;resize:vertical}
+    .muted{color:var(--muted)}
+    .btns{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      border:0;
+      border-radius:14px;
+      padding:12px 16px;
+      cursor:pointer;
+      font-weight:800
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:#fff
+    }
+    .btn-secondary{
+      background:#fff4e6;
+      color:#8a4b00;
+      border:1px solid #ffd8a8
+    }
+    .btn-danger{
+      background:#fff1f1;
+      color:var(--danger);
+      border:1px solid #ffd0d0
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      background:var(--orange-3);color:#8a4b00;font-weight:800
+    }
+    .team-list{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:8px
+    }
+    .check{
+      display:flex;align-items:center;gap:10px;
+      padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff
+    }
+    .member-card{
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+      background:#fffdf9;
+      margin-bottom:16px
+    }
+    .member-head{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      margin-bottom:12px
+    }
+    .score-box{
+      min-width:120px;text-align:center;padding:10px 14px;border-radius:16px;
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:#fff;font-weight:900
+    }
+    .question{
+      border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff
+    }
+    .answers{
+      display:flex;gap:10px;flex-wrap:wrap;margin-top:10px
+    }
+    .answers label{
+      font-weight:600;
+      display:flex;align-items:center;gap:8px;
+      padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:#fff
+    }
+    .criterion{
+      border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff
+    }
+    .criterion small{display:block;color:var(--muted);margin-top:4px}
+    .status{
+      padding:12px 14px;border-radius:14px;margin-top:12px;font-weight:700
+    }
+    .status.ok{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
+    .status.warn{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+    .status.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
+    .section-title{font-size:20px;font-weight:900;margin-bottom:10px}
+    .overlay{
+      position:fixed;inset:0;background:rgba(16,21,29,.55);
+      display:none;align-items:center;justify-content:center;z-index:9999
+    }
+    .overlay.show{display:flex}
+    .overlay-box{
+      background:#fff;border-radius:22px;padding:24px 28px;box-shadow:0 30px 70px rgba(0,0,0,.2);
+      font-size:18px;font-weight:900;text-align:center;max-width:420px
+    }
+    .tiny{font-size:12px;color:var(--muted)}
+    @media(max-width:980px){
+      .grid-2,.grid-3,.grid-4,.team-list{grid-template-columns:1fr}
+      .wrap{padding:14px}
+    }
   </style>
 </head>
 <body>
+  <div class="overlay" id="savingOverlay">
+    <div class="overlay-box">Ne quittez pas, l’enregistrement est en cours…</div>
+  </div>
+
   <div class="wrap">
     <section class="hero">
-      <div class="brand">
-        <div style="display:flex;gap:16px;align-items:center"><div class="logo">O</div><div><h1>Évaluation équipiers par service</h1><div class="sub">Saisie quotidienne service matin / soir</div></div></div>
-        <div class="top-actions"><a class="btn secondary" href="./dashboard.html">Voir le dashboard</a><button class="btn secondary" type="button" id="loadRosterBtn">Recharger l’équipe</button></div>
+      <div class="logo-title">
+        <img src="./otacos-logo.png" alt="Logo O'TACOS" />
+        <div>
+          <h1>ÉVALUATION EQUIPIER DU MOIS</h1>
+          <div class="sub">Préparation de l’équipe présente, évaluation par manager, sauvegarde locale illimitée jusqu’à effacement manuel.</div>
+        </div>
       </div>
     </section>
-    <div class="grid">
-      <section class="card">
-        <div class="hd"><div><div style="font-size:20px;font-weight:800">Informations du service</div><div class="mini">Le manager remplit une fois l’en-tête, puis ajoute seulement les équipiers présents.</div></div><div class="pill">Score par ligne sur 100</div></div>
-        <div class="bd">
-          <div class="meta-grid">
-            <div class="field"><label for="restaurant">Restaurant</label><input id="restaurant" placeholder="Ex. O'TACOS BSM & ARS" /></div>
-            <div class="field"><label for="serviceDate">Date</label><input id="serviceDate" type="date" /></div>
-            <div class="field"><label for="serviceType">Service</label><select id="serviceType"><option value="Matin">Matin</option><option value="Soir">Soir</option></select></div>
-            <div class="field"><label for="manager">Manager</label><input id="manager" placeholder="Nom du manager" /></div>
+
+    <section class="card">
+      <div class="section-title">Préparer le service</div>
+      <div class="grid-3">
+        <div class="field">
+          <label for="serviceDate">Date</label>
+          <input type="date" id="serviceDate" />
+        </div>
+
+        <div class="field">
+          <label for="serviceType">Service</label>
+          <select id="serviceType">
+            <option value="">Choisir</option>
+            <option value="Matin">Matin</option>
+            <option value="Soir">Soir</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="managerName">Nom du manager</label>
+          <select id="managerName">
+            <option value="">Choisir</option>
+            <option value="Imane">Imane</option>
+            <option value="Guillaume">Guillaume</option>
+            <option value="Pape">Pape</option>
+            <option value="Omar">Omar</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div class="section-title" style="font-size:18px">Équipe présente</div>
+        <div class="muted">Sélectionne l’équipe présente sur le service, puis clique sur “Préparer l’évaluation”.</div>
+        <div id="teamList" class="team-list"></div>
+      </div>
+
+      <div class="btns" style="margin-top:16px">
+        <button class="btn btn-primary" id="prepareBtn" type="button">Préparer l’évaluation</button>
+      </div>
+
+      <div id="topStatus"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Critere d’evaluation de l’equipier</div>
+      <div class="muted">
+        Questions basiques = <b>15 points maximum</b>.  
+        Critères de performance = <b>85 points maximum</b>.  
+        Score total = <b>100</b>.
+      </div>
+
+      <div style="margin-top:14px" class="grid-2">
+        <div class="question">
+          <div><b>Questions basiques (15 pts max)</b></div>
+          <div class="tiny" style="margin-top:8px">
+            • L’équipier se lave les mains régulièrement et l’hygiène au travail est acceptable : Oui +2 / Non -1<br>
+            • L’équipier a le tablier et est prêt à l’heure pile : Oui +5 / Non -4<br>
+            • L’équipier a-t-il fait une erreur dans le service : Oui -2 / Non +3<br>
+            • La tenue / l’odeur de l’équipier est acceptable : Oui +3 / Non -2<br>
+            • L’équipier est souriant : Oui +2 / Non -1
           </div>
-          <div class="foot"><div class="row-actions"><button class="btn secondary" type="button" id="addRowBtn">+ Ajouter un équipier</button><button class="btn secondary" type="button" id="fillDemoBtn">Exemple</button></div><div class="muted">Tous les champs notes sont sur 1 à 5.</div></div>
-          <div class="table-wrap" style="margin-top:16px"><table id="scoresTable"><thead><tr><th class="name-col">Équipier</th><th class="small">Prod.</th><th class="small">Qualité</th><th class="small">Ponctu.</th><th class="small">Polyv.</th><th class="small">Équipe</th><th class="small">Client</th><th class="small">Pertes</th><th class="score-col">Score /100</th><th>Commentaire</th><th class="small">Suppr.</th></tr></thead><tbody id="rows"></tbody></table></div>
-          <div class="foot"><div style="min-width:260px;flex:1"><div class="mini" style="margin-bottom:6px">Niveau moyen du service</div><div class="total-bar"><div class="total-fill" id="serviceAverageFill"></div></div></div><div class="status" id="serviceAverageLabel">0 / 100</div></div>
-          <div class="note">La note <b>Pertes</b> doit rester positive : <b>5 = excellent contrôle</b>, <b>1 = pertes/casse importantes</b>.</div>
-          <div class="foot" style="margin-top:22px"><div id="submitStatus" class="muted">Prêt à envoyer.</div><button class="btn" id="submitBtn" type="button">Enregistrer ce service</button></div>
         </div>
-      </section>
-      <aside class="card">
-        <div class="hd"><div style="font-size:20px;font-weight:800">Règles de score</div><div class="pill">Pondération intégrée</div></div>
-        <div class="bd">
-          <div class="stats"><div class="stat"><div class="k">Équipiers saisis</div><div class="v" id="countRows">0</div></div><div class="stat"><div class="k">Moyenne du service</div><div class="v" id="averageBox">0</div></div></div>
-          <div class="criteria"><div class="criterion"><b>Productivité</b><span>20 %</span></div><div class="criterion"><b>Qualité</b><span>20 %</span></div><div class="criterion"><b>Ponctualité</b><span>15 %</span></div><div class="criterion"><b>Polyvalence</b><span>15 %</span></div><div class="criterion"><b>Esprit d’équipe</b><span>15 %</span></div><div class="criterion"><b>Satisfaction client</b><span>10 %</span></div><div class="criterion"><b>Pertes / casse</b><span>5 %</span></div></div>
-          <div class="note"><b>Bon usage manager :</b><br />5 = excellent service, 4 = très bon, 3 = attendu, 2 = insuffisant, 1 = très insuffisant.</div>
-          <div class="note"><b>Connexion :</b><br />Remplace la variable <code>APPS_SCRIPT_URL</code> dans le fichier par l’URL de ton web app Google Apps Script.</div>
+        <div class="question">
+          <div><b>Critères de performance (85 pts max)</b></div>
+          <div class="tiny" style="margin-top:8px">
+            • Productivité : 20%<br>
+            • Score de production saisi sur 10 : 20%<br>
+            • Polyvalence : 15%<br>
+            • Esprit d’équipe : 15%<br>
+            • Satisfaction client : 20%<br>
+            • Casse : 10%
+          </div>
         </div>
-      </aside>
-    </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Évaluation des équipiers présents</div>
+      <div id="membersContainer" class="muted">Aucune fiche générée pour le moment.</div>
+
+      <div class="btns" style="margin-top:18px">
+        <button class="btn btn-primary" id="saveBtn" type="button">Enregistrer ce service</button>
+        <button class="btn btn-danger" id="clearBtn" type="button">Effacer tout</button>
+      </div>
+
+      <div id="bottomStatus"></div>
+    </section>
   </div>
+
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRVPh9ZBhggLjNWhWR8R92XhTR-CuPBi7HpggCXpwqF4ga_QBT0lyClkarEseKpr-B/exec";
-    const DEFAULT_ROSTER = ["Aya","Mehdi","Yassine","Imane","Sofiane","Sarah","Rayan","Meryem"];
-    const WEIGHTS = {productivity:20,quality:20,punctuality:15,versatility:15,teamwork:15,customer:10,losses:5};
-    let roster = [...DEFAULT_ROSTER];
-    const rowsEl = document.getElementById("rows");
-    const countRowsEl = document.getElementById("countRows");
-    const averageBoxEl = document.getElementById("averageBox");
-    const serviceAverageFillEl = document.getElementById("serviceAverageFill");
-    const serviceAverageLabelEl = document.getElementById("serviceAverageLabel");
-    const submitStatusEl = document.getElementById("submitStatus");
-    document.getElementById("serviceDate").valueAsDate = new Date();
-    function createScoreSelect(cls){const s=document.createElement("select");s.className=cls;for(let i=1;i<=5;i++){const opt=document.createElement("option");opt.value=i;opt.textContent=i;if(i===3) opt.selected=true;s.appendChild(opt)}return s}
-    function rosterOptionsHtml(selected=""){return roster.map(name => `<option value="${escapeHtml(name)}" ${name===selected ? "selected" : ""}>${escapeHtml(name)}</option>`).join("")}
-    function addRow(data={}){const tr=document.createElement("tr");tr.innerHTML=`<td><select class="staffSelect"><option value="">Choisir...</option>${rosterOptionsHtml(data.staff || "")}</select></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="lineScore" style="font-weight:800">0</td><td><textarea class="commentInput" rows="2" placeholder="Optionnel">${data.comment || ""}</textarea></td><td><button class="btn secondary deleteBtn" type="button">X</button></td>`;const cells=tr.querySelectorAll("td");const arr=["productivity","quality","punctuality","versatility","teamwork","customer","losses"].map(cls=>createScoreSelect(cls));arr.forEach((el,i)=>{if(data.values&&data.values[i]!=null) el.value=data.values[i];cells[i+1].appendChild(el)});tr.querySelectorAll("select, textarea").forEach(el=>{el.addEventListener("input",recompute);el.addEventListener("change",recompute)});tr.querySelector(".deleteBtn").addEventListener("click",()=>{tr.remove();recompute()});rowsEl.appendChild(tr);recompute()}
-    function computeLineScore(tr){const values={productivity:Number(tr.querySelector(".productivity").value||0),quality:Number(tr.querySelector(".quality").value||0),punctuality:Number(tr.querySelector(".punctuality").value||0),versatility:Number(tr.querySelector(".versatility").value||0),teamwork:Number(tr.querySelector(".teamwork").value||0),customer:Number(tr.querySelector(".customer").value||0),losses:Number(tr.querySelector(".losses").value||0)};let score=0;Object.entries(WEIGHTS).forEach(([k,w])=>{score+=((values[k]-1)/4)*w});return Math.round(score)}
-    function recompute(){const trs=[...rowsEl.querySelectorAll("tr")];let total=0;trs.forEach(tr=>{const score=computeLineScore(tr);tr.querySelector(".lineScore").textContent=score;total+=score});const avg=trs.length?Math.round(total/trs.length):0;countRowsEl.textContent=String(trs.length);averageBoxEl.textContent=String(avg);serviceAverageLabelEl.textContent=`${avg} / 100`;serviceAverageFillEl.style.width=`${avg}%`}
-    function collectPayload(){const restaurant=document.getElementById("restaurant").value.trim();const serviceDate=document.getElementById("serviceDate").value;const serviceType=document.getElementById("serviceType").value;const manager=document.getElementById("manager").value.trim();const trs=[...rowsEl.querySelectorAll("tr")];if(!restaurant||!serviceDate||!serviceType||!manager) throw new Error("Complète restaurant, date, service et manager.");if(!trs.length) throw new Error("Ajoute au moins un équipier.");const rows=trs.map(tr=>{const staff=tr.querySelector(".staffSelect").value;if(!staff) throw new Error("Chaque ligne doit avoir un équipier.");return {restaurant,serviceDate,serviceType,manager,staff,productivity:Number(tr.querySelector(".productivity").value),quality:Number(tr.querySelector(".quality").value),punctuality:Number(tr.querySelector(".punctuality").value),versatility:Number(tr.querySelector(".versatility").value),teamwork:Number(tr.querySelector(".teamwork").value),customer:Number(tr.querySelector(".customer").value),losses:Number(tr.querySelector(".losses").value),lineScore:computeLineScore(tr),comment:tr.querySelector(".commentInput").value.trim()}});return {action:"submitScores",rows}}
-    async function submitForm(){try{const payload=collectPayload();if(!APPS_SCRIPT_URL||APPS_SCRIPT_URL.includes("PASTE_YOUR")) throw new Error("Remplace d’abord APPS_SCRIPT_URL dans le HTML.");submitStatusEl.textContent="Envoi en cours...";submitStatusEl.className="muted";const res=await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify(payload),headers:{"Content-Type":"text/plain;charset=utf-8"}});const data=await res.json().catch(()=>({}));if(!res.ok||data.ok===false) throw new Error(data.error||"Erreur pendant l’enregistrement.");submitStatusEl.textContent=`${data.inserted || payload.rows.length} ligne(s) enregistrée(s).`;submitStatusEl.className="status ok"}catch(err){submitStatusEl.textContent=err.message;submitStatusEl.className="status bad"}}
-    async function loadRoster(){try{if(!APPS_SCRIPT_URL||APPS_SCRIPT_URL.includes("PASTE_YOUR")){submitStatusEl.textContent="APPS_SCRIPT_URL non configurée : équipe par défaut chargée.";submitStatusEl.className="muted";rerenderStaffSelects();return}submitStatusEl.textContent="Chargement de l’équipe...";const url=APPS_SCRIPT_URL+(APPS_SCRIPT_URL.includes("?")?"&":"?")+"mode=roster";const res=await fetch(url);const data=await res.json();if(Array.isArray(data.roster)&&data.roster.length){roster=data.roster;rerenderStaffSelects();submitStatusEl.textContent=`Équipe chargée (${roster.length}).`;submitStatusEl.className="status ok"}else throw new Error("Aucune équipe trouvée.")}catch(err){submitStatusEl.textContent=err.message;submitStatusEl.className="status bad"}}
-    function rerenderStaffSelects(){[...document.querySelectorAll(".staffSelect")].forEach(sel=>{const current=sel.value;sel.innerHTML=`<option value="">Choisir...</option>${rosterOptionsHtml(current)}`})}
-    function escapeHtml(str){return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
-    document.getElementById("addRowBtn").addEventListener("click",()=>addRow());document.getElementById("fillDemoBtn").addEventListener("click",()=>{rowsEl.innerHTML="";addRow({staff:roster[0],values:[4,4,5,4,4,5,4],comment:"Très bon service."});addRow({staff:roster[1]||roster[0],values:[3,4,4,3,5,4,4],comment:"Bonne tenue poste chaud."});addRow({staff:roster[2]||roster[0],values:[5,3,4,4,4,4,3],comment:"Fort débit mais qualité à surveiller."})});document.getElementById("submitBtn").addEventListener("click",submitForm);document.getElementById("loadRosterBtn").addEventListener("click",loadRoster);
-    addRow(); addRow();
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHcDOxq9rUP1lEY24KGR9lZ4Z713sllK3kVaQDs_LaUulI-IZWwmNPoU8wD6XL6TAV/exec";
+    const DRAFT_KEY = "otacos_eval_draft_v3";
+
+    const QUESTION_CONFIG = [
+      { key: "q_hands", label: "L’équipier se lave les mains régulièrement et l’hygiène au travail est acceptable ?", yes: 2, no: -1 },
+      { key: "q_apron", label: "L’équipier a le tablier et est prêt à l’heure pile ?", yes: 5, no: -4 },
+      { key: "q_error", label: "L’équipier a-t-il fait une erreur dans le service ?", yes: -2, no: 3 },
+      { key: "q_uniform", label: "La tenue / l’odeur de l’équipier est acceptable ?", yes: 3, no: -2 },
+      { key: "q_smile", label: "L’équipier est souriant ?", yes: 2, no: -1 }
+    ];
+
+    const MANAGER_OPTIONS = ["Imane", "Guillaume", "Pape", "Omar"];
+
+    function qs(id){ return document.getElementById(id); }
+
+    function showStatus(targetId, type, message){
+      const el = qs(targetId);
+      if(!el) return;
+      el.innerHTML = `<div class="status ${type}">${escapeHtml(message)}</div>`;
+    }
+
+    function clearStatus(targetId){
+      const el = qs(targetId);
+      if(el) el.innerHTML = '';
+    }
+
+    function showOverlay(show){
+      qs('savingOverlay').classList.toggle('show', !!show);
+    }
+
+    function todayLocal(){
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function defaultDraft(){
+      return {
+        serviceDate: todayLocal(),
+        serviceType: "",
+        managerName: "",
+        selectedTeam: [],
+        membersData: {}
+      };
+    }
+
+    function loadDraft(){
+      try{
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if(!raw) return defaultDraft();
+        const parsed = JSON.parse(raw);
+        return {
+          serviceDate: parsed.serviceDate || todayLocal(),
+          serviceType: parsed.serviceType || "",
+          managerName: parsed.managerName || "",
+          selectedTeam: Array.isArray(parsed.selectedTeam) ? parsed.selectedTeam : [],
+          membersData: parsed.membersData || {}
+        };
+      }catch{
+        return defaultDraft();
+      }
+    }
+
+    function saveDraft(){
+      const draft = collectDraftFromUI();
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    }
+
+    function clearDraftStorage(){
+      localStorage.removeItem(DRAFT_KEY);
+    }
+
+    function collectDraftFromUI(){
+      const selectedTeam = [...document.querySelectorAll('.team-check:checked')].map(i => i.value);
+
+      const membersData = {};
+      document.querySelectorAll('.member-card').forEach(card => {
+        const staff = card.dataset.staff;
+        membersData[staff] = {
+          q_hands: getRadioValue(card, "q_hands"),
+          q_apron: getRadioValue(card, "q_apron"),
+          q_error: getRadioValue(card, "q_error"),
+          q_uniform: getRadioValue(card, "q_uniform"),
+          q_smile: getRadioValue(card, "q_smile"),
+          productivity: card.querySelector('[name="productivity"]')?.value || "",
+          productionScore10: card.querySelector('[name="productionScore10"]')?.value || "",
+          versatility: card.querySelector('[name="versatility"]')?.value || "",
+          teamwork: card.querySelector('[name="teamwork"]')?.value || "",
+          customer: card.querySelector('[name="customer"]')?.value || "",
+          breakage: getRadioValue(card, "breakage"),
+          comment: card.querySelector('[name="comment"]')?.value || ""
+        };
+      });
+
+      return {
+        serviceDate: qs('serviceDate').value || todayLocal(),
+        serviceType: qs('serviceType').value || "",
+        managerName: qs('managerName').value || "",
+        selectedTeam,
+        membersData
+      };
+    }
+
+    function getRadioValue(scope, name){
+      const checked = scope.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : "";
+    }
+
+    function applyDraftToHeader(draft){
+      qs('serviceDate').value = draft.serviceDate || todayLocal();
+      qs('serviceType').value = draft.serviceType || "";
+      qs('managerName').value = draft.managerName || "";
+    }
+
+    async function loadRoster(){
+      const res = await fetch(`${APPS_SCRIPT_URL}?mode=roster`);
+      const data = await res.json();
+      if(!data.ok) throw new Error(data.error || "Impossible de charger l'équipe.");
+      return data.roster || [];
+    }
+
+    function renderTeamList(roster, draft){
+      const box = qs('teamList');
+      if(!roster.length){
+        box.innerHTML = `<div class="muted">Aucun équipier dans la feuille Équipe.</div>`;
+        return;
+      }
+
+      box.innerHTML = roster.map(name => `
+        <label class="check">
+          <input type="checkbox" class="team-check" value="${escapeHtmlAttr(name)}" ${draft.selectedTeam.includes(name) ? 'checked' : ''}>
+          <span>${escapeHtml(name)}</span>
+        </label>
+      `).join('');
+
+      box.querySelectorAll('.team-check').forEach(el => {
+        el.addEventListener('change', saveDraft);
+      });
+    }
+
+    function prepareEvaluationFromDraft(draft){
+      const selected = draft.selectedTeam || [];
+      renderMemberCards(selected, draft.membersData || {});
+      saveDraft();
+    }
+
+    function renderMemberCards(selectedTeam, membersData){
+      const box = qs('membersContainer');
+
+      if(!selectedTeam.length){
+        box.innerHTML = `<div class="muted">Sélectionne l’équipe présente puis clique sur “Préparer l’évaluation”.</div>`;
+        return;
+      }
+
+      box.innerHTML = selectedTeam.map(name => memberCardHtml(name, membersData[name] || {})).join('');
+
+      box.querySelectorAll('input, select, textarea').forEach(el => {
+        el.addEventListener('input', () => {
+          updateAllScores();
+          saveDraft();
+        });
+        el.addEventListener('change', () => {
+          updateAllScores();
+          saveDraft();
+        });
+      });
+
+      updateAllScores();
+    }
+
+    function memberCardHtml(staff, data){
+      return `
+        <div class="member-card" data-staff="${escapeHtmlAttr(staff)}">
+          <div class="member-head">
+            <div>
+              <h3>${escapeHtml(staff)}</h3>
+              <div class="muted">Évaluation complète sur 100</div>
+            </div>
+            <div class="score-box">
+              <div style="font-size:12px;opacity:.9">SCORE</div>
+              <div class="member-total" style="font-size:28px">0</div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            ${QUESTION_CONFIG.map(q => `
+              <div class="question">
+                <div><b>${escapeHtml(q.label)}</b></div>
+                <div class="answers">
+                  <label>
+                    <input type="radio" name="${q.key}" value="yes" ${data[q.key] === 'yes' ? 'checked' : ''}>
+                    Oui (${q.yes > 0 ? '+' : ''}${q.yes})
+                  </label>
+                  <label>
+                    <input type="radio" name="${q.key}" value="no" ${data[q.key] === 'no' ? 'checked' : ''}>
+                    Non (${q.no > 0 ? '+' : ''}${q.no})
+                  </label>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="height:14px"></div>
+
+          <div class="grid-3">
+            <div class="criterion">
+              <label>Productivité</label>
+              <small>Cadence, efficacité, tenue du poste sur le flux du service — 20%</small>
+              <select name="productivity">
+                ${score5Options(data.productivity)}
+              </select>
+            </div>
+
+            <div class="criterion">
+              <label>Score de production à saisir</label>
+              <small>Note sur 10 — 20% (10/10 = 5/5)</small>
+              <input type="number" min="0" max="10" step="1" name="productionScore10" value="${escapeHtmlAttr(data.productionScore10 || '')}">
+            </div>
+
+            <div class="criterion">
+              <label>Polyvalence</label>
+              <small>Aide sur plusieurs postes, flexibilité sur le service — 15%</small>
+              <select name="versatility">
+                ${score5Options(data.versatility)}
+              </select>
+            </div>
+
+            <div class="criterion">
+              <label>Esprit d’équipe</label>
+              <small>Aide les collègues, communique bien, attitude positive — 15%</small>
+              <select name="teamwork">
+                ${score5Options(data.teamwork)}
+              </select>
+            </div>
+
+            <div class="criterion">
+              <label>Satisfaction client</label>
+              <small>Accueil, relation client, avis, réclamations, erreurs de service — 20%</small>
+              <select name="customer">
+                ${score5Options(data.customer)}
+              </select>
+            </div>
+
+            <div class="criterion">
+              <label>Casse</label>
+              <small>Pas de casse matériel dans le service — 10%</small>
+              <div class="answers">
+                <label>
+                  <input type="radio" name="breakage" value="yes" ${data.breakage === 'yes' ? 'checked' : ''}>
+                  Oui (5/5)
+                </label>
+                <label>
+                  <input type="radio" name="breakage" value="no" ${data.breakage === 'no' ? 'checked' : ''}>
+                  Non (0/5)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div style="height:14px"></div>
+
+          <div class="field">
+            <label>Commentaire manager</label>
+            <textarea name="comment" placeholder="Commentaire libre...">${escapeHtml(data.comment || '')}</textarea>
+          </div>
+
+          <div style="margin-top:12px" class="grid-3">
+            <div class="question"><b>Questions basiques</b><div class="muted member-basic">0 / 15</div></div>
+            <div class="question"><b>Critères pondérés</b><div class="muted member-weighted">0 / 85</div></div>
+            <div class="question"><b>Score final</b><div class="muted member-final">0 / 100</div></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function score5Options(selected){
+      const val = String(selected || '');
+      const options = ['<option value="">Choisir</option>'];
+      for(let i=0;i<=5;i++){
+        options.push(`<option value="${i}" ${val===String(i)?'selected':''}>${i} / 5</option>`);
+      }
+      return options.join('');
+    }
+
+    function yesNoPoints(value, yesPts, noPts){
+      if(value === 'yes') return yesPts;
+      if(value === 'no') return noPts;
+      return 0;
+    }
+
+    function num(v){
+      return Number(v || 0);
+    }
+
+    function clamp(n, min, max){
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function computeCardScore(card){
+      const qHands = getRadioValue(card, 'q_hands');
+      const qApron = getRadioValue(card, 'q_apron');
+      const qError = getRadioValue(card, 'q_error');
+      const qUniform = getRadioValue(card, 'q_uniform');
+      const qSmile = getRadioValue(card, 'q_smile');
+
+      const productivity = num(card.querySelector('[name="productivity"]')?.value);
+      const productionScore10 = num(card.querySelector('[name="productionScore10"]')?.value);
+      const versatility = num(card.querySelector('[name="versatility"]')?.value);
+      const teamwork = num(card.querySelector('[name="teamwork"]')?.value);
+      const customer = num(card.querySelector('[name="customer"]')?.value);
+      const breakage = getRadioValue(card, 'breakage');
+
+      const basicScore =
+        yesNoPoints(qHands, 2, -1) +
+        yesNoPoints(qApron, 5, -4) +
+        yesNoPoints(qError, -2, 3) +
+        yesNoPoints(qUniform, 3, -2) +
+        yesNoPoints(qSmile, 2, -1);
+
+      const productivityPts = (productivity / 5) * 20;
+      const productionPts = (clamp(productionScore10, 0, 10) / 10) * 20;
+      const versatilityPts = (versatility / 5) * 15;
+      const teamworkPts = (teamwork / 5) * 15;
+      const customerPts = (customer / 5) * 20;
+      const breakage5 = breakage === 'yes' ? 5 : 0;
+      const breakagePts = (breakage5 / 5) * 10;
+
+      const weightedScore = productivityPts + productionPts + versatilityPts + teamworkPts + customerPts + breakagePts;
+      const total = clamp(Math.round((basicScore + weightedScore) * 10) / 10, 0, 100);
+
+      return {
+        q_hands: qHands === 'yes' ? 2 : qHands === 'no' ? -1 : 0,
+        q_apron: qApron === 'yes' ? 5 : qApron === 'no' ? -4 : 0,
+        q_error: qError === 'yes' ? -2 : qError === 'no' ? 3 : 0,
+        q_uniform: qUniform === 'yes' ? 3 : qUniform === 'no' ? -2 : 0,
+        q_smile: qSmile === 'yes' ? 2 : qSmile === 'no' ? -1 : 0,
+        basicScore: Math.round(basicScore * 10) / 10,
+
+        productivity,
+        productionScore10: clamp(productionScore10, 0, 10),
+        versatility,
+        teamwork,
+        customer,
+        breakage5,
+
+        weightedScore: Math.round(weightedScore * 10) / 10,
+        total
+      };
+    }
+
+    function updateAllScores(){
+      document.querySelectorAll('.member-card').forEach(card => {
+        const s = computeCardScore(card);
+        card.querySelector('.member-total').textContent = Math.round(s.total);
+        card.querySelector('.member-basic').textContent = `${s.basicScore} / 15`;
+        card.querySelector('.member-weighted').textContent = `${s.weightedScore} / 85`;
+        card.querySelector('.member-final').textContent = `${s.total} / 100`;
+      });
+    }
+
+    function validateBeforeSubmit(){
+      if(!qs('serviceDate').value) return "Merci de choisir une date.";
+      if(!qs('serviceType').value) return "Merci de choisir le service.";
+      if(!qs('managerName').value) return "Merci de choisir le nom du manager.";
+
+      const cards = [...document.querySelectorAll('.member-card')];
+      if(!cards.length) return "Merci de préparer l’évaluation avec l’équipe présente.";
+
+      return "";
+    }
+
+    function buildPayloadRows(){
+      const serviceDate = qs('serviceDate').value;
+      const serviceType = qs('serviceType').value;
+      const managerName = qs('managerName').value;
+
+      return [...document.querySelectorAll('.member-card')].map(card => {
+        const staff = card.dataset.staff;
+        const score = computeCardScore(card);
+        const comment = card.querySelector('[name="comment"]')?.value || '';
+
+        return {
+          restaurant: "O'TACOS",
+          serviceDate,
+          serviceType,
+          manager: managerName,
+          staff,
+
+          q_hands: score.q_hands,
+          q_apron: score.q_apron,
+          q_error: score.q_error,
+          q_uniform: score.q_uniform,
+          q_smile: score.q_smile,
+          basicScore: score.basicScore,
+
+          productivity: score.productivity,
+          productionScore10: score.productionScore10,
+          versatility: score.versatility,
+          teamwork: score.teamwork,
+          customer: score.customer,
+          breakage5: score.breakage5,
+
+          weightedScore: score.weightedScore,
+          lineScore: score.total,
+          comment
+        };
+      });
+    }
+
+    async function submitService(){
+      clearStatus('topStatus');
+      clearStatus('bottomStatus');
+
+      const err = validateBeforeSubmit();
+      if(err){
+        showStatus('bottomStatus', 'err', err);
+        return;
+      }
+
+      if(!navigator.onLine){
+        showStatus('bottomStatus', 'warn', "Vous êtes hors connexion. La saisie reste enregistrée sur cet appareil jusqu’à l’envoi ou jusqu’à l’effacement manuel.");
+        saveDraft();
+        return;
+      }
+
+      const payload = {
+        action: "submitScores",
+        rows: buildPayloadRows()
+      };
+
+      try{
+        showOverlay(true);
+
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        const text = await res.text();
+        let data;
+        try{
+          data = JSON.parse(text);
+        }catch{
+          throw new Error("Réponse invalide du serveur.");
+        }
+
+        if(!data.ok){
+          throw new Error(data.error || "Enregistrement impossible.");
+        }
+
+        saveDraft();
+        showStatus('bottomStatus', 'ok', `Service enregistré avec succès. ${data.inserted} ligne(s) envoyée(s). Le brouillon reste conservé jusqu’à effacement manuel.`);
+      }catch(error){
+        saveDraft();
+        showStatus('bottomStatus', 'err', error.message || "Erreur lors de l’enregistrement.");
+      }finally{
+        showOverlay(false);
+      }
+    }
+
+    function clearAll(){
+      const ok = confirm("Voulez-vous vraiment tout effacer sur cette page ? Le brouillon local sera supprimé.");
+      if(!ok) return;
+
+      clearDraftStorage();
+
+      const draft = defaultDraft();
+      applyDraftToHeader(draft);
+
+      document.querySelectorAll('.team-check').forEach(ch => ch.checked = false);
+      qs('membersContainer').innerHTML = `<div class="muted">Sélectionne l’équipe présente puis clique sur “Préparer l’évaluation”.</div>`;
+
+      clearStatus('topStatus');
+      showStatus('bottomStatus', 'ok', "Le brouillon local a été effacé.");
+    }
+
+    async function init(){
+      try{
+        const draft = loadDraft();
+        applyDraftToHeader(draft);
+
+        const roster = await loadRoster();
+        renderTeamList(roster, draft);
+
+        qs('serviceDate').addEventListener('change', saveDraft);
+        qs('serviceType').addEventListener('change', saveDraft);
+        qs('managerName').addEventListener('change', saveDraft);
+
+        qs('prepareBtn').addEventListener('click', () => {
+          const currentDraft = collectDraftFromUI();
+          prepareEvaluationFromDraft(currentDraft);
+          showStatus('topStatus', 'ok', "Les fiches des équipiers présents sont prêtes.");
+        });
+
+        qs('saveBtn').addEventListener('click', submitService);
+        qs('clearBtn').addEventListener('click', clearAll);
+
+        if((draft.selectedTeam || []).length){
+          prepareEvaluationFromDraft(draft);
+        }
+      }catch(error){
+        showStatus('topStatus', 'err', error.message || "Impossible de charger la page.");
+      }
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function escapeHtmlAttr(str){
+      return escapeHtml(str);
+    }
+
+    window.addEventListener('online', () => {
+      showStatus('topStatus', 'ok', "Connexion rétablie. Le brouillon local est toujours présent et peut être envoyé.");
+    });
+
+    window.addEventListener('offline', () => {
+      saveDraft();
+      showStatus('topStatus', 'warn', "Vous êtes hors connexion. La saisie reste conservée localement.");
+    });
+
+    init();
   </script>
 </body>
 </html>
