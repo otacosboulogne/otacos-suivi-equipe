@@ -82,6 +82,7 @@
     .service-postes{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
     .post-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:#fff1dd;color:#8a4b00;border:1px solid #ffd8a8}
     .post-tag.zone-caisse{background:var(--blue-light);color:var(--blue);border-color:#b5d4f4}
+    .strikethrough{text-decoration:line-through}
     .answer-section{margin-top:8px}
     .answer-section-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
     .answer-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dashed #f0e8db;font-size:13px}
@@ -395,7 +396,7 @@
         return `
           <tr style="${isEliminated ? 'background-color:#fef3f2;color:#b42318' : ''}">
             <td>${idx + 1}</td>
-            <td><span style="${isEliminated ? 'text-decoration:line-through' : ''}">${escapeHtml(r.staff)}</span>${elimBadge}${reason}</td>
+            <td><span class="${isEliminated ? 'strikethrough' : ''}">${escapeHtml(r.staff)}</span>${elimBadge}${reason}</td>
             <td><b>${r.avgScoreBoosted}</b></td>
             <td>${r.productionBonus > 0 ? '+' + r.productionBonus : '—'}</td>
             <td>${r.avgPct}%</td>
