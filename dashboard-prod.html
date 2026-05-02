@@ -75,7 +75,7 @@
 </div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec"; 
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQzbs9zVUQXHpc1DmMXI4JAUlh2naT0dCLDIKVfas2UL3hmgXj8VOGJ51S2_phrbm3/exec"; 
   let rawData = [];
   let activeCharts = {};
 
@@ -83,7 +83,7 @@
     { id: 'chartScore', key: 'note', label: 'Score Global (/10)', full: true },
     { id: 'chartPoids', key: 'poids', label: 'Poids (g)', full: false },
     { id: 'chartTime', key: 'tempsSec', label: 'Temps (sec)', full: false },
-    { id: 'chartTaille', key: 'taille', label: 'Longueur (cm)', full: false },
+    { id: 'chartLongueur', key: 'longueur', label: 'Longueur (cm)', full: false },
     { id: 'chartLargeur', key: 'largeur', label: 'Largeur (cm)', full: false },
     { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur (cm)', full: true }
   ];
@@ -96,7 +96,7 @@
 
   async function init() {
     try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);
+      const res = await fetch(`${APPS_SCRIPT_URL}?mode=production`);
       const json = await res.json();
       if (!json.ok || !json.production) return;
       rawData = json.production;
@@ -115,7 +115,6 @@
 
   function parseVal(val) {
     if (val === undefined || val === null || val === "") return 0;
-    // Remplace la virgule par un point et force en nombre
     let n = parseFloat(String(val).replace(',', '.'));
     return isNaN(n) ? 0 : n;
   }
@@ -131,7 +130,7 @@
       finalData = dates.map(date => {
         const tests = filtered.filter(d => d.date === date);
         const avg = (k) => tests.reduce((a, c) => a + parseVal(c[k]), 0) / tests.length;
-        return { date, note: avg('note'), poids: avg('poids'), tempsSec: avg('tempsSec'), taille: avg('taille'), largeur: avg('largeur'), epaisseur: avg('epaisseur') };
+        return { date, note: avg('note'), poids: avg('poids'), tempsSec: avg('tempsSec'), longueur: avg('longueur'), largeur: avg('largeur'), epaisseur: avg('epaisseur') };
       });
     } else {
       finalData = filtered.filter(d => d.staff === staffVal).sort((a,b) => new Date(a.date) - new Date(b.date));
@@ -163,7 +162,7 @@
         maintainAspectRatio: false,
         scales: { 
           y: { 
-            beginAtZero: true, // L'échelle s'adapte toute seule à partir de 0
+            beginAtZero: false,
             grid: { color: '#f0f0f0' },
             ticks: { font: { weight: 'bold' } }
           }
