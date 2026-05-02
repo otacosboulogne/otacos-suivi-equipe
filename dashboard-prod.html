@@ -5,36 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analytics Production - O'Tacos</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Ajout de SlimSelect pour une liste déroulante multi-sélection élégante -->
+  <!-- SlimSelect pour une liste multi-sélection élégante -->
   <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet">
   <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
   
   <style>
-    :root {
-      --orange: #f08a00; --blue: #185fa5; --bg: #fdfaf7; --card: #ffffff; --line: #e2d8ce;
-    }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: #1a1c1e; margin: 0; padding: 20px; }
+    :root { --orange: #f08a00; --blue: #185fa5; --bg: #fdfaf7; --card: #ffffff; --line: #e2d8ce; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: #1a1c1e; margin: 0; padding: 20px; }
     .container { max-width: 1300px; margin: 0 auto; }
-    
-    /* Header & Logo */
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; gap: 20px; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
     .logo-area { display: flex; align-items: center; gap: 15px; }
     .logo-area img { width: 60px; height: 60px; border-radius: 12px; border: 1px solid var(--line); background: #fff; padding: 5px; }
-    
-    /* Filtres */
     .filter-card { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--line); margin-bottom: 25px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-    
-    /* Charts */
     .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
     .chart-box { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,0.03); min-height: 400px; }
     .full-width { grid-column: span 2; }
     h2 { font-size: 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--blue); }
-
-    /* Bouton */
-    .btn-nav { padding: 12px 20px; border-radius: 12px; border: 1px solid var(--line); background: #fff; text-decoration: none; color: #444; font-weight: 600; transition: 0.2s; }
-    .btn-nav:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
-
-    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } .full-width { grid-column: span 1; } .filter-card { grid-template-columns: 1fr; } }
+    .btn-nav { padding: 12px 20px; border-radius: 12px; border: 1px solid var(--line); background: #fff; text-decoration: none; color: #444; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -65,48 +52,46 @@
   </div>
 
   <div class="main-grid">
-    <!-- Graphique Global -->
     <div class="chart-box full-width">
       <h2>⭐ Évolution du Score Global (/10)</h2>
       <canvas id="chartScore"></canvas>
     </div>
-
-    <!-- Graphiques par Items -->
     <div class="chart-box">
       <h2>⚖️ Précision du Poids (Cible 300g)</h2>
       <canvas id="chartPoids"></canvas>
     </div>
-
     <div class="chart-box">
       <h2>⏱️ Rapidité (Secondes)</h2>
       <canvas id="chartTemps"></canvas>
-    </div>
-
-    <div class="chart-box full-width">
-      <h2>📊 Conformité par Critère (%)</h2>
-      <canvas id="chartRadar"></canvas>
     </div>
   </div>
 </div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec"; // Remplace par ton URL v4
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec";
   let rawData = [];
-  let staffSelector, scoreChart, poidsChart, tempsChart, radarChart;
+  let staffSelector, scoreChart, poidsChart, tempsChart;
 
   async function init() {
     try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);[cite: 4]
+      // APPEL DU SCRIPT
+      const res = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);
       const json = await res.json();
-      if (!json.ok) return;
-      rawData = json.data;
+      
+      // CORRECTION : Ton JSON utilise "production", pas "data"
+      if (!json.ok || !json.production) {
+        console.error("Données invalides", json);
+        return;
+      }
+      
+      rawData = json.production;
 
-      // Init multi-sélecteur
+      // Initialisation du sélecteur avec les noms reçus (Usman, Fanny...)
       const staffs = [...new Set(rawData.map(d => d.staff))];
       staffSelector = new SlimSelect({
         select: '#staffSelect',
         data: staffs.map(s => ({ text: s, value: s })),
-        onChange: () => updateDashboard()
+        events: { afterChange: () => updateDashboard() }
       });
 
       updateDashboard();
@@ -115,25 +100,20 @@
 
   function updateDashboard() {
     const selectedStaffs = staffSelector.getSelected();
-    let filtered = rawData;
-    
-    if (selectedStaffs.length > 0) {
-      filtered = rawData.filter(d => selectedStaffs.includes(d.staff));
-    }
+    let filtered = (selectedStaffs.length > 0) 
+      ? rawData.filter(d => selectedStaffs.includes(d.staff)) 
+      : rawData;
 
-    // Tri par date pour les graphiques
-    filtered.sort((a, b) => new Date(a.testDate) - new Date(b.testDate));
+    // Tri par date
+    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     renderScoreChart(filtered, selectedStaffs);
-    renderPoidsChart(filtered, selectedStaffs);
-    renderTempsChart(filtered, selectedStaffs);
-    renderRadarChart(filtered);
+    renderPoidsChart(filtered);
+    renderTempsChart(filtered);
   }
 
-  // --- CONFIGURATION DES GRAPHIQUES (HAUTE QUALITÉ) ---
-
   function renderScoreChart(data, selected) {
-    const ctx = document.getElementById('chartScore');
+    const ctx = document.getElementById('chartScore').getContext('2d');
     if (scoreChart) scoreChart.destroy();
 
     const datasets = selected.length === 0 ? [{
@@ -141,94 +121,45 @@
       data: data.map(d => d.note),
       borderColor: '#f08a00',
       backgroundColor: 'rgba(240, 138, 0, 0.1)',
-      fill: true,
-      tension: 0.4
+      fill: true, tension: 0.4
     }] : selected.map(name => ({
       label: name,
       data: data.filter(d => d.staff === name).map(d => d.note),
-      borderColor: '#' + Math.floor(Math.random()*16777215).toString(16), // Couleur aléatoire par équipier
+      borderColor: '#' + Math.floor(Math.random()*16777215).toString(16),
       tension: 0.4
     }));
 
     scoreChart = new Chart(ctx, {
       type: 'line',
-      data: { labels: data.map(d => new Date(d.testDate).toLocaleDateString()), datasets },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+      data: { labels: data.map(d => d.date), datasets },
+      options: { responsive: true, maintainAspectRatio: false }
     });
   }
 
-  function renderPoidsChart(data, selected) {
-    const ctx = document.getElementById('chartPoids');
+  function renderPoidsChart(data) {
+    const ctx = document.getElementById('chartPoids').getContext('2d');
     if (poidsChart) poidsChart.destroy();
-
     poidsChart = new Chart(ctx, {
-      type: 'scatter',
-      data: {
-        datasets: [{
-          label: 'Tests (Cible 300g)',
-          data: data.map(d => ({ x: new Date(d.testDate), y: d.poids })),
-          backgroundColor: '#185fa5'
-        }]
-      },
-      options: {
-        scales: { 
-          y: { min: 250, max: 350, title: { display: true, text: 'Grammes' } },
-          x: { type: 'category', labels: data.map(d => new Date(d.testDate).toLocaleDateString()) }
-        }
-      }
-    });
-  }
-
-  function renderTempsChart(data, selected) {
-    const ctx = document.getElementById('chartTemps');
-    if (tempsChart) tempsChart.destroy();
-
-    tempsChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.map(d => new Date(d.testDate).toLocaleDateString()),
-        datasets: [{
-          label: 'Temps de préparation (s)',
-          data: data.map(d => d.tempsSec),
-          backgroundColor: data.map(d => d.tempsSec > 60 ? '#b42318' : '#067647')
-        }]
+        labels: data.map(d => d.staff),
+        datasets: [{ label: 'Note Performance', data: data.map(d => d.note), backgroundColor: '#185fa5' }]
       }
     });
   }
 
-  function renderRadarChart(data) {
-    const ctx = document.getElementById('chartRadar');
-    if (radarChart) radarChart.destroy();
-
-    // Calcul des moyennes par critère décodé du JSON 'details'
-    const criteria = { croisillons: 0, emballage: 0, sauces: 0, poids_ok: 0 };
-    data.forEach(d => {
-      const det = typeof d.details === 'string' ? JSON.parse(d.details) : d.details;[cite: 4]
-      if (det.croisillons?.includes('1/1')) criteria.croisillons++;
-      if (det.emballage?.includes('1/1')) criteria.emballage++;
-      if (det.sauces?.includes('1/1')) criteria.sauces++;
-      if (det.poids?.includes('2/2')) criteria.poids_ok++;
-    });
-
-    const count = data.length || 1;
-    radarChart = new Chart(ctx, {
-      type: 'radar',
+  function renderTempsChart(data) {
+    const ctx = document.getElementById('chartTemps').getContext('2d');
+    if (tempsChart) tempsChart.destroy();
+    tempsChart = new Chart(ctx, {
+      type: 'doughnut',
       data: {
-        labels: ['Croisillons', 'Emballage', 'Sauces', 'Poids Conforme'],
+        labels: [...new Set(data.map(d => d.staff))],
         datasets: [{
-          label: '% de réussite',
-          data: [
-            (criteria.croisillons/count)*100,
-            (criteria.emballage/count)*100,
-            (criteria.sauces/count)*100,
-            (criteria.poids_ok/count)*100
-          ],
-          backgroundColor: 'rgba(24, 95, 165, 0.2)',
-          borderColor: '#185fa5',
-          pointBackgroundColor: '#185fa5'
+          data: [...new Set(data.map(d => d.staff))].map(s => data.filter(x => x.staff === s).length),
+          backgroundColor: ['#f08a00', '#185fa5', '#e2d8ce']
         }]
-      },
-      options: { scales: { r: { min: 0, max: 100 } } }
+      }
     });
   }
 
