@@ -37,7 +37,7 @@
     th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
     th{color:#5e6570;font-size:12px;font-weight:700}
     .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;font-weight:900;font-size:13px}
-    select,input[type="text"],input[type="password"],textarea{padding:12px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;font-size:15px}
+    select,input[type="text"],input[type="password"],input[type="date"],textarea{padding:12px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;font-size:15px}
     textarea{min-height:60px;resize:vertical;width:100%}
     .empty{color:var(--muted);font-size:14px}
     .entry{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;background:#fffdf9}
@@ -48,25 +48,15 @@
     .btn-secondary{background:#fff4e6;color:#8a4b00;border:1px solid #ffd8a8}
     .btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
 
-    /* Lignes éliminées */
-    tr.eliminated{background:#fef3f2}
-    tr.eliminated td{color:var(--danger)}
+    /* Lignes éliminées — important pour que le fond rouge soit bien visible */
+    tr.eliminated{background:#fef3f2 !important}
+    tr.eliminated td{color:var(--danger) !important}
     tr.eliminated .name-col{text-decoration:line-through}
     .elim-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#fecdca;color:#7f1d1d;margin-left:6px}
     .elim-reason{display:block;font-size:11px;color:#991b1b;font-style:italic;margin-top:3px;text-decoration:none}
     .winner-trophy{display:inline-block;margin-left:6px}
     .winner-note{font-size:12px;color:#8a4b00;font-style:italic;margin-top:10px;padding:8px 10px;background:#fff4e6;border:1px solid #ffd8a8;border-radius:10px}
 
-.eliminated {
-  background: #fee2e2;
-  border: 2px solid #dc2626;
-  color: #991b1b;
-  border-radius: 10px;
-  padding: 10px;
-}
-    
-    /* Bloc évaluation détaillée */
-    .eval-detail{margin-bottom:14px}
     .eval-staff{font-size:18px;font-weight:800}
     .eval-meta{font-size:13px;color:var(--muted);margin-top:2px;margin-bottom:10px}
     .service-block{padding:14px;border-radius:14px;background:#fff;border:1px solid var(--line);margin-bottom:10px}
@@ -91,7 +81,13 @@
     .filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
     .filter-bar select,.filter-bar input{flex:1;min-width:160px}
 
-    /* Modale */
+    /* Production ranking */
+    .prod-row{padding:10px 8px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .prod-rank-num{font-weight:900;font-size:16px;color:var(--orange);min-width:30px}
+    .prod-rank-name{flex:1;font-weight:700}
+    .prod-rank-stats{font-size:13px;color:var(--muted)}
+    .prod-rank-note{font-weight:900;color:var(--orange)}
+
     .overlay{position:fixed;inset:0;background:rgba(16,21,29,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:14px}
     .overlay.show{display:flex}
     .modal{background:#fff;border-radius:18px;padding:20px;box-shadow:0 30px 70px rgba(0,0,0,.2);max-width:600px;width:100%;max-height:88vh;overflow-y:auto}
@@ -112,6 +108,19 @@
     .elim-date{font-size:11px;color:var(--muted);margin-top:2px}
     .elim-criteria{font-size:12px;margin-top:4px}
     .elim-comment{font-size:11px;color:#666;margin-top:3px;font-style:italic}
+
+    .admin-tabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:1px solid var(--line);overflow-x:auto}
+    .admin-tab{padding:10px 14px;cursor:pointer;font-weight:700;font-size:13px;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap}
+    .admin-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+    .admin-pane{display:none}
+    .admin-pane.active{display:block}
+
+    .prod-history-row{padding:10px;border:1px solid var(--line);border-radius:12px;margin-bottom:6px;background:#fffdf9}
+    .prod-history-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+    .prod-history-staff{font-weight:800;font-size:14px}
+    .prod-history-note{font-weight:900;color:var(--orange);font-size:14px}
+    .prod-history-meta{font-size:12px;color:var(--muted)}
+    .prod-history-detail{font-size:12px;color:var(--text);margin-top:6px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px 12px}
   </style>
 </head>
 <body>
@@ -127,7 +136,7 @@
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center" id="topActions">
           <a class="btn-back" href="https://otacosboulogne.github.io/otacos-suivi-equipe/">↩ Retour saisie</a>
-          <button class="btn-admin" id="adminBtn" type="button">🔒 Espace directeur</button>
+          <button class="btn-admin" id="adminBtn" type="button">🔒 Accès administrateur</button>
           <select id="monthSelect"></select>
         </div>
       </div>
@@ -152,6 +161,7 @@
               <th>Rang</th>
               <th>Équipier</th>
               <th>Score moy.</th>
+              <th>Bonus prod</th>
               <th>%</th>
               <th>Services</th>
             </tr>
@@ -167,6 +177,13 @@
     </div>
 
     <section class="card">
+      <div class="top" style="margin-bottom:10px">
+        <div style="font-size:18px;font-weight:800">🥙 Classement Challenge production</div>
+      </div>
+      <div id="prodRanking"><div class="empty">Aucun test production ce mois.</div></div>
+    </section>
+
+    <section class="card">
       <div style="font-size:18px;font-weight:800;margin-bottom:10px">Dernière évaluation détaillée par équipier</div>
       <div class="filter-bar">
         <input type="text" id="filterStaff" placeholder="Filtrer par nom d'équipier..." />
@@ -180,13 +197,12 @@
     </section>
   </div>
 
-  <!-- MODALE LOGIN ADMIN -->
   <div class="overlay" id="loginOverlay">
     <div class="modal">
-      <h2>🔒 Espace directeur</h2>
+      <h2>🔒 Accès administrateur</h2>
       <div class="modal-row">
         <label for="adminPwd">Mot de passe</label>
-        <input type="password" id="adminPwd" placeholder="Saisissez le mot de passe directeur" />
+        <input type="password" id="adminPwd" placeholder="Mot de passe" autocomplete="off" />
       </div>
       <div class="modal-btns">
         <button class="btn btn-secondary" id="cancelLoginBtn" type="button">Annuler</button>
@@ -196,58 +212,93 @@
     </div>
   </div>
 
-  <!-- MODALE ÉLIMINATIONS -->
   <div class="overlay" id="adminOverlay">
-    <div class="modal" style="max-width:720px">
-      <h2>Gestion des éliminations — <span id="adminMonthLabel">—</span></h2>
-      <div style="background:#fff7ed;border:1px solid #ffd8a8;border-radius:12px;padding:10px;margin-bottom:14px;font-size:13px;color:#8a4b00">
-        L'équipier éliminé apparaît dans le classement avec son nom barré. Le trophée passe au suivant.
+    <div class="modal" style="max-width:760px">
+      <h2>Espace administrateur — <span id="adminMonthLabel">—</span></h2>
+
+      <div class="admin-tabs">
+        <div class="admin-tab active" data-tab="elim">Éliminations</div>
+        <div class="admin-tab" data-tab="prodHistory">Historique production</div>
+        <div class="admin-tab" data-tab="security">Sécurité</div>
       </div>
 
-      <div class="modal-row">
-        <label for="elimStaff">Équipier à éliminer</label>
-        <select id="elimStaff">
-          <option value="">— Choisir un équipier —</option>
-        </select>
-      </div>
+      <div class="admin-pane active" data-pane="elim">
+        <div style="background:#fff7ed;border:1px solid #ffd8a8;border-radius:12px;padding:10px;margin-bottom:14px;font-size:13px;color:#8a4b00">
+          L'équipier éliminé apparaît dans le classement avec son nom barré sur fond rouge. Le trophée passe au suivant.
+        </div>
+        <div class="modal-row">
+          <label for="elimStaff">Équipier à éliminer</label>
+          <select id="elimStaff"><option value="">— Choisir —</option></select>
+        </div>
+        <div class="modal-row">
+          <label>Critères éliminatoires (cocher au moins un)</label>
+          <div class="checks-grid" id="elimCriteriaList">
+            <label class="check-row"><input type="checkbox" value="Refus de poste / insubordination"> Refus de poste / insubordination</label>
+            <label class="check-row"><input type="checkbox" value="Attitude grave envers client/collègue"> Attitude grave envers client/collègue</label>
+            <label class="check-row"><input type="checkbox" value="Absence non justifiée"> Absence non justifiée</label>
+            <label class="check-row"><input type="checkbox" value="Retard répétitif"> Retard répétitif</label>
+            <label class="check-row"><input type="checkbox" value="Absence justifiée +10 jours dans le mois"> Absence justifiée +10 jours dans le mois</label>
+          </div>
+        </div>
+        <div class="modal-row">
+          <label for="elimComment">Commentaire libre (optionnel)</label>
+          <textarea id="elimComment" placeholder="Précisions, dates, contexte..."></textarea>
+        </div>
+        <div class="modal-btns">
+          <button class="btn btn-primary" id="saveElimBtn" type="button">Enregistrer l'élimination</button>
+        </div>
+        <div id="adminStatus"></div>
 
-      <div class="modal-row">
-        <label>Critères éliminatoires (cocher au moins un)</label>
-        <div class="checks-grid" id="elimCriteriaList">
-          <label class="check-row"><input type="checkbox" value="Refus de poste / insubordination"> Refus de poste / insubordination</label>
-          <label class="check-row"><input type="checkbox" value="Attitude grave envers client/collègue"> Attitude grave envers client/collègue</label>
-          <label class="check-row"><input type="checkbox" value="Absence non justifiée"> Absence non justifiée</label>
-          <label class="check-row"><input type="checkbox" value="Retard répétitif"> Retard répétitif</label>
-          <label class="check-row"><input type="checkbox" value="Absence justifiée +10 jours dans le mois"> Absence justifiée +10 jours dans le mois</label>
+        <div style="margin-top:20px">
+          <h3 style="margin:0 0 8px 0;font-size:15px">Éliminations du mois</h3>
+          <div id="elimList" class="elim-list"></div>
         </div>
       </div>
 
-      <div class="modal-row">
-        <label for="elimComment">Commentaire libre (optionnel)</label>
-        <textarea id="elimComment" placeholder="Précisions, dates, contexte..."></textarea>
+      <div class="admin-pane" data-pane="prodHistory">
+        <div class="filter-bar" style="margin-bottom:12px">
+          <select id="prodHistoryMonth"></select>
+          <input type="text" id="prodHistoryStaff" placeholder="Filtrer par nom..." />
+        </div>
+        <div id="prodHistoryList"></div>
       </div>
 
-      <div class="modal-btns">
+      <div class="admin-pane" data-pane="security">
+        <div style="background:#fff7ed;border:1px solid #ffd8a8;border-radius:12px;padding:10px;margin-bottom:14px;font-size:13px;color:#8a4b00">
+          Le directeur peut changer les mots de passe ici. Stockage hashé (SHA-256) côté serveur.
+        </div>
+        <div class="modal-row">
+          <label for="pwdType">Type de mot de passe</label>
+          <select id="pwdType">
+            <option value="admin">Administrateur (espace admin / paramètres)</option>
+            <option value="override">Override (modifier un service clôturé)</option>
+          </select>
+        </div>
+        <div class="modal-row">
+          <label for="newPwd">Nouveau mot de passe (6 caractères minimum)</label>
+          <input type="password" id="newPwd" placeholder="Nouveau mot de passe" />
+        </div>
+        <div class="modal-row">
+          <label for="newPwd2">Confirmer le mot de passe</label>
+          <input type="password" id="newPwd2" placeholder="Confirmation" />
+        </div>
+        <div class="modal-btns">
+          <button class="btn btn-primary" id="changePwdBtn" type="button">Changer le mot de passe</button>
+        </div>
+        <div id="securityStatus"></div>
+      </div>
+
+      <div class="modal-btns" style="margin-top:14px">
         <button class="btn btn-secondary" id="closeAdminBtn" type="button">Fermer</button>
-        <button class="btn btn-primary" id="saveElimBtn" type="button">Enregistrer l'élimination</button>
-      </div>
-      <div id="adminStatus"></div>
-
-      <div style="margin-top:20px">
-        <h3 style="margin:0 0 8px 0;font-size:15px">Éliminations du mois</h3>
-        <div id="elimList" class="elim-list"><div class="empty">Aucune élimination enregistrée pour ce mois.</div></div>
       </div>
     </div>
   </div>
 
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH8BAyPtgmnpgXdQFCSKF0ORm5Ern09hUFIW5sqll25jF3j0VAM8_Wrq1nqDxihW8Z/exec";
-    const ADMIN_PASSWORD = "Otacos2026!";
-    const VIEW_MODE = "manager"; // "manager" ou "equipier"
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyF8a4Z1R9Shoj08pTYjzbvXUtQyT4rN2sqpWrN4Uq9hjFUoP1wT7UGhpfCtxiY_USc/exec";
+    const VIEW_MODE = "manager";
 
-    // Liste des questions (synchronisée avec index.html)
     const QUESTIONS_LIST = [
-      // COMMUN
       { key:"c_tenue",      label:"Tenue propre et hygiène corporelle irréprochable", poste:"commun" },
       { key:"c_mains",      label:"Lavage des mains systématique", poste:"commun" },
       { key:"c_concentre",  label:"Resté concentré, pas de discussions inutiles", poste:"commun" },
@@ -260,7 +311,6 @@
       { key:"c_epack",      label:"Validation Epack hygiène", poste:"commun" },
       { key:"c_dlc",        label:"DLC posées sans qu'on lui demande", poste:"commun" },
       { key:"c_traca",      label:"Traçabilité faite systématiquement", poste:"commun" },
-      // CAISSE
       { key:"p_caisse_accueil",       label:"Accueil avec discours O'Tacos", poste:"caisse" },
       { key:"p_caisse_boisson",       label:"Boisson remise sans retour client", poste:"caisse" },
       { key:"p_caisse_fidelite",      label:"Programme fidélité proposé aux bornes", poste:"caisse" },
@@ -273,7 +323,6 @@
       { key:"p_caisse_glace",         label:"Préparation glace & O'Shake conforme", poste:"caisse" },
       { key:"p_caisse_priorite",      label:"Ordre de priorité respecté (WC, salle…)", poste:"caisse" },
       { key:"p_caisse_avis",          label:"Avis Google 5★ sur le service", poste:"caisse" },
-      // OUVERTURE CAISSE
       { key:"p_ouv_vitrine",  label:"Vitrine remplie et bien présentée", poste:"ouverture" },
       { key:"p_ouv_lumieres", label:"Lumières, écrans, vitrine, bornes allumés", poste:"ouverture" },
       { key:"p_ouv_machine",  label:"Machine à glace propre + température prise", poste:"ouverture" },
@@ -281,7 +330,6 @@
       { key:"p_ouv_drapeau",  label:"Drapeau sorti", poste:"ouverture" },
       { key:"p_ouv_terrasse", label:"Terrasse mise et propre (été)", poste:"ouverture" },
       { key:"p_ouv_dlc",      label:"DLC conformes", poste:"ouverture" },
-      // FERMETURE CAISSE
       { key:"p_ferm_c_terrasse",   label:"Terrasse rangée (été)", poste:"fermeture_c" },
       { key:"p_ferm_c_extinction", label:"Écrans/enseigne éteints, bornes en veille", poste:"fermeture_c" },
       { key:"p_ferm_c_plateau",    label:"Plateau propre, frigo boisson rempli", poste:"fermeture_c" },
@@ -289,13 +337,11 @@
       { key:"p_ferm_c_dlc",        label:"DLC conformes", poste:"fermeture_c" },
       { key:"p_ferm_c_machine",    label:"Machine à glace en veille, tapping couvert", poste:"fermeture_c" },
       { key:"p_ferm_c_timing",     label:"Timing fermeture conforme", poste:"fermeture_c" },
-      // FRITURE & CUISSON
       { key:"p_frit_programmes", label:"Programmes appropriés respectés", poste:"friture" },
       { key:"p_frit_rupture",    label:"Pas de rupture friture / blocage prod", poste:"friture" },
       { key:"p_frit_viande",     label:"Viandes/fromagère lancées en temps", poste:"friture" },
       { key:"p_frit_tickets",    label:"Tickets regardés régulièrement", poste:"friture" },
       { key:"p_frit_appro",      label:"Approvisionnement frigo / suppléments", poste:"friture" },
-      // TOASTER
       { key:"p_toast_qualite",   label:"Tacos bien toastés, croisillons visibles", poste:"toaster" },
       { key:"p_toast_rythme",    label:"Rythme au toaster sans blocage", poste:"toaster" },
       { key:"p_toast_gratin",    label:"Gratinage conforme", poste:"toaster" },
@@ -304,7 +350,6 @@
       { key:"p_toast_discours",  label:"Discours client (regard, sourire)", poste:"toaster" },
       { key:"p_toast_appel",     label:"Appel caisse dès commande prête", poste:"toaster" },
       { key:"p_toast_verif",     label:"Vérification commande avant remise", poste:"toaster" },
-      // ENVOI
       { key:"p_envoi_rythme",  label:"Rythme à l'envoi sans blocage", poste:"envoi" },
       { key:"p_envoi_commu",   label:"Bonne communication pliage / friture", poste:"envoi" },
       { key:"p_envoi_ordre",   label:"Ordre tickets respecté (C&C/Uber/resto)", poste:"envoi" },
@@ -312,20 +357,17 @@
       { key:"p_envoi_lance",   label:"Regarde ce qu'il faut lancer", poste:"envoi" },
       { key:"p_envoi_viande",  label:"Prévient niveaux de viandes", poste:"envoi" },
       { key:"p_envoi_avance",  label:"Avance gratinages + pots de sauces", poste:"envoi" },
-      // PLIAGE
       { key:"p_pliage_qualite", label:"Tacos bien pliés", poste:"pliage" },
       { key:"p_pliage_rythme",  label:"Rythme au pliage sans blocage", poste:"pliage" },
       { key:"p_pliage_propre",  label:"Zone pliage nettoyée régulièrement", poste:"pliage" },
       { key:"p_pliage_louche",  label:"Louche bleue pour fromagère/petit tacos", poste:"pliage" },
       { key:"p_pliage_avance",  label:"Avance frites/finger food au toaster", poste:"pliage" },
       { key:"p_pliage_dose",    label:"Pas de surdosage frites/fromagère", poste:"pliage" },
-      // PRÉPA MATIN
       { key:"p_prepa_m_dlc",     label:"DLC posées dès l'ouverture", poste:"prepa_matin" },
       { key:"p_prepa_m_epack",   label:"Epack hygiène à jour", poste:"prepa_matin" },
       { key:"p_prepa_m_stock",   label:"Stocks préparés avant ouverture", poste:"prepa_matin" },
       { key:"p_prepa_m_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_matin" },
       { key:"p_prepa_m_decong",  label:"Process décongélation respecté", poste:"prepa_matin" },
-      // PRÉPA SOIR
       { key:"p_prepa_s_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_soir" },
       { key:"p_prepa_s_plonge",  label:"Plonge faite, plateaux gastro rangés", poste:"prepa_soir" },
       { key:"p_prepa_s_dlc",     label:"DLC et traçabilités à jour", poste:"prepa_soir" },
@@ -333,12 +375,10 @@
       { key:"p_prepa_s_frigo",   label:"Frigo, emballages, suppléments remplis", poste:"prepa_soir" },
       { key:"p_prepa_s_epack",   label:"Epack hygiène à jour", poste:"prepa_soir" },
       { key:"p_prepa_s_propre",  label:"Zone cuisine et plonge propres", poste:"prepa_soir" },
-      // FERMETURE CUISINE
       { key:"p_ferm_k_cello",   label:"Produits cellophanés et DLC conformes", poste:"fermeture_k" },
       { key:"p_ferm_k_timing",  label:"Timing fermeture conforme", poste:"fermeture_k" },
       { key:"p_ferm_k_decong",  label:"Process décongélation respecté", poste:"fermeture_k" },
       { key:"p_ferm_k_chambre", label:"Produits rangés en chambre + et −", poste:"fermeture_k" },
-      // RÉCEPTION LIVRAISON
       { key:"p_recep_verif",  label:"Livraison vérifiée (quantités, état, T°)", poste:"reception" },
       { key:"p_recep_fifo",   label:"Rangement FIFO immédiat", poste:"reception" },
       { key:"p_recep_carton", label:"Cartons pliés et mis en poubelle", poste:"reception" },
@@ -346,30 +386,24 @@
       { key:"p_recep_signal", label:"Produit non conforme signalé au manager", poste:"reception" },
     ];
 
-    const POSTES_LABELS = {
-      caisse:"Caisse", ouverture:"Ouverture caisse", fermeture_c:"Fermeture caisse",
-      friture:"Friture & cuisson", toaster:"Toaster", envoi:"Envoi", pliage:"Pliage",
-      prepa_matin:"Prépa matin", prepa_soir:"Prépa soir", fermeture_k:"Fermeture cuisine",
-      reception:"Réception livraison"
-    };
-    const POSTES_ZONE = {
-      caisse:"caisse", ouverture:"caisse", fermeture_c:"caisse",
-      friture:"cuisine", toaster:"cuisine", envoi:"cuisine", pliage:"cuisine",
-      prepa_matin:"cuisine", prepa_soir:"cuisine", fermeture_k:"cuisine", reception:"cuisine"
-    };
+    const POSTES_LABELS = { caisse:"Caisse", ouverture:"Ouverture caisse", fermeture_c:"Fermeture caisse", friture:"Friture & cuisson", toaster:"Toaster", envoi:"Envoi", pliage:"Pliage", prepa_matin:"Prépa matin", prepa_soir:"Prépa soir", fermeture_k:"Fermeture cuisine", reception:"Réception livraison" };
+    const POSTES_ZONE = { caisse:"caisse", ouverture:"caisse", fermeture_c:"caisse", friture:"cuisine", toaster:"cuisine", envoi:"cuisine", pliage:"cuisine", prepa_matin:"cuisine", prepa_soir:"cuisine", fermeture_k:"cuisine", reception:"cuisine" };
 
-    let isAdminAuthenticated = false;
+    let adminToken = null;
     let currentEliminations = [];
     let currentRanking = [];
     let currentLatestEntries = [];
+    let allProductionData = [];
 
     function qs(id){ return document.getElementById(id); }
     function escapeHtml(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
     function showStatus(id, type, message){
-      const el = qs(id);
-      if(!el) return;
+      const el = qs(id); if(!el) return;
       el.innerHTML = `<div class="status ${type}">${escapeHtml(message)}</div>`;
       setTimeout(()=>{ if(el.firstChild) el.innerHTML=''; }, 4000);
+    }
+    function getFingerprint_(){
+      return (navigator.userAgent + screen.width + screen.height).split('').reduce((a,c)=>{a=((a<<5)-a)+c.charCodeAt(0);return a&a},0).toString(36);
     }
 
     function applyViewMode(){
@@ -385,34 +419,14 @@
         const res = await fetch(`${APPS_SCRIPT_URL}?mode=months`);
         const data = await res.json();
         const months = (data.months || []).sort().reverse();
-        if(!months.length){
-          const fallback = currentMonth();
-          addMonthOption(sel, fallback);
-          sel.value = fallback;
-        }else{
-          months.forEach(m => addMonthOption(sel, m));
-          sel.value = months[0];
-        }
-      }catch{
-        const fallback = currentMonth();
-        addMonthOption(sel, fallback);
-        sel.value = fallback;
-      }
+        if(!months.length){ const f=currentMonth(); addMonthOption(sel,f); sel.value=f; }
+        else{ months.forEach(m=>addMonthOption(sel,m)); sel.value=months[0]; }
+      }catch{ const f=currentMonth(); addMonthOption(sel,f); sel.value=f; }
       sel.addEventListener('change', loadDashboard);
       loadDashboard();
     }
-
-    function currentMonth(){
-      const now = new Date();
-      return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-    }
-
-    function addMonthOption(select, value){
-      const opt = document.createElement('option');
-      opt.value = value;
-      opt.textContent = value;
-      select.appendChild(opt);
-    }
+    function currentMonth(){ const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; }
+    function addMonthOption(sel, val){ const o=document.createElement('option'); o.value=val; o.textContent=val; sel.appendChild(o); }
 
     async function loadDashboard(){
       const month = qs('monthSelect').value;
@@ -421,20 +435,17 @@
       if(adminLabel) adminLabel.textContent = month;
 
       try{
-        const [dashboardRes, elimRes] = await Promise.all([
+        const [dashRes, elimRes] = await Promise.all([
           fetch(`${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`),
           fetch(`${APPS_SCRIPT_URL}?mode=eliminations&month=${encodeURIComponent(month)}`).catch(()=>null)
         ]);
 
-        const data = await dashboardRes.json();
+        const data = await dashRes.json();
         if(data.ok === false) throw new Error(data.error || 'Erreur backend');
 
         let eliminations = [];
         if(elimRes){
-          try{
-            const elimData = await elimRes.json();
-            if(elimData.ok !== false) eliminations = elimData.eliminations || [];
-          }catch{}
+          try{ const e=await elimRes.json(); if(e.ok!==false) eliminations = e.eliminations||[]; }catch{}
         }
 
         currentEliminations = eliminations;
@@ -442,20 +453,21 @@
         currentLatestEntries = data.latestEntries || [];
 
         renderDashboard(data, month, eliminations);
+        renderProdRanking(data.productionRanking || []);
         renderLatestEntries();
       }catch(err){
         renderEmpty(err.message);
       }
     }
 
-    function renderEmpty(message){
+    function renderEmpty(msg){
       qs('winnerName').textContent='—';
       qs('winnerScore').textContent='0';
       qs('servicesCount').textContent='0';
       qs('staffCount').textContent='0';
-      qs('rankingBody').innerHTML=`<tr><td colspan="5" class="empty">${escapeHtml(message)}</td></tr>`;
-      qs('winnerCard').innerHTML=`<div class="empty">${escapeHtml(message)}</div>`;
-      qs('latestEntries').innerHTML=`<div class="empty">${escapeHtml(message)}</div>`;
+      qs('rankingBody').innerHTML=`<tr><td colspan="6" class="empty">${escapeHtml(msg)}</td></tr>`;
+      qs('winnerCard').innerHTML=`<div class="empty">${escapeHtml(msg)}</div>`;
+      qs('latestEntries').innerHTML=`<div class="empty">${escapeHtml(msg)}</div>`;
     }
 
     function renderDashboard(data, month, eliminations){
@@ -463,18 +475,24 @@
       const elimSet = new Map();
       eliminations.forEach(e => elimSet.set(e.staff, e));
 
-      const trueWinner = ranking.find(r => !elimSet.has(r.staff));
+      const allEliminated = ranking.length > 0 && ranking.every(r => elimSet.has(r.staff));
+      const trueWinner = allEliminated ? null : ranking.find(r => !elimSet.has(r.staff));
       const topRank = ranking[0];
       const topRankIsEliminated = topRank && elimSet.has(topRank.staff);
 
-      qs('winnerName').textContent = trueWinner ? trueWinner.staff : '—';
-      qs('winnerScore').textContent = trueWinner ? (trueWinner.avgScore + ' pts') : '0';
+      if(allEliminated){
+        qs('winnerName').textContent = 'Aucun';
+        qs('winnerScore').textContent = '0';
+      } else {
+        qs('winnerName').textContent = trueWinner ? trueWinner.staff : '—';
+        qs('winnerScore').textContent = trueWinner ? (trueWinner.avgScoreBoosted + ' pts') : '0';
+      }
       qs('servicesCount').textContent = String(data.totalServiceRows || 0);
       qs('staffCount').textContent = String(ranking.length);
 
       const body = qs('rankingBody');
       if(!ranking.length){
-        body.innerHTML = `<tr><td colspan="5" class="empty">Aucune donnée pour ${escapeHtml(month)}.</td></tr>`;
+        body.innerHTML = `<tr><td colspan="6" class="empty">Aucune donnée pour ${escapeHtml(month)}.</td></tr>`;
         qs('winnerCard').innerHTML = `<div class="empty">Aucune donnée pour ${escapeHtml(month)}.</div>`;
         return;
       }
@@ -490,14 +508,17 @@
           <tr class="${isEliminated ? 'eliminated' : ''}">
             <td>${idx + 1}</td>
             <td><span class="name-col">${escapeHtml(r.staff)}</span>${elimBadge}${trophy}${reason}</td>
-            <td><b>${r.avgScore}</b></td>
+            <td><b>${r.avgScoreBoosted}</b></td>
+            <td>${r.productionBonus > 0 ? '+' + r.productionBonus : '—'}</td>
             <td>${r.avgPct}%</td>
             <td>${r.services}</td>
           </tr>
         `;
       }).join('');
 
-      if(trueWinner){
+      if(allEliminated){
+        qs('winnerCard').innerHTML = `<div class="empty">Aucun équipier ne peut prétendre au trophée ce mois (tous éliminés).</div>`;
+      } else if(trueWinner){
         const noteHtml = topRankIsEliminated
           ? `<div class="winner-note">${escapeHtml(topRank.staff)} avait le meilleur score mais a été éliminé(e). Le trophée revient à ${escapeHtml(trueWinner.staff)}.</div>`
           : '';
@@ -505,15 +526,17 @@
           <div style="font-size:26px;font-weight:900;margin-bottom:6px">🏆 ${escapeHtml(trueWinner.staff)}</div>
           <div style="color:#6c7480;margin-bottom:14px;font-size:13px">${escapeHtml(month)}</div>
           <div style="display:grid;gap:10px">
-            ${metric("Score moyen", trueWinner.avgScore + ' pts')}
+            ${metric("Score moyen (avec bonus production)", trueWinner.avgScoreBoosted + ' pts')}
+            ${metric("Score moyen brut", trueWinner.avgScore + ' pts')}
+            ${metric("Bonus production", (trueWinner.productionBonus > 0 ? '+' + trueWinner.productionBonus : '—'))}
             ${metric("Pourcentage moyen", trueWinner.avgPct + '%')}
             ${metric("Score cumulé", trueWinner.totalScore + ' pts')}
             ${metric("Services évalués", trueWinner.services)}
           </div>
           ${noteHtml}
         `;
-      }else{
-        qs('winnerCard').innerHTML = `<div class="empty">Tous les équipiers évalués sont éliminés ce mois.</div>`;
+      } else {
+        qs('winnerCard').innerHTML = `<div class="empty">Aucun gagnant pour le moment.</div>`;
       }
     }
 
@@ -521,73 +544,69 @@
       return `<div><div style="font-size:12px;color:#6c7480">${escapeHtml(label)}</div><div style="font-size:18px;font-weight:800">${escapeHtml(String(value))}</div></div>`;
     }
 
-    // ─── DERNIÈRES ÉVALUATIONS DÉTAILLÉES ─────────────────
+    function renderProdRanking(ranking){
+      const box = qs('prodRanking');
+      if(!ranking || !ranking.length){ box.innerHTML = `<div class="empty">Aucun test production ce mois.</div>`; return; }
+      box.innerHTML = ranking.map((r,idx)=>`
+        <div class="prod-row">
+          <span class="prod-rank-num">${idx+1}</span>
+          <span class="prod-rank-name">${escapeHtml(r.staff)}</span>
+          <span class="prod-rank-stats">${r.tests} test${r.tests>1?'s':''}</span>
+          <span class="prod-rank-note">⭐ ${r.totalNote} pts (moy. ${r.avgNote})</span>
+        </div>
+      `).join('');
+    }
+
     function renderLatestEntries(){
       const filterStaff = qs('filterStaff').value.toLowerCase().trim();
       const filterService = qs('filterServiceType').value;
       const box = qs('latestEntries');
-
       let entries = currentLatestEntries.slice();
-      if(filterStaff) entries = entries.filter(e => e.staff.toLowerCase().includes(filterStaff));
-
-      if(!entries.length){
-        box.innerHTML = `<div class="empty">Aucune dernière saisie disponible.</div>`;
-        return;
-      }
+      if(filterStaff) entries = entries.filter(e=>e.staff.toLowerCase().includes(filterStaff));
+      if(!entries.length){ box.innerHTML = `<div class="empty">Aucune dernière saisie disponible.</div>`; return; }
 
       box.innerHTML = entries.map(entry => {
         const matin = entry.services?.Matin;
         const soir = entry.services?.Soir;
-        const showMatin = (!filterService || filterService === 'Matin') && matin;
-        const showSoir = (!filterService || filterService === 'Soir') && soir;
-        if(!showMatin && !showSoir) return '';
-
+        const showM = (!filterService || filterService === 'Matin') && matin;
+        const showS = (!filterService || filterService === 'Soir') && soir;
+        if(!showM && !showS) return '';
         return `
           <div class="entry">
             <div class="eval-staff">${escapeHtml(entry.staff)}</div>
             <div class="eval-meta">Date : ${escapeHtml(entry.date)} • Manager : ${escapeHtml(entry.manager || '—')}</div>
-            ${showMatin ? renderServiceBlock('Matin', matin) : ''}
-            ${showSoir ? renderServiceBlock('Soir', soir) : ''}
+            ${showM ? renderServiceBlock('Matin', matin) : ''}
+            ${showS ? renderServiceBlock('Soir', soir) : ''}
           </div>
         `;
       }).join('');
     }
 
     function renderServiceBlock(label, s){
-      const postesHtml = (s.postes || []).map(pid => {
+      const postesHtml = (s.postes || []).map(pid=>{
         const lbl = POSTES_LABELS[pid] || pid;
         const zone = POSTES_ZONE[pid] || 'cuisine';
         return `<span class="post-tag zone-${zone}">${escapeHtml(lbl)}</span>`;
       }).join('');
 
-      // Questions communes
-      const commonQs = QUESTIONS_LIST.filter(q => q.poste === 'commun');
+      const commonQs = QUESTIONS_LIST.filter(q=>q.poste==='commun');
       const commonHtml = commonQs.map(q => answerRow(q, s.answers)).join('');
 
-      // Questions par poste
-      const posteSections = (s.postes || []).map(pid => {
-        const pQs = QUESTIONS_LIST.filter(q => q.poste === pid);
+      const posteSections = (s.postes||[]).map(pid=>{
+        const pQs = QUESTIONS_LIST.filter(q=>q.poste===pid);
         if(!pQs.length) return '';
         const lbl = POSTES_LABELS[pid] || pid;
-        return `
-          <div class="answer-section">
-            <div class="answer-section-title">Poste : ${escapeHtml(lbl)}</div>
-            ${pQs.map(q => answerRow(q, s.answers)).join('')}
-          </div>
-        `;
+        return `<div class="answer-section"><div class="answer-section-title">Poste : ${escapeHtml(lbl)}</div>${pQs.map(q=>answerRow(q, s.answers)).join('')}</div>`;
       }).join('');
 
       return `
         <div class="service-block">
           <div class="service-head">
-            <div class="service-label">${label === 'Matin' ? '☀️' : '🌙'} ${escapeHtml(label)}</div>
+            <div class="service-label">${label==='Matin'?'☀️':'🌙'} ${escapeHtml(label)}</div>
             <div class="service-score">${s.score} / ${s.max} pts (${s.pct}%)</div>
           </div>
           ${postesHtml ? `<div class="service-postes">${postesHtml}</div>` : ''}
-          <div class="answer-section">
-            <div class="answer-section-title">Questions communes</div>
-            ${commonHtml}
-          </div>
+          <div class="answer-section"><div class="answer-section-title">Questions communes</div>${commonHtml}</div>
           ${posteSections}
           ${s.comment ? `<div class="comment-box"><div class="comment-box-label">Commentaire manager</div>${escapeHtml(s.comment)}</div>` : ''}
         </div>
@@ -597,53 +616,53 @@
     function answerRow(q, answers){
       const val = answers && answers[q.key];
       let pill = `<span class="answer-pill a-skip">—</span>`;
-      if(val === 'oui') pill = `<span class="answer-pill a-oui">Oui</span>`;
-      else if(val === 'non') pill = `<span class="answer-pill a-non">Non</span>`;
-      else if(val === 'na') pill = `<span class="answer-pill a-na">N/A</span>`;
-      return `
-        <div class="answer-row">
-          <div class="answer-text">${escapeHtml(q.label)}</div>
-          ${pill}
-        </div>
-      `;
+      if(val==='oui') pill=`<span class="answer-pill a-oui">Oui</span>`;
+      else if(val==='non') pill=`<span class="answer-pill a-non">Non</span>`;
+      else if(val==='na') pill=`<span class="answer-pill a-na">N/A</span>`;
+      return `<div class="answer-row"><div class="answer-text">${escapeHtml(q.label)}</div>${pill}</div>`;
     }
 
-    // ─── ADMIN — LOGIN ET GESTION ────────────────────────
     function showLoginModal(){
-      qs('adminPwd').value = '';
-      qs('loginStatus').innerHTML = '';
+      qs('adminPwd').value=''; qs('loginStatus').innerHTML='';
       qs('loginOverlay').classList.add('show');
       setTimeout(()=>qs('adminPwd').focus(), 100);
     }
     function hideLoginModal(){ qs('loginOverlay').classList.remove('show'); }
 
-    function tryLogin(){
-      if(qs('adminPwd').value === ADMIN_PASSWORD){
-        isAdminAuthenticated = true;
+    async function tryLogin(){
+      const pwd = qs('adminPwd').value;
+      if(!pwd) return;
+      try{
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({ action:'login', type:'admin', password: pwd, fingerprint: getFingerprint_() })
+        });
+        const data = JSON.parse(await res.text());
+        if(!data.ok) throw new Error(data.error || 'Échec authentification.');
+        adminToken = data.token;
+        setTimeout(()=>{ adminToken = null; }, (data.expiresIn-30)*1000);
         hideLoginModal();
         showAdminModal();
-      }else{
-        showStatus('loginStatus', 'err', 'Mot de passe incorrect.');
+      }catch(err){
+        showStatus('loginStatus','err', err.message);
       }
     }
 
     function showAdminModal(){
       populateStaffSelect();
       renderEliminationsList();
+      loadProductionHistory();
       qs('adminOverlay').classList.add('show');
     }
     function hideAdminModal(){ qs('adminOverlay').classList.remove('show'); }
 
     function populateStaffSelect(){
       const sel = qs('elimStaff');
-      sel.innerHTML = '<option value="">— Choisir un équipier —</option>';
-      currentRanking.forEach(r => {
-        const already = currentEliminations.some(e => e.staff === r.staff);
-        if(!already){
-          const opt = document.createElement('option');
-          opt.value = r.staff;
-          opt.textContent = r.staff;
-          sel.appendChild(opt);
+      sel.innerHTML = '<option value="">— Choisir —</option>';
+      currentRanking.forEach(r=>{
+        if(!currentEliminations.some(e=>e.staff===r.staff)){
+          const o=document.createElement('option'); o.value=r.staff; o.textContent=r.staff; sel.appendChild(o);
         }
       });
     }
@@ -654,7 +673,7 @@
         box.innerHTML = '<div class="empty">Aucune élimination enregistrée pour ce mois.</div>';
         return;
       }
-      box.innerHTML = currentEliminations.map(e => `
+      box.innerHTML = currentEliminations.map(e=>`
         <div class="elim-item">
           <div class="elim-info">
             <div class="elim-staff">${escapeHtml(e.staff)}</div>
@@ -668,36 +687,25 @@
     }
 
     async function saveElimination(){
+      if(!adminToken){ showStatus('adminStatus','err','Session expirée. Reconnectez-vous.'); return; }
       const staff = qs('elimStaff').value;
-      const checks = [...qs('elimCriteriaList').querySelectorAll('input:checked')].map(c => c.value);
+      const checks = [...qs('elimCriteriaList').querySelectorAll('input:checked')].map(c=>c.value);
       const comment = qs('elimComment').value.trim();
       const month = qs('monthSelect').value;
-
       if(!staff){ showStatus('adminStatus','err','Choisissez un équipier.'); return; }
       if(!checks.length){ showStatus('adminStatus','err','Cochez au moins un critère.'); return; }
-
-      const payload = {
-        action: 'addElimination',
-        password: ADMIN_PASSWORD,
-        month, staff,
-        criteria: checks.join(' • '),
-        comment
-      };
-
       try{
         const res = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({ action:'addElimination', token: adminToken, month, staff, criteria: checks.join(' • '), comment })
         });
         const data = JSON.parse(await res.text());
         if(!data.ok) throw new Error(data.error || 'Enregistrement impossible.');
-
-        showStatus('adminStatus', 'ok', 'Élimination enregistrée.');
+        showStatus('adminStatus','ok','Élimination enregistrée.');
         qs('elimStaff').value = '';
-        qs('elimCriteriaList').querySelectorAll('input:checked').forEach(c => c.checked = false);
+        qs('elimCriteriaList').querySelectorAll('input:checked').forEach(c=>c.checked=false);
         qs('elimComment').value = '';
-
         await loadDashboard();
         populateStaffSelect();
         renderEliminationsList();
@@ -707,46 +715,120 @@
     }
 
     async function cancelElimination(staff){
+      if(!adminToken){ alert('Session expirée. Reconnectez-vous.'); return; }
       if(!confirm(`Annuler l'élimination de ${staff} ?`)) return;
-      const payload = {
-        action: 'cancelElimination',
-        password: ADMIN_PASSWORD,
-        month: qs('monthSelect').value,
-        staff
-      };
-
       try{
         const res = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({ action:'cancelElimination', token: adminToken, month: qs('monthSelect').value, staff })
         });
         const data = JSON.parse(await res.text());
         if(!data.ok) throw new Error(data.error || 'Annulation impossible.');
-
         showStatus('adminStatus','ok','Élimination annulée.');
         await loadDashboard();
         populateStaffSelect();
         renderEliminationsList();
       }catch(err){
-        showStatus('adminStatus','err',err.message);
+        showStatus('adminStatus','err', err.message);
       }
     }
 
-    // ─── INIT ─────────────────────────────────────────────
+    async function loadProductionHistory(){
+      try{
+        const res = await fetch(`${APPS_SCRIPT_URL}?mode=production`);
+        const data = await res.json();
+        if(!data.ok) throw new Error(data.error||'Erreur');
+        allProductionData = data.production || [];
+        renderProdHistoryFilters();
+        renderProdHistory();
+      }catch(err){
+        qs('prodHistoryList').innerHTML = `<div class="empty">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderProdHistoryFilters(){
+      const months = [...new Set(allProductionData.map(p=>p.month))].sort().reverse();
+      const sel = qs('prodHistoryMonth');
+      sel.innerHTML = '<option value="">Tous les mois</option>' + months.map(m=>`<option value="${m}">${m}</option>`).join('');
+    }
+
+    function renderProdHistory(){
+      const month = qs('prodHistoryMonth').value;
+      const staffFilter = qs('prodHistoryStaff').value.toLowerCase().trim();
+      let filtered = allProductionData.slice();
+      if(month) filtered = filtered.filter(p=>p.month===month);
+      if(staffFilter) filtered = filtered.filter(p=>p.staff.toLowerCase().includes(staffFilter));
+      const box = qs('prodHistoryList');
+      if(!filtered.length){ box.innerHTML = '<div class="empty">Aucun test production trouvé.</div>'; return; }
+      filtered.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+      box.innerHTML = filtered.map(p=>`
+        <div class="prod-history-row">
+          <div class="prod-history-head">
+            <div class="prod-history-staff">${escapeHtml(p.staff)}</div>
+            <div class="prod-history-note">⭐ ${p.note}/10</div>
+          </div>
+          <div class="prod-history-meta">${escapeHtml(p.date || '')} • Manager : ${escapeHtml(p.manager || '—')}</div>
+          <div class="prod-history-detail">
+            <div>Poids : ${p.poids}g</div>
+            <div>L : ${p.longueur}</div>
+            <div>l : ${p.largeur}</div>
+            <div>Ép : ${p.epaisseur}</div>
+            <div>Temps : ${p.tempsSec}s</div>
+          </div>
+          ${p.comment ? `<div style="font-size:12px;color:#666;font-style:italic;margin-top:6px">"${escapeHtml(p.comment)}"</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    async function changePassword(){
+      if(!adminToken){ showStatus('securityStatus','err','Session expirée.'); return; }
+      const type = qs('pwdType').value;
+      const newPwd = qs('newPwd').value;
+      const newPwd2 = qs('newPwd2').value;
+      if(!newPwd || newPwd.length < 6){ showStatus('securityStatus','err','Mot de passe trop court (6 min).'); return; }
+      if(newPwd !== newPwd2){ showStatus('securityStatus','err','Les mots de passe ne correspondent pas.'); return; }
+      try{
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({ action:'changePassword', token: adminToken, type, newPassword: newPwd })
+        });
+        const data = JSON.parse(await res.text());
+        if(!data.ok) throw new Error(data.error||'Erreur');
+        showStatus('securityStatus','ok', `Mot de passe ${type} mis à jour.`);
+        qs('newPwd').value = ''; qs('newPwd2').value = '';
+      }catch(err){
+        showStatus('securityStatus','err', err.message);
+      }
+    }
+
     applyViewMode();
 
     if(VIEW_MODE === 'manager'){
       qs('adminBtn').addEventListener('click', () => {
-        if(isAdminAuthenticated) showAdminModal(); else showLoginModal();
+        if(adminToken) showAdminModal(); else showLoginModal();
       });
       qs('cancelLoginBtn').addEventListener('click', hideLoginModal);
       qs('confirmLoginBtn').addEventListener('click', tryLogin);
-      qs('adminPwd').addEventListener('keydown', e => { if(e.key === 'Enter') tryLogin(); });
+      qs('adminPwd').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
       qs('closeAdminBtn').addEventListener('click', hideAdminModal);
       qs('saveElimBtn').addEventListener('click', saveElimination);
-      qs('loginOverlay').addEventListener('click', e => { if(e.target === qs('loginOverlay')) hideLoginModal(); });
-      qs('adminOverlay').addEventListener('click', e => { if(e.target === qs('adminOverlay')) hideAdminModal(); });
+      qs('changePwdBtn').addEventListener('click', changePassword);
+      qs('loginOverlay').addEventListener('click', e=>{ if(e.target===qs('loginOverlay')) hideLoginModal(); });
+      qs('adminOverlay').addEventListener('click', e=>{ if(e.target===qs('adminOverlay')) hideAdminModal(); });
+
+      document.querySelectorAll('.admin-tab').forEach(tab=>{
+        tab.addEventListener('click', ()=>{
+          document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+          document.querySelectorAll('.admin-pane').forEach(p=>p.classList.remove('active'));
+          tab.classList.add('active');
+          document.querySelector(`.admin-pane[data-pane="${tab.dataset.tab}"]`).classList.add('active');
+        });
+      });
+
+      qs('prodHistoryMonth').addEventListener('change', renderProdHistory);
+      qs('prodHistoryStaff').addEventListener('input', renderProdHistory);
     }
 
     qs('filterStaff').addEventListener('input', renderLatestEntries);
