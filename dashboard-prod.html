@@ -10,18 +10,30 @@
   <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
   
   <style>
-    :root { --orange: #f08a00; --blue: #185fa5; --bg: #fdfaf7; --card: #ffffff; --line: #e2d8ce; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: #1a1c1e; margin: 0; padding: 20px; }
+    :root {
+      --orange: #f08a00; --blue: #185fa5; --bg: #fdfaf7; --card: #ffffff; --line: #e2d8ce;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: #1a1c1e; margin: 0; padding: 20px; }
     .container { max-width: 1300px; margin: 0 auto; }
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+    
+    /* Header */
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; gap: 20px; }
     .logo-area { display: flex; align-items: center; gap: 15px; }
     .logo-area img { width: 60px; height: 60px; border-radius: 12px; border: 1px solid var(--line); background: #fff; padding: 5px; }
+    
+    /* Filtres */
     .filter-card { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--line); margin-bottom: 25px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    
+    /* Grille de Graphiques */
     .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
     .chart-box { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,0.03); min-height: 400px; }
     .full-width { grid-column: span 2; }
     h2 { font-size: 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--blue); }
-    .btn-nav { padding: 12px 20px; border-radius: 12px; border: 1px solid var(--line); background: #fff; text-decoration: none; color: #444; font-weight: 600; }
+
+    .btn-nav { padding: 12px 20px; border-radius: 12px; border: 1px solid var(--line); background: #fff; text-decoration: none; color: #444; font-weight: 600; transition: 0.2s; }
+    .btn-nav:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+
+    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } .full-width { grid-column: span 1; } .filter-card { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -56,114 +68,164 @@
       <h2>⭐ Évolution du Score Global (/10)</h2>
       <canvas id="chartScore"></canvas>
     </div>
+
     <div class="chart-box">
-      <h2>⚖️ Précision du Poids (Cible 300g)</h2>
+      <h2>⚖️ Performance Individuelle (Notes)</h2>
       <canvas id="chartPoids"></canvas>
     </div>
+
     <div class="chart-box">
-      <h2>⏱️ Rapidité (Secondes)</h2>
-      <canvas id="chartTemps"></canvas>
+      <h2>📊 Volume de tests par équipier</h2>
+      <canvas id="chartPie"></canvas>
     </div>
   </div>
 </div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec";
+  // URL de ton API Google Apps Script
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec"; 
+  
   let rawData = [];
-  let staffSelector, scoreChart, poidsChart, tempsChart;
+  let staffSelector, scoreChart, poidsChart, pieChart;
 
+  // Initialisation au chargement
   async function init() {
     try {
-      // APPEL DU SCRIPT
+      console.log("Récupération des données...");
       const res = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);
       const json = await res.json();
       
-      // CORRECTION : Ton JSON utilise "production", pas "data"
+      // On vérifie le format (doit être json.production d'après ton test)
       if (!json.ok || !json.production) {
-        console.error("Données invalides", json);
+        console.error("Données invalides ou vides", json);
         return;
       }
       
       rawData = json.production;
+      console.log("Données chargées :", rawData);
 
-      // Initialisation du sélecteur avec les noms reçus (Usman, Fanny...)
-      const staffs = [...new Set(rawData.map(d => d.staff))];
+      // Création de la liste unique des équipiers
+      const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s);
+      
+      // Initialisation du menu SlimSelect
       staffSelector = new SlimSelect({
         select: '#staffSelect',
         data: staffs.map(s => ({ text: s, value: s })),
-        events: { afterChange: () => updateDashboard() }
+        events: {
+          afterChange: () => updateDashboard()
+        }
       });
 
+      // Premier affichage
       updateDashboard();
-    } catch (e) { console.error("Erreur d'initialisation", e); }
+    } catch (e) {
+      console.error("Erreur d'initialisation :", e);
+    }
   }
 
   function updateDashboard() {
     const selectedStaffs = staffSelector.getSelected();
+    
+    // Filtrage par équipier (si aucun sélectionné, on montre tout)
     let filtered = (selectedStaffs.length > 0) 
       ? rawData.filter(d => selectedStaffs.includes(d.staff)) 
       : rawData;
 
-    // Tri par date
+    // Tri chronologique
     filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
 
+    // Mise à jour des graphiques
     renderScoreChart(filtered, selectedStaffs);
-    renderPoidsChart(filtered);
-    renderTempsChart(filtered);
+    renderBarChart(filtered);
+    renderPieChart(filtered);
   }
 
   function renderScoreChart(data, selected) {
     const ctx = document.getElementById('chartScore').getContext('2d');
     if (scoreChart) scoreChart.destroy();
 
+    // Si personne n'est sélectionné, on affiche une moyenne globale
+    // Sinon, on crée un dataset par personne
     const datasets = selected.length === 0 ? [{
-      label: 'Moyenne Globale',
+      label: 'Score Global',
       data: data.map(d => d.note),
       borderColor: '#f08a00',
       backgroundColor: 'rgba(240, 138, 0, 0.1)',
-      fill: true, tension: 0.4
+      fill: true,
+      tension: 0.4
     }] : selected.map(name => ({
       label: name,
       data: data.filter(d => d.staff === name).map(d => d.note),
       borderColor: '#' + Math.floor(Math.random()*16777215).toString(16),
-      tension: 0.4
+      tension: 0.4,
+      fill: false
     }));
 
     scoreChart = new Chart(ctx, {
       type: 'line',
-      data: { labels: data.map(d => d.date), datasets },
-      options: { responsive: true, maintainAspectRatio: false }
+      data: {
+        labels: data.map(d => d.date),
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { y: { min: 0, max: 10 } }
+      }
     });
   }
 
-  function renderPoidsChart(data) {
+  function renderBarChart(data) {
     const ctx = document.getElementById('chartPoids').getContext('2d');
     if (poidsChart) poidsChart.destroy();
+
     poidsChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: data.map(d => d.staff),
-        datasets: [{ label: 'Note Performance', data: data.map(d => d.note), backgroundColor: '#185fa5' }]
+        datasets: [{
+          label: 'Notes obtenues',
+          data: data.map(d => d.note),
+          backgroundColor: '#185fa5'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { min: 0, max: 10 } }
       }
     });
   }
 
-  function renderTempsChart(data) {
-    const ctx = document.getElementById('chartTemps').getContext('2d');
-    if (tempsChart) tempsChart.destroy();
-    tempsChart = new Chart(ctx, {
+  function renderPieChart(data) {
+    const ctx = document.getElementById('chartPie').getContext('2d');
+    if (pieChart) pieChart.destroy();
+
+    // Comptage des tests par équipier
+    const stats = {};
+    data.forEach(d => { stats[d.staff] = (stats[d.staff] || 0) + 1; });
+
+    pieChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: [...new Set(data.map(d => d.staff))],
+        labels: Object.keys(stats),
         datasets: [{
-          data: [...new Set(data.map(d => d.staff))].map(s => data.filter(x => x.staff === s).length),
-          backgroundColor: ['#f08a00', '#185fa5', '#e2d8ce']
+          data: Object.values(stats),
+          backgroundColor: ['#f08a00', '#185fa5', '#067647', '#b42318', '#7b2cbf']
         }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'right' } }
       }
     });
   }
 
+  // Lancement du Dashboard
   init();
 </script>
+
 </body>
 </html>
