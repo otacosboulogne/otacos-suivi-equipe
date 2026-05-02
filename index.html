@@ -858,9 +858,6 @@
         next.style.display='none';
         save.style.display='inline-flex';
         clear.style.display='inline-flex';
-        
-        // Récupérer automatiquement le brouillon
-        setTimeout(()=>{ recoverLastEntry(); }, 100);
       }
     }
 
@@ -941,58 +938,6 @@
       }catch(error){
         hideOverlay();
         showStatus('bottomStatus','err',error.message||"Erreur lors de l'enregistrement.");
-      }
-    }
-
-    async function recoverLastEntry(){
-      try {
-        showStatus('bottomStatus','ok','Récupération du brouillon...');
-        
-        // Charger le brouillon depuis localStorage
-        const draft = loadDraft();
-        
-        if(!draft || !draft.membersData || Object.keys(draft.membersData).length === 0){
-          showStatus('bottomStatus','err','Aucun brouillon trouvé.');
-          return;
-        }
-
-        const selectedTeam = [...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
-
-        // Remplir les postes depuis le brouillon
-        staffPostes = draft.staffPostes || {};
-
-        // Récréer l'étape 2 (les fiches équipiers)
-        renderStep2(selectedTeam);
-        
-        // Remplir les réponses depuis le brouillon
-        selectedTeam.forEach(staff => {
-          const memberData = draft.membersData[staff] || {};
-
-          // Remplir les réponses (anciennes valeurs: 'oui'/'non'/'na' → nouvelles: 'Oui'/'Non'/'N/A')
-          Object.keys(memberData).forEach(qKey => {
-            if(qKey === 'comment') return; // Skip commentaire
-            
-            let answer = memberData[qKey];
-            
-            // Convertir anciennes valeurs en nouvelles
-            if(answer === 'oui') answer = 'Oui';
-            else if(answer === 'non') answer = 'Non';
-            else if(answer === 'na') answer = 'N/A';
-            
-            const elem = document.querySelector(`[data-staff="${staff}"][data-question="${qKey}"][value="${answer}"]`);
-            if(elem) elem.checked = true;
-          });
-
-          // Remplir le commentaire s'il existe
-          if(memberData.comment){
-            const commentArea = document.querySelector(`.member-card[data-staff="${staff}"] textarea[name="comment"]`);
-            if(commentArea) commentArea.value = memberData.comment;
-          }
-        });
-
-        showStatus('bottomStatus','ok','Brouillon récupéré !');
-      }catch(err){
-        showStatus('bottomStatus','err','Erreur récupération: '+err.message);
       }
     }
 
