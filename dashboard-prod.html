@@ -86,15 +86,17 @@
       console.log("Initialisation...");
       const res = await fetch(`${APPS_SCRIPT_URL}?mode=production`);
       const json = await res.json();
-      console.log("Réponse API:", json);
+      console.log("Réponse API complète:", JSON.stringify(json, null, 2));
       
       if (!json.ok || !json.production) {
-        console.error("Erreur API ou pas de données");
+        console.error("Erreur API ou pas de données - OK:", json.ok, "Production:", json.production);
+        alert("Erreur API:\n" + JSON.stringify(json, null, 2));
         return;
       }
       
       rawData = json.production;
       console.log("Données reçues:", rawData.length, "tests");
+      console.log("Premier test:", rawData[0]);
 
       // Remplir Équipiers
       const selectStaff = document.getElementById('staffSelect');
@@ -116,7 +118,8 @@
 
       updateDashboard();
     } catch (e) { 
-      console.error("Erreur init:", e); 
+      console.error("Erreur init:", e);
+      alert("Erreur: " + e.message);
     }
   }
 
