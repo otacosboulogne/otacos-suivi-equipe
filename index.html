@@ -2,190 +2,187 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>ÉVALUATION EQUIPIER DU MOIS</title>
   <style>
     :root{
-      --bg:#fff8f1;
-      --card:#ffffff;
-      --text:#1f2430;
-      --muted:#6c7480;
-      --orange:#f08a00;
-      --orange-2:#ffb347;
-      --orange-3:#fff1dd;
-      --line:#e9e0d3;
-      --shadow:0 16px 40px rgba(240,138,0,.12);
-      --danger:#b42318;
-      --ok:#067647;
+      --bg:#fff8f1;--card:#ffffff;--text:#1f2430;--muted:#6c7480;
+      --orange:#f08a00;--orange-2:#ffb347;--orange-3:#fff1dd;--line:#e9e0d3;
+      --shadow:0 16px 40px rgba(240,138,0,.12);--danger:#b42318;--ok:#067647;
+      --blue:#185fa5;--blue-light:#e6f1fb;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,Arial,sans-serif;
-      background:linear-gradient(180deg,#fff8f1 0%, #fffdf9 100%);
-      color:var(--text)
-    }
-    .wrap{max-width:1200px;margin:0 auto;padding:20px}
-    .hero,.card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:24px;
-      box-shadow:var(--shadow)
-    }
-    .hero{
-      padding:24px;
-      margin-bottom:18px;
-      background:
-        radial-gradient(circle at top right, rgba(240,138,0,.15), transparent 30%),
-        linear-gradient(135deg, rgba(255,179,71,.16), rgba(255,255,255,.9))
-    }
-    .card{padding:20px;margin-bottom:18px}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    html,body{margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
+         background:linear-gradient(180deg,#fff8f1 0%,#fffdf9 100%);color:var(--text);
+         font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+    .wrap{max-width:1200px;margin:0 auto;padding:16px;padding-bottom:120px}
+    .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+    .hero{padding:18px;margin-bottom:14px;background:radial-gradient(circle at top right,rgba(240,138,0,.15),transparent 30%),linear-gradient(135deg,rgba(255,179,71,.16),rgba(255,255,255,.9))}
+    .card{padding:16px;margin-bottom:14px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
     h1,h2,h3{margin:0}
-    .logo-title{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    .logo-title img{
-      width:54px;height:54px;object-fit:contain;border-radius:14px;background:#fff;
-      border:1px solid var(--line);padding:6px
-    }
-    .sub{color:var(--muted);margin-top:6px}
-    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-    .field{display:flex;flex-direction:column;gap:8px}
+    h1{font-size:22px}
+    h3{font-size:18px}
+    .logo-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .logo-title img{width:48px;height:48px;object-fit:contain;border-radius:12px;background:#fff;border:1px solid var(--line);padding:4px}
+    .sub{color:var(--muted);margin-top:4px;font-size:14px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .field{display:flex;flex-direction:column;gap:6px}
     label{font-size:14px;font-weight:700}
     input,select,textarea,button{font:inherit}
-    input[type="date"], select, textarea, input[type="number"]{
-      width:100%;
-      padding:12px 14px;
-      border:1px solid var(--line);
-      border-radius:14px;
-      background:#fff;
-      color:var(--text)
+    input[type="date"],input[type="text"],input[type="password"],input[type="number"],select,textarea{
+      width:100%;padding:14px 14px;border:1px solid var(--line);border-radius:14px;
+      background:#fff;color:var(--text);font-size:16px
     }
-    textarea{min-height:82px;resize:vertical}
-    .muted{color:var(--muted)}
-    .btns{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      border:0;
-      border-radius:14px;
-      padding:12px 16px;
-      cursor:pointer;
-      font-weight:800
-    }
-    .btn-primary{
-      background:linear-gradient(135deg,var(--orange),var(--orange-2));
-      color:#fff
-    }
-    .btn-secondary{
-      background:#fff4e6;
-      color:#8a4b00;
-      border:1px solid #ffd8a8
-    }
-    .btn-danger{
-      background:#fff1f1;
-      color:var(--danger);
-      border:1px solid #ffd0d0
-    }
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;
-      background:var(--orange-3);color:#8a4b00;font-weight:800
-    }
-    .team-list{
-      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:8px
-    }
-    .check{
-      display:flex;align-items:center;gap:10px;
-      padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff
-    }
-    .member-card{
-      border:1px solid var(--line);
-      border-radius:22px;
-      padding:18px;
-      background:#fffdf9;
-      margin-bottom:16px
-    }
-    .member-head{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-      margin-bottom:12px
-    }
-    .score-box{
-      min-width:120px;text-align:center;padding:10px 14px;border-radius:16px;
-      background:linear-gradient(135deg,var(--orange),var(--orange-2));
-      color:#fff;font-weight:900
-    }
-    .question{
-      border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff
-    }
-    .answers{
-      display:flex;gap:10px;flex-wrap:wrap;margin-top:10px
-    }
-    .answers label{
-      font-weight:600;
-      display:flex;align-items:center;gap:8px;
-      padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:#fff
-    }
-    .criterion{
-      border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff
-    }
-    .criterion small{display:block;color:var(--muted);margin-top:4px}
-    .status{
-      padding:12px 14px;border-radius:14px;margin-top:12px;font-weight:700
-    }
+    textarea{min-height:80px;resize:vertical}
+    .muted{color:var(--muted);font-size:14px}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{border:0;border-radius:14px;padding:14px 18px;cursor:pointer;font-weight:800;font-size:15px;min-height:48px}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff}
+    .btn-secondary{background:#fff4e6;color:#8a4b00;border:1px solid #ffd8a8}
+    .btn-danger{background:#fff1f1;color:var(--danger);border:1px solid #ffd0d0}
+    .btn-icon{padding:10px 14px;background:#fff4e6;border:1px solid #ffd8a8;color:#8a4b00;border-radius:12px;font-weight:700;cursor:pointer;font-size:14px}
+    .section-title{font-size:18px;font-weight:900;margin-bottom:10px}
+    .status{padding:12px 14px;border-radius:14px;margin-top:10px;font-weight:700;font-size:14px}
     .status.ok{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
     .status.warn{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
     .status.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
-    .section-title{font-size:20px;font-weight:900;margin-bottom:10px}
-    .overlay{
-      position:fixed;inset:0;background:rgba(16,21,29,.55);
-      display:none;align-items:center;justify-content:center;z-index:9999
-    }
+    .overlay{position:fixed;inset:0;background:rgba(16,21,29,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:14px}
     .overlay.show{display:flex}
-    .overlay-box{
-      background:#fff;border-radius:22px;padding:24px 28px;box-shadow:0 30px 70px rgba(0,0,0,.2);
-      font-size:18px;font-weight:900;text-align:center;max-width:420px
+    .overlay-box{background:#fff;border-radius:18px;padding:20px 22px;box-shadow:0 30px 70px rgba(0,0,0,.2);font-size:16px;font-weight:900;text-align:center;max-width:420px}
+    a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+
+    /* Team list — 2 cols mobile, 4 cols desktop */
+    .team-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+    @media(min-width:700px){ .team-list{grid-template-columns:repeat(4,minmax(0,1fr))} }
+    .check{display:flex;align-items:center;gap:10px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;cursor:pointer;min-height:52px}
+    .check input{width:20px;height:20px;flex-shrink:0}
+    .check span{font-size:15px;font-weight:600}
+
+    /* Step 2 */
+    .step2-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+    @media(min-width:700px){ .step2-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+    .staff-poste-card{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fffdf9}
+    .staff-name{font-size:16px;font-weight:800;margin-bottom:10px}
+    .postes-wrap{display:flex;flex-wrap:wrap;gap:6px}
+    .poste-chip{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:13px;font-weight:700;cursor:pointer;user-select:none;min-height:38px}
+    .poste-chip.selected.zone-cuisine{background:var(--orange);color:#fff;border-color:var(--orange)}
+    .poste-chip.zone-caisse{border-color:#b5d4f4}
+    .poste-chip.selected.zone-caisse{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+    /* Member card */
+    .member-card{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fffdf9;margin-bottom:14px}
+    .member-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .score-box{min-width:110px;text-align:center;padding:10px 12px;border-radius:14px;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;font-weight:900}
+    .score-box .s-label{font-size:11px;opacity:.9}
+    .score-box .s-value{font-size:24px;line-height:1.1}
+    .score-box .s-pct{font-size:12px;opacity:.85}
+    .poste-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .poste-tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fff1dd;color:#8a4b00;border:1px solid #ffd8a8}
+    .poste-tag.zone-caisse{background:var(--blue-light);color:var(--blue);border-color:#b5d4f4}
+
+    /* Questions — mobile-first design */
+    .q-section{margin-bottom:14px}
+    .q-section-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;padding:6px 10px;background:#f8f3ee;border-radius:8px}
+    .question{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff;margin-bottom:6px}
+    .q-text{font-size:14px;line-height:1.4;margin-bottom:10px}
+    .q-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .q-pts{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap}
+    .q-answers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-radius:12px;overflow:hidden;border:1px solid var(--line);flex-shrink:0;min-width:180px}
+    .q-answers button{padding:10px 8px;font-size:13px;font-weight:800;border:none;background:#fff;color:var(--muted);cursor:pointer;border-right:1px solid var(--line);min-height:42px}
+    .q-answers button:last-child{border-right:none}
+    .q-answers button.active-oui{background:#ecfdf3;color:#067647}
+    .q-answers button.active-non{background:#fef3f2;color:#b42318}
+    .q-answers button.active-na{background:var(--blue-light);color:var(--blue)}
+
+    /* Settings panel */
+    .settings-modal{background:#fff;border-radius:18px;padding:20px;max-width:760px;width:100%;max-height:88vh;overflow-y:auto}
+    .settings-poste-block{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;background:#fffdf9}
+    .settings-poste-title{font-weight:800;font-size:15px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+    .settings-q-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed #f0e8db}
+    .settings-q-row:last-child{border-bottom:none}
+    .settings-q-text{flex:1;font-size:13px;line-height:1.3}
+    .settings-q-pts{width:60px;flex-shrink:0}
+    .settings-q-pts input{padding:6px 8px;text-align:center;font-weight:700;font-size:14px}
+
+    /* Save bar bottom (sticky) */
+    .save-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:8px;justify-content:flex-end;z-index:50;box-shadow:0 -8px 24px rgba(0,0,0,.05)}
+    .save-bar .btn{flex:1;max-width:200px}
+
+    @media(max-width:500px){
+      .q-bottom{flex-direction:column;align-items:stretch}
+      .q-pts{align-self:flex-end}
+      .q-answers{width:100%}
+      .save-bar .btn{flex:1;max-width:none}
+      h1{font-size:18px}
+      .grid-3{grid-template-columns:1fr}
     }
-    .tiny{font-size:12px;color:var(--muted)}
-    @media(max-width:980px){
-      .grid-2,.grid-3,.grid-4,.team-list{grid-template-columns:1fr}
-      .wrap{padding:14px}
-    }
-    a.btn{
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
   </style>
 </head>
 <body>
   <div class="overlay" id="savingOverlay">
-    <div class="overlay-box">Ne quittez pas, l’enregistrement est en cours…</div>
+    <div class="overlay-box">Ne quittez pas, l'enregistrement est en cours…</div>
+  </div>
+
+  <!-- ========== MODAL : LOGIN PARAMÈTRES ========== -->
+  <div class="overlay" id="settingsLoginOverlay">
+    <div class="overlay-box" style="text-align:left;font-weight:normal;font-size:15px">
+      <h3 style="margin-bottom:12px">Espace directeur — Modifier les points</h3>
+      <div class="field">
+        <label for="settingsPwd">Mot de passe</label>
+        <input type="password" id="settingsPwd" placeholder="Mot de passe" />
+      </div>
+      <div class="btns" style="margin-top:14px;justify-content:flex-end">
+        <button class="btn btn-secondary" id="settingsLoginCancel" type="button">Annuler</button>
+        <button class="btn btn-primary" id="settingsLoginConfirm" type="button">Accéder</button>
+      </div>
+      <div id="settingsLoginStatus"></div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL : SETTINGS ========== -->
+  <div class="overlay" id="settingsOverlay">
+    <div class="settings-modal">
+      <h3 style="margin-bottom:6px">Modifier les points par question</h3>
+      <div class="muted" style="margin-bottom:14px">Modifiez librement les valeurs en points puis cliquez "Enregistrer". Les changements s'appliquent partout dans l'application.</div>
+      <div id="settingsContent"></div>
+      <div class="btns" style="margin-top:14px;justify-content:space-between;flex-wrap:wrap">
+        <button class="btn btn-danger" id="settingsResetBtn" type="button">Restaurer valeurs initiales</button>
+        <div class="btns">
+          <button class="btn btn-secondary" id="settingsCloseBtn" type="button">Fermer</button>
+          <button class="btn btn-primary" id="settingsSaveBtn" type="button">Enregistrer</button>
+        </div>
+      </div>
+      <div id="settingsStatus"></div>
+    </div>
   </div>
 
   <div class="wrap">
     <section class="hero">
-  <div class="logo-title">
-    <img src="./otacos-logo.png" alt="Logo O'TACOS" />
-    <div>
-      <h1>ÉVALUATION EQUIPIER DU MOIS</h1>
-      <div class="sub">O'TACOS BOULOGNE SUR MER</div>
-    </div>
-  </div>
-
-  <div class="btns" style="margin-top:16px">
-    <a class="btn btn-secondary" href="https://otacosboulogne.github.io/otacos-suivi-equipe/dashboard.html">Accès dashboard</a>
-  </div>
-</section>
+      <div class="top">
+        <div class="logo-title">
+          <img src="./otacos-logo.png" alt="Logo O'TACOS" />
+          <div>
+            <h1>ÉVALUATION EQUIPIER DU MOIS</h1>
+            <div class="sub">O'TACOS BOULOGNE SUR MER</div>
+          </div>
+        </div>
+        <button class="btn-icon" id="openSettingsBtn" type="button" title="Modifier les points">⚙️ Points</button>
+      </div>
+      <div class="btns" style="margin-top:14px">
+        <a class="btn btn-secondary" href="https://otacosboulogne.github.io/otacos-suivi-equipe/dashboard.html">Accès dashboard</a>
+      </div>
+    </section>
 
     <section class="card">
-      <div class="section-title">Préparer le service</div>
+      <div class="section-title">Étape 1 — Préparer le service</div>
       <div class="grid-3">
         <div class="field">
           <label for="serviceDate">Date</label>
           <input type="date" id="serviceDate" />
         </div>
-
         <div class="field">
           <label for="serviceType">Service</label>
           <select id="serviceType">
@@ -194,9 +191,8 @@
             <option value="Soir">Soir</option>
           </select>
         </div>
-
         <div class="field">
-          <label for="managerName">Nom du manager</label>
+          <label for="managerName">Manager</label>
           <select id="managerName">
             <option value="">Choisir</option>
             <option value="Imane">Imane</option>
@@ -207,760 +203,725 @@
         </div>
       </div>
 
-      <div style="margin-top:16px">
-        <div class="section-title" style="font-size:18px">Équipe présente</div>
-        <div class="muted">Sélectionne l’équipe présente sur le service, puis clique sur “Préparer l’évaluation”.</div>
+      <div style="margin-top:14px">
+        <div class="section-title" style="font-size:16px">Équipe présente</div>
+        <div class="muted">Sélectionne les équipiers présents.</div>
         <div id="teamList" class="team-list"></div>
       </div>
 
-      <div class="btns" style="margin-top:16px">
-        <button class="btn btn-primary" id="prepareBtn" type="button">Préparer l’évaluation</button>
+      <div class="btns" style="margin-top:14px">
+        <button class="btn btn-primary" id="goStep2Btn" type="button" style="width:100%">Suivant — Attribuer les postes →</button>
       </div>
-
       <div id="topStatus"></div>
     </section>
 
-    <section class="card">
-      <div class="section-title">Critères à prendre en compte pour évaluer l’équipe</div>
-      <div class="muted">
-        Questions basiques & Critères de performance
+    <section class="card" id="step2Section" style="display:none">
+      <div class="section-title">Étape 2 — Attribuer les postes</div>
+      <div class="muted">Pour chaque équipier, coche le ou les postes qu'il a tenus sur ce service.</div>
+      <div id="step2Grid" class="step2-grid"></div>
+      <div class="btns" style="margin-top:14px">
+        <button class="btn btn-secondary" id="backStep1Btn" type="button">← Retour</button>
+        <button class="btn btn-primary" id="goStep3Btn" type="button" style="flex:1">Suivant — Évaluer →</button>
       </div>
-
-      <div style="margin-top:14px" class="grid-2">
-        <div class="question">
-          <div><b>Questions basiques (15 pts)</b></div>
-          <div class="tiny" style="margin-top:8px">
-            • L’équipier se lave les mains régulièrement et son hygiène dans le service est acceptable<br>
-            • L’équipier porte son tablier et sa charlotte, et il est prêt à l’heure exacte du début de service à son poste <br>
-            • L’équipier a-t-il fait une erreur dans le service<br>
-            • La tenue / l’odeur de l’équipier est acceptable<br>
-            • L’équipier est concentré dans son travail 
-          </div>
-        </div>
-        <div class="question">
-          <div><b>Critères de performance (85 pts)</b></div>
-          <div class="tiny" style="margin-top:8px">
-            • Productivité : 20%<br>
-            • Score de production à saisi : 20%<br>
-            • Polyvalence : 15%<br>
-            • Esprit d’équipe : 15%<br>
-            • Satisfaction client : 20%<br>
-            • Respect et manipulation du matériel : 10%
-          </div>
-        </div>
-      </div>
+      <div id="step2Status"></div>
     </section>
 
-    <section class="card">
-      <div class="section-title">Évaluation des équipiers présents</div>
-      <div id="membersContainer" class="muted">Aucune fiche générée pour le moment.</div>
-
-      <div class="btns" style="margin-top:18px">
-        <button class="btn btn-primary" id="saveBtn" type="button">Enregistrer ce service</button>
+    <section class="card" id="step3Section" style="display:none">
+      <div class="section-title">Étape 3 — Évaluation de l'équipe</div>
+      <div class="muted" style="margin-bottom:12px">
+        <b>Oui</b> = +X pts &nbsp;•&nbsp; <b>Non</b> = −0,5 pt &nbsp;•&nbsp; <b>N/A</b> = 0 pt (question retirée)<br>
+        <span style="font-size:12px">Le score ne descend jamais sous 0.</span>
+      </div>
+      <div id="membersContainer" class="muted">Les fiches apparaîtront ici.</div>
+      <div class="btns" style="margin-top:16px">
+        <button class="btn btn-secondary" id="backStep2Btn" type="button">← Retour</button>
         <button class="btn btn-danger" id="clearBtn" type="button">Effacer tout</button>
       </div>
-
       <div id="bottomStatus"></div>
     </section>
   </div>
 
+  <!-- Sticky save bar (visible uniquement à l'étape 3) -->
+  <div class="save-bar" id="saveBar" style="display:none">
+    <button class="btn btn-primary" id="saveBtn" type="button">💾 Enregistrer ce service</button>
+  </div>
+
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQzbs9zVUQXHpc1DmMXI4JAUlh2naT0dCLDIKVfas2UL3hmgXj8VOGJ51S2_phrbm3/exec";
-    const DRAFT_KEY = "otacos_eval_draft_v3";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH8BAyPtgmnpgXdQFCSKF0ORm5Ern09hUFIW5sqll25jF3j0VAM8_Wrq1nqDxihW8Z/exec";
+    const DRAFT_KEY = "otacos_eval_draft_v6";
+    const POINTS_KEY = "otacos_eval_points_v1";
+    const ADMIN_PASSWORD = "Otacos2026!";
+    const NEGATIVE_PENALTY = 0.5; // points enlevés pour chaque "Non"
     let currentOverrideCode = "";
 
-    const QUESTION_CONFIG = [
-      { key: "q_hands", label: "L’équipier se lave les mains régulièrement et son hygiène dans le service est acceptable ?", yes: 2, no: -1 },
-      { key: "q_apron", label: "L’équipier porte son tablier et sa charlotte, et il est prêt à l’heure exacte du début de service à son poste ?", yes: 5, no: -4 },
-      { key: "q_error", label: "L’équipier a-t-il fait une erreur dans le service ?", yes: -2, no: 3 },
-      { key: "q_uniform", label: "La tenue / l’odeur de l’équipier est acceptable ?", yes: 3, no: -2 },
-      { key: "q_smile", label: "L’équipier est concentré dans son travail ?", yes: 2, no: -1 }
+    const POSTES = [
+      { id: "caisse",      label: "Caisse",                zone: "caisse" },
+      { id: "ouverture",   label: "Ouverture caisse",      zone: "caisse" },
+      { id: "fermeture_c", label: "Fermeture caisse",      zone: "caisse" },
+      { id: "friture",     label: "Friture & cuisson",     zone: "cuisine" },
+      { id: "toaster",     label: "Toaster",               zone: "cuisine" },
+      { id: "envoi",       label: "Envoi",                 zone: "cuisine" },
+      { id: "pliage",      label: "Pliage",                zone: "cuisine" },
+      { id: "prepa_matin", label: "Prépa matin",           zone: "cuisine" },
+      { id: "prepa_soir",  label: "Prépa soir",            zone: "cuisine" },
+      { id: "fermeture_k", label: "Fermeture cuisine",     zone: "cuisine" },
+      { id: "reception",   label: "Réception livraison",   zone: "cuisine" },
     ];
 
+    // Questions par défaut (points = "defaultPts")
+    const QUESTIONS_DEFAULT = [
+      // COMMUN
+      { key:"c_tenue",      label:"Sur ce service, sa tenue était propre et son hygiène corporelle irréprochable", defaultPts:2, poste:"commun" },
+      { key:"c_mains",      label:"Sur ce service, il s'est lavé les mains systématiquement (après avoir touché quelque chose, changement de poste, produit cru…)", defaultPts:2, poste:"commun" },
+      { key:"c_concentre",  label:"Sur ce service, il est resté concentré — pas de discussions inutiles au poste / caisse avec livreur", defaultPts:2, poste:"commun" },
+      { key:"c_rythme",     label:"Sur ce service, son rythme de production était soutenu et constant (caisse : temps d'attente d'encaissement réduit)", defaultPts:2, poste:"commun" },
+      { key:"c_aide",       label:"Sur ce service, il a aidé spontanément un collègue sans qu'on lui demande", defaultPts:1, poste:"commun" },
+      { key:"c_erreur",     label:"Sur ce service, aucune erreur n'a été constatée pour le salarié", defaultPts:2, poste:"commun" },
+      { key:"c_energie",    label:"Sur ce service, son énergie et son attitude étaient positives pour le reste de l'équipe", defaultPts:1, poste:"commun" },
+      { key:"c_propre_fin", label:"En fin de service, il a laissé son poste propre et rangé avant de partir", defaultPts:2, poste:"commun" },
+      { key:"c_poubelle",   label:"Si cela a été demandé, le salarié a sorti la poubelle et respecté le timing", defaultPts:2, poste:"commun" },
+      { key:"c_epack",      label:"Validation des nettoyages des postes sur Epack hygiène (même pour la caisse)", defaultPts:2, poste:"commun" },
+      { key:"c_dlc",        label:"Le salarié met les DLC sur les produits systématiquement sans qu'on lui demande", defaultPts:3, poste:"commun" },
+      { key:"c_traca",      label:"Traçabilité faite systématiquement", defaultPts:3, poste:"commun" },
+
+      // CAISSE
+      { key:"p_caisse_accueil",       label:"Il a accueilli chaque client avec le discours O'Tacos", defaultPts:2, poste:"caisse" },
+      { key:"p_caisse_boisson",       label:"La boisson a été remise sans que le client ait à revenir en caisse", defaultPts:2, poste:"caisse" },
+      { key:"p_caisse_fidelite",      label:"Le salarié propose aux clients aux bornes le programme de fidélité", defaultPts:1, poste:"caisse" },
+      { key:"p_caisse_aucune_err",    label:"Aucune erreur dans les commandes Uber, Deliveroo ou C&C (si une erreur est constatée ultérieurement, elle est débitée le jour de la constatation)", defaultPts:5, poste:"caisse" },
+      { key:"p_caisse_uber",          label:"Les commandes Uber/Deliveroo ont été données rapidement et bien filmées", defaultPts:2, poste:"caisse" },
+      { key:"p_caisse_borne",         label:"Les bornes ont été surveillées et les clients en difficulté guidés", defaultPts:1, poste:"caisse" },
+      { key:"p_caisse_vente",         label:"Il a proposé une vente additionnelle (boisson, dessert, menu)", defaultPts:1, poste:"caisse" },
+      { key:"p_caisse_sac",           label:"Aucune commande donnée à un livreur qui n'a pas de sac", defaultPts:2, poste:"caisse" },
+      { key:"p_caisse_aucune_err_ck", label:"Aucune erreur de caisse (même une validation avec un mauvais mode de paiement est considérée comme une erreur)", defaultPts:5, poste:"caisse" },
+      { key:"p_caisse_glace",         label:"La préparation de la glace & O'Shake est conforme", defaultPts:1, poste:"caisse" },
+      { key:"p_caisse_priorite",      label:"L'ordre de priorité est respecté (WC propre, salle, …)", defaultPts:3, poste:"caisse" },
+      { key:"p_caisse_avis",          label:"Avis Google 5★ obtenu sur le service (cocher Oui dès la disponibilité de l'information, même pour un service antérieur)", defaultPts:2, poste:"caisse" },
+
+      // OUVERTURE CAISSE
+      { key:"p_ouv_vitrine",  label:"La vitrine était remplie et bien présentée avant l'ouverture", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_lumieres", label:"Lumières, écrans, lumière vitrine et bornes allumés", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_machine",  label:"La machine à glace est propre et la température a été prise", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_devant",   label:"Devant le restaurant propre", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_drapeau",  label:"Drapeau sorti", defaultPts:1, poste:"ouverture" },
+      { key:"p_ouv_terrasse", label:"Terrasse mise et propre (si été)", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_dlc",      label:"DLC conformes", defaultPts:3, poste:"ouverture" },
+
+      // FERMETURE CAISSE
+      { key:"p_ferm_c_terrasse",   label:"Terrasse rangée (si été)", defaultPts:2, poste:"fermeture_c" },
+      { key:"p_ferm_c_extinction", label:"Écrans éteints, enseigne éteinte, borne en veille, tablette/téléphone en charge", defaultPts:2, poste:"fermeture_c" },
+      { key:"p_ferm_c_plateau",    label:"Plateau propre et frigo boisson rempli", defaultPts:1, poste:"fermeture_c" },
+      { key:"p_ferm_c_drapeau",    label:"Drapeau rentré", defaultPts:2, poste:"fermeture_c" },
+      { key:"p_ferm_c_dlc",        label:"DLC conformes", defaultPts:3, poste:"fermeture_c" },
+      { key:"p_ferm_c_machine",    label:"Machine à glace en veille et tapping couvert", defaultPts:1, poste:"fermeture_c" },
+      { key:"p_ferm_c_timing",     label:"Timing fermeture conforme", defaultPts:2, poste:"fermeture_c" },
+
+      // FRITURE & CUISSON
+      { key:"p_frit_programmes", label:"Il respecte les programmes appropriés à chaque produit", defaultPts:2, poste:"friture" },
+      { key:"p_frit_rupture",    label:"Pas de rupture de fritures / frites ni de blocage de production", defaultPts:2, poste:"friture" },
+      { key:"p_frit_viande",     label:"Les viandes / fromagère sont lancées en temps", defaultPts:1, poste:"friture" },
+      { key:"p_frit_tickets",    label:"L'équipier regarde les tickets régulièrement pour voir ce qu'il faut lancer", defaultPts:1, poste:"friture" },
+      { key:"p_frit_appro",      label:"Approvisionnement du frigo / suppléments sans retarder la production", defaultPts:1, poste:"friture" },
+
+      // TOASTER
+      { key:"p_toast_qualite",   label:"Les tacos ont été bien toastés, sans être brûlés, avec des croisillons bien visibles", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_rythme",    label:"Le rythme au toaster n'a jamais bloqué la ligne de production", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_gratin",    label:"Le gratinage était conforme", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_emballage", label:"Les emballages étaient propres et la présentation soignée", defaultPts:1, poste:"toaster" },
+      { key:"p_toast_propre",    label:"Le toaster et sa zone étaient nettoyés régulièrement pendant le service", defaultPts:1, poste:"toaster" },
+      { key:"p_toast_discours",  label:"Discours avec le client respecte les standards O'TACOS (regard, sourire au moment de la remise)", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_appel",     label:"Dès qu'une commande Uber, Deliveroo ou C&C est prête, il appelle la caisse", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_verif",     label:"Il a vérifié chaque commande avant de la remettre au client", defaultPts:2, poste:"toaster" },
+
+      // ENVOI
+      { key:"p_envoi_rythme",  label:"Le rythme à l'envoi ne bloque pas la ligne de production", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_commu",   label:"Bonne communication avec le poste pliage / friture", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_ordre",   label:"L'ordre des tickets est respecté (C&C / Uber / restaurant)", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_louches", label:"Il ne surdose pas au niveau des louches (visuel des louches)", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_lance",   label:"Il regarde ce qu'il faut lancer (finger food / fritures)", defaultPts:1, poste:"envoi" },
+      { key:"p_envoi_viande",  label:"Il prévient le responsable des niveaux de viandes", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_avance",  label:"Il avance les gratinages + pots de sauces", defaultPts:1, poste:"envoi" },
+
+      // PLIAGE
+      { key:"p_pliage_qualite", label:"Les tacos étaient bien pliés", defaultPts:2, poste:"pliage" },
+      { key:"p_pliage_rythme",  label:"Le rythme au pliage ne bloque pas la ligne de production", defaultPts:2, poste:"pliage" },
+      { key:"p_pliage_propre",  label:"La zone de pliage était nettoyée régulièrement pendant le service", defaultPts:1, poste:"pliage" },
+      { key:"p_pliage_louche",  label:"La louche bleue est utilisée pour les suppléments fromagère, frites fromagère, et petit tacos", defaultPts:3, poste:"pliage" },
+      { key:"p_pliage_avance",  label:"Le salarié avance les frites et finger food à la personne au toaster", defaultPts:1, poste:"pliage" },
+      { key:"p_pliage_dose",    label:"Il ne surdose pas les frites / fromagère (visuel des louches)", defaultPts:2, poste:"pliage" },
+
+      // PRÉPA MATIN
+      { key:"p_prepa_m_dlc",     label:"Toutes les DLC ont été posées sur les produits dès l'ouverture", defaultPts:2, poste:"prepa_matin" },
+      { key:"p_prepa_m_epack",   label:"Epack hygiène à jour (remise en température, traçabilité, refroidissement…)", defaultPts:2, poste:"prepa_matin" },
+      { key:"p_prepa_m_stock",   label:"Les stocks nécessaires au service ont été préparés avant ouverture", defaultPts:2, poste:"prepa_matin" },
+      { key:"p_prepa_m_feuille", label:"Feuille de production utilisée et remplie", defaultPts:2, poste:"prepa_matin" },
+      { key:"p_prepa_m_decong",  label:"Les produits du lendemain ont été mis à décongeler selon le process", defaultPts:2, poste:"prepa_matin" },
+
+      // PRÉPA SOIR
+      { key:"p_prepa_s_feuille", label:"Feuille de production utilisée et remplie", defaultPts:2, poste:"prepa_soir" },
+      { key:"p_prepa_s_plonge",  label:"Plonge faite et plateaux gastro rangés", defaultPts:1, poste:"prepa_soir" },
+      { key:"p_prepa_s_dlc",     label:"Toutes les DLC et traçabilités des produits entamés ont été mises à jour", defaultPts:2, poste:"prepa_soir" },
+      { key:"p_prepa_s_decong",  label:"Les produits du lendemain ont été mis à décongeler selon le process", defaultPts:2, poste:"prepa_soir" },
+      { key:"p_prepa_s_frigo",   label:"Le frigo, les emballages et suppléments sont remplis", defaultPts:2, poste:"prepa_soir" },
+      { key:"p_prepa_s_epack",   label:"Epack hygiène à jour (remise en température, traçabilité, refroidissement…)", defaultPts:5, poste:"prepa_soir" },
+      { key:"p_prepa_s_propre",  label:"Zone cuisine et plonge propres (sol, plan de travail, …)", defaultPts:2, poste:"prepa_soir" },
+
+      // FERMETURE CUISINE
+      { key:"p_ferm_k_cello",   label:"Produits cellophanés et DLC conformes", defaultPts:2, poste:"fermeture_k" },
+      { key:"p_ferm_k_timing",  label:"Timing fermeture conforme", defaultPts:2, poste:"fermeture_k" },
+      { key:"p_ferm_k_decong",  label:"Les produits du lendemain ont été mis à décongeler selon le process", defaultPts:2, poste:"fermeture_k" },
+      { key:"p_ferm_k_chambre", label:"Les produits ont été rangés en chambre + et −", defaultPts:2, poste:"fermeture_k" },
+
+      // RÉCEPTION LIVRAISON
+      { key:"p_recep_verif",  label:"La livraison a été vérifiée (quantités, état des produits, température si froid)", defaultPts:2, poste:"reception" },
+      { key:"p_recep_fifo",   label:"Les produits ont été rangés immédiatement selon le principe FIFO", defaultPts:2, poste:"reception" },
+      { key:"p_recep_carton", label:"Cartons pliés et mis en poubelle", defaultPts:1, poste:"reception" },
+      { key:"p_recep_sol",    label:"Aucun produit laissé au sol, tout est rangé / sur cailloutis", defaultPts:2, poste:"reception" },
+      { key:"p_recep_signal", label:"Tout produit non conforme a été signalé au manager immédiatement", defaultPts:2, poste:"reception" },
+    ];
+
+    // QUESTIONS = QUESTIONS_DEFAULT + override depuis localStorage
+    let QUESTIONS = [];
+    function loadQuestions(){
+      let overrides = {};
+      try{
+        const raw = localStorage.getItem(POINTS_KEY);
+        if(raw) overrides = JSON.parse(raw);
+      }catch{}
+      QUESTIONS = QUESTIONS_DEFAULT.map(q => ({
+        ...q,
+        pts: (overrides[q.key] !== undefined && !isNaN(Number(overrides[q.key])))
+              ? Number(overrides[q.key])
+              : q.defaultPts
+      }));
+    }
+    function saveQuestions(){
+      const overrides = {};
+      QUESTIONS.forEach(q => {
+        if(Number(q.pts) !== Number(q.defaultPts)) overrides[q.key] = Number(q.pts);
+      });
+      localStorage.setItem(POINTS_KEY, JSON.stringify(overrides));
+    }
+    function resetQuestions(){
+      localStorage.removeItem(POINTS_KEY);
+      loadQuestions();
+    }
+
+    let staffPostes = {};
+    let isAdminAuthenticated = false;
+
+    // ─── HELPERS ──────────────────────────────────────────────
     function qs(id){ return document.getElementById(id); }
-
-    function showStatus(targetId, type, message){
-      const el = qs(targetId);
-      if(!el) return;
-      el.innerHTML = `<div class="status ${type}">${escapeHtml(message)}</div>`;
-    }
-
-    function clearStatus(targetId){
-      const el = qs(targetId);
-      if(el) el.innerHTML = '';
-    }
-
-    function showOverlay(show){
-      qs('savingOverlay').classList.toggle('show', !!show);
-    }
+    function showStatus(id, type, msg){ const el=qs(id); if(el) el.innerHTML=`<div class="status ${type}">${escapeHtml(msg)}</div>`; }
+    function clearStatus(id){ const el=qs(id); if(el) el.innerHTML=''; }
+    function showOverlay(show){ qs('savingOverlay').classList.toggle('show', !!show); }
 
     function todayLocal(){
-      const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,'0');
-      const day = String(d.getDate()).padStart(2,'0');
-      return `${y}-${m}-${day}`;
+      const d=new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
-    function defaultDraft(){
-      return {
-        serviceDate: todayLocal(),
-        serviceType: "",
-        managerName: "",
-        selectedTeam: [],
-        membersData: {}
-      };
+    function escapeHtml(str){
+      return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
     }
+
+    // ─── DRAFT ────────────────────────────────────────────────
+    function defaultDraft(){ return { serviceDate:todayLocal(), serviceType:"", managerName:"", selectedTeam:[], staffPostes:{}, membersData:{} }; }
 
     function loadDraft(){
       try{
-        const raw = localStorage.getItem(DRAFT_KEY);
+        const raw=localStorage.getItem(DRAFT_KEY);
         if(!raw) return defaultDraft();
-        const parsed = JSON.parse(raw);
+        const p=JSON.parse(raw);
         return {
-          serviceDate: parsed.serviceDate || todayLocal(),
-          serviceType: parsed.serviceType || "",
-          managerName: parsed.managerName || "",
-          selectedTeam: Array.isArray(parsed.selectedTeam) ? parsed.selectedTeam : [],
-          membersData: parsed.membersData || {}
+          serviceDate: p.serviceDate||todayLocal(),
+          serviceType: p.serviceType||"",
+          managerName: p.managerName||"",
+          selectedTeam: Array.isArray(p.selectedTeam)?p.selectedTeam:[],
+          staffPostes: p.staffPostes||{},
+          membersData: p.membersData||{}
         };
-      }catch{
-        return defaultDraft();
-      }
+      }catch{ return defaultDraft(); }
     }
 
+    let _saveDraftTimer=null;
     function saveDraft(){
-      const draft = collectDraftFromUI();
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-    }
-
-    function clearDraftStorage(){
-      localStorage.removeItem(DRAFT_KEY);
+      clearTimeout(_saveDraftTimer);
+      _saveDraftTimer=setTimeout(()=>{
+        const draft=collectDraftFromUI();
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      }, 250);
     }
 
     function collectDraftFromUI(){
-      const selectedTeam = [...document.querySelectorAll('.team-check:checked')].map(i => i.value);
-
-      const membersData = {};
-      document.querySelectorAll('.member-card').forEach(card => {
-        const staff = card.dataset.staff;
-        membersData[staff] = {
-          q_hands: getRadioValue(card, "q_hands"),
-          q_apron: getRadioValue(card, "q_apron"),
-          q_error: getRadioValue(card, "q_error"),
-          q_uniform: getRadioValue(card, "q_uniform"),
-          q_smile: getRadioValue(card, "q_smile"),
-          productivity: card.querySelector('[name="productivity"]')?.value || "",
-          productionScore10: card.querySelector('[name="productionScore10"]')?.value || "",
-          versatility: card.querySelector('[name="versatility"]')?.value || "",
-          teamwork: card.querySelector('[name="teamwork"]')?.value || "",
-          customer: card.querySelector('[name="customer"]')?.value || "",
-          breakage: getRadioValue(card, "breakage"),
-          comment: card.querySelector('[name="comment"]')?.value || ""
-        };
+      const selectedTeam=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+      const membersData={};
+      document.querySelectorAll('.member-card').forEach(card=>{
+        const staff=card.dataset.staff;
+        const d={};
+        card.querySelectorAll('.q-answers').forEach(group=>{
+          const key=group.dataset.qkey;
+          const oui=group.querySelector('button.active-oui');
+          const non=group.querySelector('button.active-non');
+          const na=group.querySelector('button.active-na');
+          if(oui) d[key]='oui';
+          else if(non) d[key]='non';
+          else if(na) d[key]='na';
+        });
+        const ta=card.querySelector('textarea[name="comment"]');
+        if(ta) d.comment=ta.value;
+        membersData[staff]=d;
       });
-
       return {
-        serviceDate: qs('serviceDate').value || todayLocal(),
-        serviceType: qs('serviceType').value || "",
-        managerName: qs('managerName').value || "",
-        selectedTeam,
-        membersData
+        serviceDate:qs('serviceDate').value||todayLocal(),
+        serviceType:qs('serviceType').value||"",
+        managerName:qs('managerName').value||"",
+        selectedTeam, staffPostes, membersData
       };
     }
 
-    function getRadioValue(scope, name){
-      const checked = scope.querySelector(`input[name="${name}"]:checked`);
-      return checked ? checked.value : "";
-    }
-
     function applyDraftToHeader(draft){
-      qs('serviceDate').value = draft.serviceDate || todayLocal();
-      qs('serviceType').value = draft.serviceType || "";
-      qs('managerName').value = draft.managerName || "";
+      qs('serviceDate').value=draft.serviceDate||todayLocal();
+      qs('serviceType').value=draft.serviceType||"";
+      qs('managerName').value=draft.managerName||"";
     }
 
+    function clearDraftStorage(){ localStorage.removeItem(DRAFT_KEY); }
+
+    // ─── ROSTER ───────────────────────────────────────────────
     async function loadRoster(){
-      const res = await fetch(`${APPS_SCRIPT_URL}?mode=roster`);
-      const data = await res.json();
-      if(!data.ok) throw new Error(data.error || "Impossible de charger l'équipe.");
-      return data.roster || [];
+      const res=await fetch(`${APPS_SCRIPT_URL}?mode=roster`);
+      const data=await res.json();
+      if(!data.ok) throw new Error(data.error||"Impossible de charger l'équipe.");
+      return data.roster||[];
     }
 
     function renderTeamList(roster, draft){
-      const box = qs('teamList');
-      if(!roster.length){
-        box.innerHTML = `<div class="muted">Aucun équipier dans la feuille Équipe.</div>`;
-        return;
-      }
-
-      box.innerHTML = roster.map(name => `
+      const box=qs('teamList');
+      if(!roster.length){ box.innerHTML=`<div class="muted">Aucun équipier dans la feuille Équipe.</div>`; return; }
+      box.innerHTML=roster.map(name=>`
         <label class="check">
-          <input type="checkbox" class="team-check" value="${escapeHtmlAttr(name)}" ${draft.selectedTeam.includes(name) ? 'checked' : ''}>
+          <input type="checkbox" class="team-check" value="${escapeHtml(name)}" ${draft.selectedTeam.includes(name)?'checked':''}>
           <span>${escapeHtml(name)}</span>
         </label>
       `).join('');
-
-      box.querySelectorAll('.team-check').forEach(el => {
-        el.addEventListener('change', saveDraft);
-      });
+      box.querySelectorAll('.team-check').forEach(el=>el.addEventListener('change', saveDraft));
     }
 
-    function prepareEvaluationFromDraft(draft){
-      const selected = draft.selectedTeam || [];
-      renderMemberCards(selected, draft.membersData || {});
+    // ─── STEP 2 ───────────────────────────────────────────────
+    function renderStep2(selectedTeam){
+      const grid=qs('step2Grid');
+      grid.innerHTML=selectedTeam.map(name=>{
+        const assigned=staffPostes[name]||[];
+        return `
+          <div class="staff-poste-card" data-staff="${escapeHtml(name)}">
+            <div class="staff-name">${escapeHtml(name)}</div>
+            <div class="postes-wrap">
+              ${POSTES.map(p=>`
+                <div class="poste-chip zone-${p.zone} ${assigned.includes(p.id)?'selected':''}"
+                     data-poste="${p.id}"
+                     data-staff="${escapeHtml(name)}"
+                     onclick="togglePoste(this)">
+                  ${escapeHtml(p.label)}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function togglePoste(chip){
+      const staff=chip.dataset.staff;
+      const poste=chip.dataset.poste;
+      if(!staffPostes[staff]) staffPostes[staff]=[];
+      const idx=staffPostes[staff].indexOf(poste);
+      if(idx>=0){ staffPostes[staff].splice(idx,1); chip.classList.remove('selected'); }
+      else{ staffPostes[staff].push(poste); chip.classList.add('selected'); }
       saveDraft();
     }
 
+    // ─── STEP 3 — ÉVALUATION ──────────────────────────────────
     function renderMemberCards(selectedTeam, membersData){
-      const box = qs('membersContainer');
-
-      if(!selectedTeam.length){
-        box.innerHTML = `<div class="muted">Sélectionne l’équipe présente puis clique sur “Préparer l’évaluation”.</div>`;
-        return;
-      }
-
-      box.innerHTML = selectedTeam.map(name => memberCardHtml(name, membersData[name] || {})).join('');
-
-      box.querySelectorAll('input, select, textarea').forEach(el => {
-        el.addEventListener('input', () => {
-          updateAllScores();
-          saveDraft();
-        });
-        el.addEventListener('change', () => {
-          updateAllScores();
-          saveDraft();
-        });
+      const box=qs('membersContainer');
+      if(!selectedTeam.length){ box.innerHTML=`<div class="muted">Aucun équipier sélectionné.</div>`; return; }
+      box.innerHTML=selectedTeam.map(name=>memberCardHtml(name, membersData[name]||{}, staffPostes[name]||[])).join('');
+      box.querySelectorAll('textarea').forEach(el=>{
+        el.addEventListener('change', saveDraft);
+        el.addEventListener('input', saveDraft);
       });
-
       updateAllScores();
     }
 
-    function memberCardHtml(staff, data){
+    function memberCardHtml(staff, data, postes){
+      const posteLabels=postes.map(pid=>{
+        const p=POSTES.find(x=>x.id===pid);
+        return p?`<span class="poste-tag zone-${p.zone}">${escapeHtml(p.label)}</span>`:'';
+      }).join('');
+
+      const commonQs=QUESTIONS.filter(q=>q.poste==='commun');
+      const maxPts=commonQs.reduce((a,q)=>a+Number(q.pts),0) +
+                   QUESTIONS.filter(q=>postes.includes(q.poste)).reduce((a,q)=>a+Number(q.pts),0);
+
       return `
-        <div class="member-card" data-staff="${escapeHtmlAttr(staff)}">
+        <div class="member-card" data-staff="${escapeHtml(staff)}">
           <div class="member-head">
             <div>
               <h3>${escapeHtml(staff)}</h3>
-              <div class="muted">Évaluation complète sur 100</div>
+              <div class="muted" style="margin-top:2px">Score sur <span class="member-max">${maxPts}</span> pts</div>
             </div>
             <div class="score-box">
-              <div style="font-size:12px;opacity:.9">SCORE</div>
-              <div class="member-total" style="font-size:28px">0</div>
+              <div class="s-label">SCORE</div>
+              <div class="s-value member-total">0</div>
+              <div class="s-pct member-pct">0%</div>
             </div>
           </div>
 
-          <div class="grid-2">
-            ${QUESTION_CONFIG.map(q => `
-              <div class="question">
-                <div><b>${escapeHtml(q.label)}</b></div>
-                <div class="answers">
-                  <label>
-                    <input type="radio" name="${q.key}" value="yes" ${data[q.key] === 'yes' ? 'checked' : ''}>
-                    Oui (${q.yes > 0 ? '+' : ''}${q.yes})
-                  </label>
-                  <label>
-                    <input type="radio" name="${q.key}" value="no" ${data[q.key] === 'no' ? 'checked' : ''}>
-                    Non (${q.no > 0 ? '+' : ''}${q.no})
-                  </label>
-                </div>
+          ${posteLabels ? `<div class="poste-tags">${posteLabels}</div>` : ''}
+
+          <div class="q-section">
+            <div class="q-section-title">Questions communes</div>
+            ${commonQs.map(q=>questionHtml(q, data)).join('')}
+          </div>
+
+          ${postes.map(pid=>{
+            const pLabel=POSTES.find(x=>x.id===pid)?.label||pid;
+            const pQs=QUESTIONS.filter(q=>q.poste===pid);
+            if(!pQs.length) return '';
+            return `
+              <div class="q-section">
+                <div class="q-section-title">Poste : ${escapeHtml(pLabel)}</div>
+                ${pQs.map(q=>questionHtml(q, data)).join('')}
               </div>
-            `).join('')}
-          </div>
+            `;
+          }).join('')}
 
-          <div style="height:14px"></div>
-
-          <div class="grid-3">
-            <div class="criterion">
-              <label>Productivité</label>
-              <small>Cadence, efficacité, tenue du poste pendant le rush, proactive — 20%</small>
-              <select name="productivity">
-                ${score5Options(data.productivity)}
-              </select>
-            </div>
-
-            <div class="criterion">
-              <label>Score de challenge production à saisir</label>
-              <small>20%</small>
-              <input type="number" min="0" max="10" step="1" name="productionScore10" value="${escapeHtmlAttr(data.productionScore10 || '')}">
-            </div>
-
-            <div class="criterion">
-              <label>Polyvalence</label>
-              <small>Aide sur plusieurs postes, flexibilité sur le service, autonome — 15%</small>
-              <select name="versatility">
-                ${score5Options(data.versatility)}
-              </select>
-            </div>
-
-            <div class="criterion">
-              <label>Esprit d’équipe</label>
-              <small>Aide ses collègues, communique bien, attitude positive — 15%</small>
-              <select name="teamwork">
-                ${score5Options(data.teamwork)}
-              </select>
-            </div>
-
-            <div class="criterion">
-              <label>Satisfaction client</label>
-              <small>Accueil, relation client, avis, réclamations, erreurs de service, relation avec les clients au toaster & bornes — 20%</small>
-              <select name="customer">
-                ${score5Options(data.customer)}
-              </select>
-            </div>
-
-            <div class="criterion">
-              <label>Casse</label>
-              <small>Pas de casse & mauvaise manipulation du matériel dans le service — 10%</small>
-              <div class="answers">
-                <label>
-                  <input type="radio" name="breakage" value="yes" ${data.breakage === 'yes' ? 'checked' : ''}>
-                  Oui (5/5)
-                </label>
-                <label>
-                  <input type="radio" name="breakage" value="no" ${data.breakage === 'no' ? 'checked' : ''}>
-                  Non (0/5)
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div style="height:14px"></div>
-
-          <div class="field">
+          <div class="field" style="margin-top:10px">
             <label>Commentaire manager</label>
-            <textarea name="comment" placeholder="Commentaire libre...">${escapeHtml(data.comment || '')}</textarea>
+            <textarea name="comment" placeholder="Points forts, axes d'amélioration...">${escapeHtml(data.comment||'')}</textarea>
           </div>
 
-          <div style="margin-top:12px" class="grid-3">
-            <div class="question"><b>Questions basiques</b><div class="muted member-basic">0 / 15</div></div>
-            <div class="question"><b>Critères pondérés</b><div class="muted member-weighted">0 / 85</div></div>
-            <div class="question"><b>Score final</b><div class="muted member-final">0 / 100</div></div>
+          <div style="margin-top:10px" class="grid-3">
+            <div class="question"><b>Score</b><div class="muted member-score-detail">0 / ${maxPts}</div></div>
+            <div class="question"><b>Pourcentage</b><div class="muted member-pct-detail">0%</div></div>
+            <div class="question"><b>Niveau</b><div class="muted member-niveau">—</div></div>
           </div>
         </div>
       `;
     }
 
-    function score5Options(selected){
-      const val = String(selected || '');
-      const options = ['<option value="">Choisir</option>'];
-      for(let i=0;i<=5;i++){
-        options.push(`<option value="${i}" ${val===String(i)?'selected':''}>${i} / 5</option>`);
-      }
-      return options.join('');
+    function questionHtml(q, data){
+      const val=data[q.key]||'';
+      return `
+        <div class="question">
+          <div class="q-text">${escapeHtml(q.label)}</div>
+          <div class="q-bottom">
+            <span class="q-pts">+${q.pts} pt${q.pts>1?'s':''} si Oui &nbsp;•&nbsp; −${NEGATIVE_PENALTY} pt si Non</span>
+            <div class="q-answers" data-qkey="${escapeHtml(q.key)}">
+              <button type="button" onclick="setAnswer(this,'oui')" class="${val==='oui'?'active-oui':''}">Oui</button>
+              <button type="button" onclick="setAnswer(this,'non')" class="${val==='non'?'active-non':''}">Non</button>
+              <button type="button" onclick="setAnswer(this,'na')" class="${val==='na'?'active-na':''}">N/A</button>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
-    function yesNoPoints(value, yesPts, noPts){
-      if(value === 'yes') return yesPts;
-      if(value === 'no') return noPts;
-      return 0;
+    function setAnswer(btn, value){
+      const group=btn.closest('.q-answers');
+      const buttons=group.querySelectorAll('button');
+      const wasActive=btn.classList.contains('active-oui')||btn.classList.contains('active-non')||btn.classList.contains('active-na');
+      buttons.forEach(b=>b.classList.remove('active-oui','active-non','active-na'));
+      if(!wasActive) btn.classList.add('active-'+value);
+      updateAllScores();
+      saveDraft();
     }
 
-    function num(v){
-      return Number(v || 0);
-    }
-
-    function clamp(n, min, max){
-      return Math.max(min, Math.min(max, n));
-    }
-
+    // ─── CALCUL SCORE CANADIEN ────────────────────────────────
     function computeCardScore(card){
-      const qHands = getRadioValue(card, 'q_hands');
-      const qApron = getRadioValue(card, 'q_apron');
-      const qError = getRadioValue(card, 'q_error');
-      const qUniform = getRadioValue(card, 'q_uniform');
-      const qSmile = getRadioValue(card, 'q_smile');
+      const staff=card.dataset.staff;
+      const postes=staffPostes[staff]||[];
+      const relevantQs=QUESTIONS.filter(q=>q.poste==='commun'||postes.includes(q.poste));
+      let score=0, max=0;
+      relevantQs.forEach(q=>{
+        const group=card.querySelector(`.q-answers[data-qkey="${q.key}"]`);
+        if(!group) return;
+        const oui=group.querySelector('button.active-oui');
+        const non=group.querySelector('button.active-non');
+        const na=group.querySelector('button.active-na');
+        if(na) return; // retiré du calcul
+        max += Number(q.pts);
+        if(oui) score += Number(q.pts);
+        else if(non) score -= NEGATIVE_PENALTY;
+      });
+      // Plafonner le score à 0 minimum
+      if(score < 0) score = 0;
+      const pct=max>0?Math.round(score/max*100):0;
+      return { score: roundScore(score), max, pct };
+    }
 
-      const productivity = num(card.querySelector('[name="productivity"]')?.value);
-      const productionScore10 = num(card.querySelector('[name="productionScore10"]')?.value);
-      const versatility = num(card.querySelector('[name="versatility"]')?.value);
-      const teamwork = num(card.querySelector('[name="teamwork"]')?.value);
-      const customer = num(card.querySelector('[name="customer"]')?.value);
-      const breakage = getRadioValue(card, 'breakage');
-
-      const basicScore =
-        yesNoPoints(qHands, 2, -1) +
-        yesNoPoints(qApron, 5, -4) +
-        yesNoPoints(qError, -2, 3) +
-        yesNoPoints(qUniform, 3, -2) +
-        yesNoPoints(qSmile, 2, -1);
-
-      const productivityPts = (productivity / 5) * 20;
-      const productionPts = (clamp(productionScore10, 0, 10) / 10) * 20;
-      const versatilityPts = (versatility / 5) * 15;
-      const teamworkPts = (teamwork / 5) * 15;
-      const customerPts = (customer / 5) * 20;
-      const breakage5 = breakage === 'yes' ? 5 : 0;
-      const breakagePts = (breakage5 / 5) * 10;
-
-      const weightedScore = productivityPts + productionPts + versatilityPts + teamworkPts + customerPts + breakagePts;
-      const total = clamp(Math.round((basicScore + weightedScore) * 10) / 10, 0, 100);
-
-      return {
-        q_hands: qHands === 'yes' ? 2 : qHands === 'no' ? -1 : 0,
-        q_apron: qApron === 'yes' ? 5 : qApron === 'no' ? -4 : 0,
-        q_error: qError === 'yes' ? -2 : qError === 'no' ? 3 : 0,
-        q_uniform: qUniform === 'yes' ? 3 : qUniform === 'no' ? -2 : 0,
-        q_smile: qSmile === 'yes' ? 2 : qSmile === 'no' ? -1 : 0,
-        basicScore: Math.round(basicScore * 10) / 10,
-
-        productivity,
-        productionScore10: clamp(productionScore10, 0, 10),
-        versatility,
-        teamwork,
-        customer,
-        breakage5,
-
-        weightedScore: Math.round(weightedScore * 10) / 10,
-        total
-      };
+    function roundScore(n){
+      // arrondi à 0,5 près
+      return Math.round(n*2)/2;
     }
 
     function updateAllScores(){
-      document.querySelectorAll('.member-card').forEach(card => {
-        const s = computeCardScore(card);
-        card.querySelector('.member-total').textContent = Math.round(s.total);
-        card.querySelector('.member-basic').textContent = `${s.basicScore} / 15`;
-        card.querySelector('.member-weighted').textContent = `${s.weightedScore} / 85`;
-        card.querySelector('.member-final').textContent = `${s.total} / 100`;
+      document.querySelectorAll('.member-card').forEach(card=>{
+        const {score,max,pct}=computeCardScore(card);
+        card.querySelector('.member-total').textContent=score;
+        card.querySelector('.member-pct').textContent=pct+'%';
+        card.querySelector('.member-score-detail').textContent=`${score} / ${max}`;
+        card.querySelector('.member-pct-detail').textContent=pct+'%';
+        card.querySelector('.member-max').textContent=max;
+        let niveau='—';
+        if(pct>=90) niveau='Excellent';
+        else if(pct>=75) niveau='Bon niveau';
+        else if(pct>=50) niveau='Moyen';
+        else if(score>0) niveau='Insuffisant';
+        else niveau='—';
+        card.querySelector('.member-niveau').textContent=niveau;
       });
     }
 
+    // ─── NAVIGATION ──────────────────────────────────────────
+    function showStep(n){
+      qs('step2Section').style.display=n===2?'block':'none';
+      qs('step3Section').style.display=n===3?'block':'none';
+      qs('saveBar').style.display=n===3?'flex':'none';
+    }
+
+    // ─── SUBMIT ──────────────────────────────────────────────
     function validateBeforeSubmit(){
       if(!qs('serviceDate').value) return "Merci de choisir une date.";
       if(!qs('serviceType').value) return "Merci de choisir le service.";
       if(!qs('managerName').value) return "Merci de choisir le nom du manager.";
-
-      const cards = [...document.querySelectorAll('.member-card')];
-      if(!cards.length) return "Merci de préparer l’évaluation avec l’équipe présente.";
-
+      const cards=[...document.querySelectorAll('.member-card')];
+      if(!cards.length) return "Aucun équipier à évaluer.";
       return "";
     }
 
     function buildPayloadRows(){
-      const serviceDate = qs('serviceDate').value;
-      const serviceType = qs('serviceType').value;
-      const managerName = qs('managerName').value;
-
-      return [...document.querySelectorAll('.member-card')].map(card => {
-        const staff = card.dataset.staff;
-        const score = computeCardScore(card);
-        const comment = card.querySelector('[name="comment"]')?.value || '';
-
+      const serviceDate=qs('serviceDate').value;
+      const serviceType=qs('serviceType').value;
+      const managerName=qs('managerName').value;
+      return [...document.querySelectorAll('.member-card')].map(card=>{
+        const staff=card.dataset.staff;
+        const {score,max,pct}=computeCardScore(card);
+        const comment=card.querySelector('[name="comment"]')?.value||'';
+        const postes=(staffPostes[staff]||[]).join(',');
+        const answers={};
+        card.querySelectorAll('.q-answers').forEach(group=>{
+          const key=group.dataset.qkey;
+          const oui=group.querySelector('button.active-oui');
+          const non=group.querySelector('button.active-non');
+          const na=group.querySelector('button.active-na');
+          if(oui) answers[key]='oui';
+          else if(non) answers[key]='non';
+          else if(na) answers[key]='na';
+        });
         return {
-          restaurant: "O'TACOS",
-          serviceDate,
-          serviceType,
-          manager: managerName,
-          staff,
-
-          q_hands: score.q_hands,
-          q_apron: score.q_apron,
-          q_error: score.q_error,
-          q_uniform: score.q_uniform,
-          q_smile: score.q_smile,
-          basicScore: score.basicScore,
-
-          productivity: score.productivity,
-          productionScore10: score.productionScore10,
-          versatility: score.versatility,
-          teamwork: score.teamwork,
-          customer: score.customer,
-          breakage5: score.breakage5,
-
-          weightedScore: score.weightedScore,
-          lineScore: score.total,
-          comment
+          restaurant:"O'TACOS",
+          serviceDate, serviceType, manager:managerName,
+          staff, postes, score, max, pct,
+          comment,
+          answers: JSON.stringify(answers)
         };
       });
-    }
-
-    async function fetchExistingServiceData(serviceDate, serviceType){
-      if(!serviceDate || !serviceType) return [];
-
-      const url = `${APPS_SCRIPT_URL}?mode=serviceData&date=${encodeURIComponent(serviceDate)}&service=${encodeURIComponent(serviceType)}`;
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if(!data.ok){
-        throw new Error(data.error || "Impossible de vérifier le service existant.");
-      }
-
-      return data.serviceData || [];
-    }
-
-    function mapQuestionScoreToYesNo(key, score){
-      const n = Number(score || 0);
-
-      if(key === 'q_hands'){
-        if(n === 2) return 'yes';
-        if(n === -1) return 'no';
-      }
-      if(key === 'q_apron'){
-        if(n === 5) return 'yes';
-        if(n === -4) return 'no';
-      }
-      if(key === 'q_error'){
-        if(n === -2) return 'yes';
-        if(n === 3) return 'no';
-      }
-      if(key === 'q_uniform'){
-        if(n === 3) return 'yes';
-        if(n === -2) return 'no';
-      }
-      if(key === 'q_smile'){
-        if(n === 2) return 'yes';
-        if(n === -1) return 'no';
-      }
-
-      return "";
-    }
-
-    function mergeExistingServiceDataIntoDraft(existingRows, currentDraft){
-      const merged = JSON.parse(JSON.stringify(currentDraft));
-
-      existingRows.forEach(row => {
-        const staff = row.staff;
-        if(!staff) return;
-
-        if(!merged.selectedTeam.includes(staff)){
-          merged.selectedTeam.push(staff);
-        }
-
-        merged.membersData[staff] = {
-          q_hands: mapQuestionScoreToYesNo('q_hands', row.q_hands),
-          q_apron: mapQuestionScoreToYesNo('q_apron', row.q_apron),
-          q_error: mapQuestionScoreToYesNo('q_error', row.q_error),
-          q_uniform: mapQuestionScoreToYesNo('q_uniform', row.q_uniform),
-          q_smile: mapQuestionScoreToYesNo('q_smile', row.q_smile),
-
-          productivity: row.productivity ?? "",
-          productionScore10: row.productionScore10 ?? "",
-          versatility: row.versatility ?? "",
-          teamwork: row.teamwork ?? "",
-          customer: row.customer ?? "",
-          breakage: Number(row.breakage5) === 5 ? 'yes' : 'no',
-          comment: row.comment || ""
-        };
-      });
-
-      return merged;
-    }
-
-    async function ensureValidationCodeIfClosed(serviceDate, serviceType){
-      const existing = await fetchExistingServiceData(serviceDate, serviceType);
-
-      if(!existing.length){
-        currentOverrideCode = "";
-        return existing;
-      }
-
-      if(currentOverrideCode){
-        return existing;
-      }
-
-      const code = window.prompt(
-        "Ce service est déjà clôturé.\n\nPour modifier les saisies existantes, merci de saisir le code de validation :"
-      );
-
-      if(code === null){
-        throw new Error("Modification annulée.");
-      }
-
-      currentOverrideCode = String(code).trim();
-      return existing;
     }
 
     async function submitService(){
-      clearStatus('topStatus');
       clearStatus('bottomStatus');
+      const err=validateBeforeSubmit();
+      if(err){ showStatus('bottomStatus','err',err); return; }
+      if(!navigator.onLine){ showStatus('bottomStatus','warn',"Hors connexion. Brouillon conservé localement."); saveDraft(); return; }
 
-      const err = validateBeforeSubmit();
-      if(err){
-        showStatus('bottomStatus', 'err', err);
-        return;
-      }
-
-      if(!navigator.onLine){
-        showStatus('bottomStatus', 'warn', "Vous êtes hors connexion. La saisie reste enregistrée sur cet appareil jusqu’à l’envoi ou jusqu’à l’effacement manuel.");
-        saveDraft();
-        return;
-      }
-
-      const payload = {
-        action: "submitScores",
-        rows: buildPayloadRows(),
-        overrideCode: currentOverrideCode || ""
-      };
-
+      const payload={ action:"submitScores", rows:buildPayloadRows(), overrideCode:currentOverrideCode||"" };
       try{
         showOverlay(true);
+        let res=await fetch(APPS_SCRIPT_URL,{ method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload) });
+        let data=JSON.parse(await res.text());
 
-        let res = await fetch(APPS_SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload)
-        });
-
-        let text = await res.text();
-        let data;
-        try{
-          data = JSON.parse(text);
-        }catch{
-          throw new Error("Réponse invalide du serveur.");
+        if(data.code==='VALIDATION_REQUIRED'){
+          const code=window.prompt("Ce service est déjà clôturé.\nSaisissez le code de validation pour modifier :");
+          if(code===null) throw new Error("Modification annulée.");
+          currentOverrideCode=String(code).trim();
+          payload.overrideCode=currentOverrideCode;
+          res=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
+          data=JSON.parse(await res.text());
         }
-
-        if(data.code === 'VALIDATION_REQUIRED'){
-          const code = window.prompt(
-            "Ce service est déjà clôturé.\n\nMerci de saisir le code de validation pour autoriser les modifications :"
-          );
-
-          if(code === null){
-            throw new Error("Modification annulée.");
-          }
-
-          currentOverrideCode = String(code).trim();
-          payload.overrideCode = currentOverrideCode;
-
-          res = await fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(payload)
-          });
-
-          text = await res.text();
-          try{
-            data = JSON.parse(text);
-          }catch{
-            throw new Error("Réponse invalide du serveur.");
-          }
-        }
-
-        if(!data.ok){
-          throw new Error(data.error || "Enregistrement impossible.");
-        }
-
+        if(!data.ok) throw new Error(data.error||"Enregistrement impossible.");
         saveDraft();
-
-        const inserted = Number(data.inserted || 0);
-        const updated = Number(data.updated || 0);
-
-        showStatus(
-          'bottomStatus',
-          'ok',
-          `Service enregistré avec succès. ${inserted} ajout(s), ${updated} mise(s) à jour. Le brouillon reste conservé jusqu’à effacement manuel.`
-        );
+        showStatus('bottomStatus','ok',`Service enregistré. ${data.inserted||0} ajout(s), ${data.updated||0} mise(s) à jour.`);
       }catch(error){
         saveDraft();
-        showStatus('bottomStatus', 'err', error.message || "Erreur lors de l’enregistrement.");
+        showStatus('bottomStatus','err',error.message||"Erreur lors de l'enregistrement.");
       }finally{
         showOverlay(false);
       }
     }
 
     function clearAll(){
-      const ok = confirm("Voulez-vous vraiment tout effacer sur cette page ? Le brouillon local sera supprimé.");
-      if(!ok) return;
-
+      if(!confirm("Voulez-vous vraiment tout effacer ?")) return;
       clearDraftStorage();
-      currentOverrideCode = "";
-
-      const draft = defaultDraft();
+      currentOverrideCode="";
+      staffPostes={};
+      const draft=defaultDraft();
       applyDraftToHeader(draft);
-
-      document.querySelectorAll('.team-check').forEach(ch => ch.checked = false);
-      qs('membersContainer').innerHTML = `<div class="muted">Sélectionne l’équipe présente puis clique sur “Préparer l’évaluation”.</div>`;
-
+      document.querySelectorAll('.team-check').forEach(ch=>ch.checked=false);
+      qs('membersContainer').innerHTML=`<div class="muted">Les fiches apparaîtront ici.</div>`;
+      showStep(0);
       clearStatus('topStatus');
-      showStatus('bottomStatus', 'ok', "Le brouillon local a été effacé.");
+      showStatus('bottomStatus','ok',"Brouillon effacé.");
     }
 
+    // ─── PARAMÈTRES (PROTÉGÉS) ────────────────────────────────
+    function showSettingsLogin(){
+      qs('settingsPwd').value='';
+      qs('settingsLoginStatus').innerHTML='';
+      qs('settingsLoginOverlay').classList.add('show');
+      setTimeout(()=>qs('settingsPwd').focus(), 100);
+    }
+    function hideSettingsLogin(){ qs('settingsLoginOverlay').classList.remove('show'); }
+    function trySettingsLogin(){
+      if(qs('settingsPwd').value === ADMIN_PASSWORD){
+        isAdminAuthenticated = true;
+        hideSettingsLogin();
+        showSettings();
+      }else{
+        showStatus('settingsLoginStatus','err','Mot de passe incorrect.');
+      }
+    }
+
+    function showSettings(){
+      renderSettings();
+      qs('settingsOverlay').classList.add('show');
+    }
+    function hideSettings(){ qs('settingsOverlay').classList.remove('show'); }
+
+    function renderSettings(){
+      const groups = [{ id:'commun', label:'Questions communes' }].concat(POSTES.map(p=>({id:p.id,label:p.label})));
+      const html = groups.map(g=>{
+        const qsInGroup = QUESTIONS.filter(q=>q.poste===g.id);
+        if(!qsInGroup.length) return '';
+        return `
+          <div class="settings-poste-block">
+            <div class="settings-poste-title">${escapeHtml(g.label)}</div>
+            ${qsInGroup.map(q=>`
+              <div class="settings-q-row">
+                <div class="settings-q-text">${escapeHtml(q.label)}</div>
+                <div class="settings-q-pts">
+                  <input type="number" step="0.5" min="0" value="${q.pts}" data-qkey="${escapeHtml(q.key)}" />
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }).join('');
+      qs('settingsContent').innerHTML = html;
+    }
+
+    function saveSettings(){
+      qs('settingsContent').querySelectorAll('input[data-qkey]').forEach(input=>{
+        const key=input.dataset.qkey;
+        const val=Number(input.value);
+        const q=QUESTIONS.find(x=>x.key===key);
+        if(q && !isNaN(val) && val>=0){
+          q.pts = val;
+        }
+      });
+      saveQuestions();
+      // Re-render les fiches si on est à l'étape 3
+      if(qs('step3Section').style.display!=='none'){
+        const draft=loadDraft();
+        const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+        renderMemberCards(selected, draft.membersData||{});
+      }
+      showStatus('settingsStatus','ok','Points enregistrés.');
+    }
+
+    function resetSettings(){
+      if(!confirm('Restaurer les valeurs initiales pour TOUTES les questions ?')) return;
+      resetQuestions();
+      renderSettings();
+      if(qs('step3Section').style.display!=='none'){
+        const draft=loadDraft();
+        const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+        renderMemberCards(selected, draft.membersData||{});
+      }
+      showStatus('settingsStatus','ok','Valeurs initiales restaurées.');
+    }
+
+    // ─── INIT ────────────────────────────────────────────────
     async function init(){
       try{
-        const draft = loadDraft();
+        loadQuestions();
+        const draft=loadDraft();
         applyDraftToHeader(draft);
+        staffPostes=draft.staffPostes||{};
 
-        const roster = await loadRoster();
+        const roster=await loadRoster();
         renderTeamList(roster, draft);
 
-        qs('serviceDate').addEventListener('change', () => {
-          currentOverrideCode = "";
-          saveDraft();
+        ['serviceDate','serviceType','managerName'].forEach(id=>{
+          qs(id).addEventListener('change', ()=>{ currentOverrideCode=""; saveDraft(); });
         });
 
-        qs('serviceType').addEventListener('change', () => {
-          currentOverrideCode = "";
-          saveDraft();
+        qs('goStep2Btn').addEventListener('click', ()=>{
+          clearStatus('topStatus');
+          if(!qs('serviceDate').value){ showStatus('topStatus','err',"Merci de choisir une date."); return; }
+          if(!qs('serviceType').value){ showStatus('topStatus','err',"Merci de choisir le service."); return; }
+          const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+          if(!selected.length){ showStatus('topStatus','err',"Sélectionne au moins un équipier."); return; }
+          renderStep2(selected);
+          showStep(2);
+          window.scrollTo({top:qs('step2Section').offsetTop-20,behavior:'smooth'});
         });
 
-        qs('managerName').addEventListener('change', saveDraft);
+        qs('backStep1Btn').addEventListener('click', ()=>{ showStep(0); window.scrollTo({top:0,behavior:'smooth'}); });
 
-        qs('prepareBtn').addEventListener('click', async () => {
-          try{
-            clearStatus('topStatus');
+        qs('goStep3Btn').addEventListener('click', ()=>{
+          clearStatus('step2Status');
+          const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+          const missing=selected.filter(s=>!staffPostes[s]||!staffPostes[s].length);
+          if(missing.length){ showStatus('step2Status','warn',`Postes manquants : ${missing.join(', ')}`); return; }
+          renderMemberCards(selected, loadDraft().membersData||{});
+          showStep(3);
+          window.scrollTo({top:qs('step3Section').offsetTop-20,behavior:'smooth'});
+        });
 
-            const currentDraft = collectDraftFromUI();
-
-            if(!currentDraft.serviceDate){
-              showStatus('topStatus', 'err', "Merci de choisir une date.");
-              return;
-            }
-
-            if(!currentDraft.serviceType){
-              showStatus('topStatus', 'err', "Merci de choisir le service.");
-              return;
-            }
-
-            const existing = await ensureValidationCodeIfClosed(currentDraft.serviceDate, currentDraft.serviceType);
-            const mergedDraft = mergeExistingServiceDataIntoDraft(existing, currentDraft);
-
-            renderTeamList(await loadRoster(), mergedDraft);
-            prepareEvaluationFromDraft(mergedDraft);
-
-            showStatus(
-              'topStatus',
-              'ok',
-              existing.length
-                ? "Service existant chargé. Vous pouvez modifier les équipiers concernés."
-                : "Les fiches des équipiers présents sont prêtes."
-            );
-          }catch(error){
-            showStatus('topStatus', 'err', error.message || "Impossible de préparer l’évaluation.");
-          }
+        qs('backStep2Btn').addEventListener('click', ()=>{
+          const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+          renderStep2(selected);
+          showStep(2);
+          window.scrollTo({top:qs('step2Section').offsetTop-20,behavior:'smooth'});
         });
 
         qs('saveBtn').addEventListener('click', submitService);
         qs('clearBtn').addEventListener('click', clearAll);
 
-        if((draft.selectedTeam || []).length){
-          prepareEvaluationFromDraft(draft);
-        }
+        // Settings
+        qs('openSettingsBtn').addEventListener('click', ()=>{
+          if(isAdminAuthenticated) showSettings();
+          else showSettingsLogin();
+        });
+        qs('settingsLoginCancel').addEventListener('click', hideSettingsLogin);
+        qs('settingsLoginConfirm').addEventListener('click', trySettingsLogin);
+        qs('settingsPwd').addEventListener('keydown', e=>{ if(e.key==='Enter') trySettingsLogin(); });
+        qs('settingsCloseBtn').addEventListener('click', hideSettings);
+        qs('settingsSaveBtn').addEventListener('click', saveSettings);
+        qs('settingsResetBtn').addEventListener('click', resetSettings);
+
+        // Click outside modale → ferme
+        qs('settingsLoginOverlay').addEventListener('click', e=>{ if(e.target===qs('settingsLoginOverlay')) hideSettingsLogin(); });
+        qs('settingsOverlay').addEventListener('click', e=>{ if(e.target===qs('settingsOverlay')) hideSettings(); });
+
       }catch(error){
-        showStatus('topStatus', 'err', error.message || "Impossible de charger la page.");
+        showStatus('topStatus','err',error.message||"Impossible de charger la page.");
       }
     }
 
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    function escapeHtmlAttr(str){
-      return escapeHtml(str);
-    }
-
-    window.addEventListener('online', () => {
-      showStatus('topStatus', 'ok', "Connexion rétablie. Le brouillon local est toujours présent et peut être envoyé.");
-    });
-
-    window.addEventListener('offline', () => {
-      saveDraft();
-      showStatus('topStatus', 'warn', "Vous êtes hors connexion. La saisie reste conservée localement.");
-    });
+    window.addEventListener('online', ()=>showStatus('topStatus','ok',"Connexion rétablie."));
+    window.addEventListener('offline', ()=>{ saveDraft(); showStatus('topStatus','warn',"Hors connexion. Brouillon conservé."); });
 
     init();
   </script>
