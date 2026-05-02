@@ -33,11 +33,11 @@
     .main{display:grid;grid-template-columns:1fr;gap:14px}
     @media(min-width:980px){ .main{grid-template-columns:1.1fr .9fr} }
     .card{padding:16px;margin-bottom:14px}
-    table{width:100%;border-collapse:collapse}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
     th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
-    th{color:#5e6570;font-size:12px;font-weight:700}
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;font-weight:900;font-size:13px}
-    select,input[type="text"],input[type="password"],input[type="date"],textarea{padding:12px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;font-size:15px}
+    th{color:#5e6570;font-size:12px;font-weight:700;background:#fafaf9}
+    select,input,textarea{padding:12px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;font-size:15px}
+    select{width:100%}
     textarea{min-height:60px;resize:vertical;width:100%}
     .empty{color:var(--muted);font-size:14px}
     .entry{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;background:#fffdf9}
@@ -47,16 +47,32 @@
     .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff}
     .btn-secondary{background:#fff4e6;color:#8a4b00;border:1px solid #ffd8a8}
     .btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
-
-    /* Lignes éliminées — important pour que le fond rouge soit bien visible */
-    tr.eliminated{background:#fef3f2 !important}
-    tr.eliminated td{color:var(--danger) !important}
-    tr.eliminated .name-col{text-decoration:line-through}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;font-weight:900;font-size:13px}
+    .prod-row{padding:10px 8px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .overlay{position:fixed;inset:0;background:rgba(16,21,29,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:14px}
+    .overlay.show{display:flex}
+    .modal{background:#fff;border-radius:18px;padding:20px;box-shadow:0 30px 70px rgba(0,0,0,.2);max-width:600px;width:100%;max-height:88vh;overflow-y:auto}
+    .modal h2{margin:0 0 14px 0;font-size:18px}
+    .modal-row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+    .modal-row label{font-size:14px;font-weight:700}
+    .checks-grid{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+    .check-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px;cursor:pointer}
+    .check-row input{width:18px;height:18px;flex-shrink:0}
+    .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+    .status{padding:10px 12px;border-radius:12px;margin-top:10px;font-weight:700;font-size:13px}
+    .status.ok{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
+    .status.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
     .elim-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#fecdca;color:#7f1d1d;margin-left:6px}
-    .elim-reason{display:block;font-size:11px;color:#991b1b;font-style:italic;margin-top:3px;text-decoration:none}
-    .winner-trophy{display:inline-block;margin-left:6px}
-    .winner-note{font-size:12px;color:#8a4b00;font-style:italic;margin-top:10px;padding:8px 10px;background:#fff4e6;border:1px solid #ffd8a8;border-radius:10px}
-
+    .elim-reason{display:block;font-size:11px;color:#991b1b;font-style:italic;margin-top:3px}
+    .elim-list{margin-top:14px}
+    .elim-item{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fffdf9;margin-bottom:6px}
+    .admin-tabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:1px solid var(--line);overflow-x:auto}
+    .admin-tab{padding:10px 14px;cursor:pointer;font-weight:700;font-size:13px;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap}
+    .admin-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+    .admin-pane{display:none}
+    .admin-pane.active{display:block}
+    .filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+    .filter-bar select,.filter-bar input{flex:1;min-width:160px}
     .eval-staff{font-size:18px;font-weight:800}
     .eval-meta{font-size:13px;color:var(--muted);margin-top:2px;margin-bottom:10px}
     .service-block{padding:14px;border-radius:14px;background:#fff;border:1px solid var(--line);margin-bottom:10px}
@@ -75,46 +91,8 @@
     .a-oui{background:#ecfdf3;color:#067647}
     .a-non{background:#fef3f2;color:#b42318}
     .a-na{background:var(--blue-light);color:var(--blue)}
-    .a-skip{background:#f3f4f6;color:#9ca3af}
     .comment-box{margin-top:10px;padding:10px;background:#f8f3ee;border-radius:10px;font-size:13px}
     .comment-box-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:3px}
-    .filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-    .filter-bar select,.filter-bar input{flex:1;min-width:160px}
-
-    /* Production ranking */
-    .prod-row{padding:10px 8px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-    .prod-rank-num{font-weight:900;font-size:16px;color:var(--orange);min-width:30px}
-    .prod-rank-name{flex:1;font-weight:700}
-    .prod-rank-stats{font-size:13px;color:var(--muted)}
-    .prod-rank-note{font-weight:900;color:var(--orange)}
-
-    .overlay{position:fixed;inset:0;background:rgba(16,21,29,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:14px}
-    .overlay.show{display:flex}
-    .modal{background:#fff;border-radius:18px;padding:20px;box-shadow:0 30px 70px rgba(0,0,0,.2);max-width:600px;width:100%;max-height:88vh;overflow-y:auto}
-    .modal h2{margin:0 0 14px 0;font-size:18px}
-    .modal-row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
-    .modal-row label{font-size:14px;font-weight:700}
-    .checks-grid{display:flex;flex-direction:column;gap:6px;margin-top:6px}
-    .check-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px;cursor:pointer}
-    .check-row input{width:18px;height:18px;flex-shrink:0}
-    .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
-    .status{padding:10px 12px;border-radius:12px;margin-top:10px;font-weight:700;font-size:13px}
-    .status.ok{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
-    .status.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
-    .elim-list{margin-top:14px}
-    .elim-item{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fffdf9;margin-bottom:6px}
-    .elim-info{flex:1}
-    .elim-staff{font-weight:800;font-size:14px}
-    .elim-date{font-size:11px;color:var(--muted);margin-top:2px}
-    .elim-criteria{font-size:12px;margin-top:4px}
-    .elim-comment{font-size:11px;color:#666;margin-top:3px;font-style:italic}
-
-    .admin-tabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:1px solid var(--line);overflow-x:auto}
-    .admin-tab{padding:10px 14px;cursor:pointer;font-weight:700;font-size:13px;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap}
-    .admin-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
-    .admin-pane{display:none}
-    .admin-pane.active{display:block}
-
     .prod-history-row{padding:10px;border:1px solid var(--line);border-radius:12px;margin-bottom:6px;background:#fffdf9}
     .prod-history-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
     .prod-history-staff{font-weight:800;font-size:14px}
@@ -151,20 +129,10 @@
 
     <div class="main">
       <section class="card">
-        <div class="top" style="margin-bottom:10px">
-          <div style="font-size:18px;font-weight:800">Classement du mois</div>
-          <div class="badge" id="selectedMonthLabel">—</div>
-        </div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:10px">Classement du mois <span class="badge" id="selectedMonthLabel">—</span></div>
         <table>
           <thead>
-            <tr>
-              <th>Rang</th>
-              <th>Équipier</th>
-              <th>Score moy.</th>
-              <th>Bonus prod</th>
-              <th>%</th>
-              <th>Services</th>
-            </tr>
+            <tr><th>Rang</th><th>Équipier</th><th>Score moy.</th><th>Bonus prod</th><th>%</th><th>Services</th></tr>
           </thead>
           <tbody id="rankingBody"></tbody>
         </table>
@@ -177,9 +145,7 @@
     </div>
 
     <section class="card">
-      <div class="top" style="margin-bottom:10px">
-        <div style="font-size:18px;font-weight:800">🥙 Classement Challenge production</div>
-      </div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:10px">🥙 Classement Challenge production</div>
       <div id="prodRanking"><div class="empty">Aucun test production ce mois.</div></div>
     </section>
 
@@ -224,7 +190,7 @@
 
       <div class="admin-pane active" data-pane="elim">
         <div style="background:#fff7ed;border:1px solid #ffd8a8;border-radius:12px;padding:10px;margin-bottom:14px;font-size:13px;color:#8a4b00">
-          L'équipier éliminé apparaît dans le classement avec son nom barré sur fond rouge. Le trophée passe au suivant.
+          L'équipier éliminé apparaît en rouge dans le classement avec un badge "éliminé".
         </div>
         <div class="modal-row">
           <label for="elimStaff">Équipier à éliminer</label>
@@ -298,96 +264,23 @@
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyF8a4Z1R9Shoj08pTYjzbvXUtQyT4rN2sqpWrN4Uq9hjFUoP1wT7UGhpfCtxiY_USc/exec";
     const VIEW_MODE = "manager";
 
-    const QUESTIONS_LIST = [
-      { key:"c_tenue",      label:"Tenue propre et hygiène corporelle irréprochable", poste:"commun" },
-      { key:"c_mains",      label:"Lavage des mains systématique", poste:"commun" },
-      { key:"c_concentre",  label:"Resté concentré, pas de discussions inutiles", poste:"commun" },
-      { key:"c_rythme",     label:"Rythme de production soutenu et constant", poste:"commun" },
-      { key:"c_aide",       label:"A aidé spontanément un collègue", poste:"commun" },
-      { key:"c_erreur",     label:"Aucune erreur constatée", poste:"commun" },
-      { key:"c_energie",    label:"Énergie et attitude positives pour l'équipe", poste:"commun" },
-      { key:"c_propre_fin", label:"Poste propre et rangé en fin de service", poste:"commun" },
-      { key:"c_poubelle",   label:"Sortie poubelle (timing respecté)", poste:"commun" },
-      { key:"c_epack",      label:"Validation Epack hygiène", poste:"commun" },
-      { key:"c_dlc",        label:"DLC posées sans qu'on lui demande", poste:"commun" },
-      { key:"c_traca",      label:"Traçabilité faite systématiquement", poste:"commun" },
-      { key:"p_caisse_accueil",       label:"Accueil avec discours O'Tacos", poste:"caisse" },
-      { key:"p_caisse_boisson",       label:"Boisson remise sans retour client", poste:"caisse" },
-      { key:"p_caisse_fidelite",      label:"Programme fidélité proposé aux bornes", poste:"caisse" },
-      { key:"p_caisse_aucune_err",    label:"Aucune erreur Uber/Deliveroo/C&C", poste:"caisse" },
-      { key:"p_caisse_uber",          label:"Commandes livraison rapides et bien filmées", poste:"caisse" },
-      { key:"p_caisse_borne",         label:"Bornes surveillées, clients guidés", poste:"caisse" },
-      { key:"p_caisse_vente",         label:"Vente additionnelle proposée", poste:"caisse" },
-      { key:"p_caisse_sac",           label:"Aucune commande à un livreur sans sac", poste:"caisse" },
-      { key:"p_caisse_aucune_err_ck", label:"Aucune erreur de caisse", poste:"caisse" },
-      { key:"p_caisse_glace",         label:"Préparation glace & O'Shake conforme", poste:"caisse" },
-      { key:"p_caisse_priorite",      label:"Ordre de priorité respecté (WC, salle…)", poste:"caisse" },
-      { key:"p_caisse_avis",          label:"Avis Google 5★ sur le service", poste:"caisse" },
-      { key:"p_ouv_vitrine",  label:"Vitrine remplie et bien présentée", poste:"ouverture" },
-      { key:"p_ouv_lumieres", label:"Lumières, écrans, vitrine, bornes allumés", poste:"ouverture" },
-      { key:"p_ouv_machine",  label:"Machine à glace propre + température prise", poste:"ouverture" },
-      { key:"p_ouv_devant",   label:"Devant du restaurant propre", poste:"ouverture" },
-      { key:"p_ouv_drapeau",  label:"Drapeau sorti", poste:"ouverture" },
-      { key:"p_ouv_terrasse", label:"Terrasse mise et propre (été)", poste:"ouverture" },
-      { key:"p_ouv_dlc",      label:"DLC conformes", poste:"ouverture" },
-      { key:"p_ferm_c_terrasse",   label:"Terrasse rangée (été)", poste:"fermeture_c" },
-      { key:"p_ferm_c_extinction", label:"Écrans/enseigne éteints, bornes en veille", poste:"fermeture_c" },
-      { key:"p_ferm_c_plateau",    label:"Plateau propre, frigo boisson rempli", poste:"fermeture_c" },
-      { key:"p_ferm_c_drapeau",    label:"Drapeau rentré", poste:"fermeture_c" },
-      { key:"p_ferm_c_dlc",        label:"DLC conformes", poste:"fermeture_c" },
-      { key:"p_ferm_c_machine",    label:"Machine à glace en veille, tapping couvert", poste:"fermeture_c" },
-      { key:"p_ferm_c_timing",     label:"Timing fermeture conforme", poste:"fermeture_c" },
-      { key:"p_frit_programmes", label:"Programmes appropriés respectés", poste:"friture" },
-      { key:"p_frit_rupture",    label:"Pas de rupture friture / blocage prod", poste:"friture" },
-      { key:"p_frit_viande",     label:"Viandes/fromagère lancées en temps", poste:"friture" },
-      { key:"p_frit_tickets",    label:"Tickets regardés régulièrement", poste:"friture" },
-      { key:"p_frit_appro",      label:"Approvisionnement frigo / suppléments", poste:"friture" },
-      { key:"p_toast_qualite",   label:"Tacos bien toastés, croisillons visibles", poste:"toaster" },
-      { key:"p_toast_rythme",    label:"Rythme au toaster sans blocage", poste:"toaster" },
-      { key:"p_toast_gratin",    label:"Gratinage conforme", poste:"toaster" },
-      { key:"p_toast_emballage", label:"Emballages propres, présentation soignée", poste:"toaster" },
-      { key:"p_toast_propre",    label:"Toaster et zone nettoyés régulièrement", poste:"toaster" },
-      { key:"p_toast_discours",  label:"Discours client (regard, sourire)", poste:"toaster" },
-      { key:"p_toast_appel",     label:"Appel caisse dès commande prête", poste:"toaster" },
-      { key:"p_toast_verif",     label:"Vérification commande avant remise", poste:"toaster" },
-      { key:"p_envoi_rythme",  label:"Rythme à l'envoi sans blocage", poste:"envoi" },
-      { key:"p_envoi_commu",   label:"Bonne communication pliage / friture", poste:"envoi" },
-      { key:"p_envoi_ordre",   label:"Ordre tickets respecté (C&C/Uber/resto)", poste:"envoi" },
-      { key:"p_envoi_louches", label:"Pas de surdosage des louches", poste:"envoi" },
-      { key:"p_envoi_lance",   label:"Regarde ce qu'il faut lancer", poste:"envoi" },
-      { key:"p_envoi_viande",  label:"Prévient niveaux de viandes", poste:"envoi" },
-      { key:"p_envoi_avance",  label:"Avance gratinages + pots de sauces", poste:"envoi" },
-      { key:"p_pliage_qualite", label:"Tacos bien pliés", poste:"pliage" },
-      { key:"p_pliage_rythme",  label:"Rythme au pliage sans blocage", poste:"pliage" },
-      { key:"p_pliage_propre",  label:"Zone pliage nettoyée régulièrement", poste:"pliage" },
-      { key:"p_pliage_louche",  label:"Louche bleue pour fromagère/petit tacos", poste:"pliage" },
-      { key:"p_pliage_avance",  label:"Avance frites/finger food au toaster", poste:"pliage" },
-      { key:"p_pliage_dose",    label:"Pas de surdosage frites/fromagère", poste:"pliage" },
-      { key:"p_prepa_m_dlc",     label:"DLC posées dès l'ouverture", poste:"prepa_matin" },
-      { key:"p_prepa_m_epack",   label:"Epack hygiène à jour", poste:"prepa_matin" },
-      { key:"p_prepa_m_stock",   label:"Stocks préparés avant ouverture", poste:"prepa_matin" },
-      { key:"p_prepa_m_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_matin" },
-      { key:"p_prepa_m_decong",  label:"Process décongélation respecté", poste:"prepa_matin" },
-      { key:"p_prepa_s_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_soir" },
-      { key:"p_prepa_s_plonge",  label:"Plonge faite, plateaux gastro rangés", poste:"prepa_soir" },
-      { key:"p_prepa_s_dlc",     label:"DLC et traçabilités à jour", poste:"prepa_soir" },
-      { key:"p_prepa_s_decong",  label:"Process décongélation respecté", poste:"prepa_soir" },
-      { key:"p_prepa_s_frigo",   label:"Frigo, emballages, suppléments remplis", poste:"prepa_soir" },
-      { key:"p_prepa_s_epack",   label:"Epack hygiène à jour", poste:"prepa_soir" },
-      { key:"p_prepa_s_propre",  label:"Zone cuisine et plonge propres", poste:"prepa_soir" },
-      { key:"p_ferm_k_cello",   label:"Produits cellophanés et DLC conformes", poste:"fermeture_k" },
-      { key:"p_ferm_k_timing",  label:"Timing fermeture conforme", poste:"fermeture_k" },
-      { key:"p_ferm_k_decong",  label:"Process décongélation respecté", poste:"fermeture_k" },
-      { key:"p_ferm_k_chambre", label:"Produits rangés en chambre + et −", poste:"fermeture_k" },
-      { key:"p_recep_verif",  label:"Livraison vérifiée (quantités, état, T°)", poste:"reception" },
-      { key:"p_recep_fifo",   label:"Rangement FIFO immédiat", poste:"reception" },
-      { key:"p_recep_carton", label:"Cartons pliés et mis en poubelle", poste:"reception" },
-      { key:"p_recep_sol",    label:"Aucun produit au sol, rangé sur cailloutis", poste:"reception" },
-      { key:"p_recep_signal", label:"Produit non conforme signalé au manager", poste:"reception" },
-    ];
-
     const POSTES_LABELS = { caisse:"Caisse", ouverture:"Ouverture caisse", fermeture_c:"Fermeture caisse", friture:"Friture & cuisson", toaster:"Toaster", envoi:"Envoi", pliage:"Pliage", prepa_matin:"Prépa matin", prepa_soir:"Prépa soir", fermeture_k:"Fermeture cuisine", reception:"Réception livraison" };
     const POSTES_ZONE = { caisse:"caisse", ouverture:"caisse", fermeture_c:"caisse", friture:"cuisine", toaster:"cuisine", envoi:"cuisine", pliage:"cuisine", prepa_matin:"cuisine", prepa_soir:"cuisine", fermeture_k:"cuisine", reception:"cuisine" };
+
+    const QUESTIONS_LIST = [
+      { key:"c_tenue", label:"Tenue propre et hygiène corporelle irréprochable", poste:"commun" },
+      { key:"c_mains", label:"Lavage des mains systématique", poste:"commun" },
+      { key:"c_concentre", label:"Resté concentré, pas de discussions inutiles", poste:"commun" },
+      { key:"c_rythme", label:"Rythme de production soutenu et constant", poste:"commun" },
+      { key:"c_aide", label:"A aidé spontanément un collègue", poste:"commun" },
+      { key:"c_erreur", label:"Aucune erreur constatée", poste:"commun" },
+      { key:"c_energie", label:"Énergie et attitude positives pour l'équipe", poste:"commun" },
+      { key:"c_propre_fin", label:"Poste propre et rangé en fin de service", poste:"commun" },
+      { key:"c_poubelle", label:"Sortie poubelle (timing respecté)", poste:"commun" },
+      { key:"c_epack", label:"Validation Epack hygiène", poste:"commun" },
+      { key:"c_dlc", label:"DLC posées sans qu'on lui demande", poste:"commun" },
+      { key:"c_traca", label:"Traçabilité faite systématiquement", poste:"commun" },
+    ];
 
     let adminToken = null;
     let currentEliminations = [];
@@ -402,15 +295,9 @@
       el.innerHTML = `<div class="status ${type}">${escapeHtml(message)}</div>`;
       setTimeout(()=>{ if(el.firstChild) el.innerHTML=''; }, 4000);
     }
-    function getFingerprint_(){
-      return (navigator.userAgent + screen.width + screen.height).split('').reduce((a,c)=>{a=((a<<5)-a)+c.charCodeAt(0);return a&a},0).toString(36);
-    }
-
-    function applyViewMode(){
-      if(VIEW_MODE === "equipier"){
-        qs('topActions').innerHTML = `<select id="monthSelect"></select>`;
-      }
-    }
+    function getFingerprint_(){ return (navigator.userAgent + screen.width + screen.height).split('').reduce((a,c)=>{a=((a<<5)-a)+c.charCodeAt(0);return a&a},0).toString(36); }
+    function currentMonth(){ const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; }
+    function addMonthOption(sel, val){ const o=document.createElement('option'); o.value=val; o.textContent=val; sel.appendChild(o); }
 
     async function initMonths(){
       const sel = qs('monthSelect');
@@ -425,49 +312,43 @@
       sel.addEventListener('change', loadDashboard);
       loadDashboard();
     }
-    function currentMonth(){ const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; }
-    function addMonthOption(sel, val){ const o=document.createElement('option'); o.value=val; o.textContent=val; sel.appendChild(o); }
 
     async function loadDashboard(){
-  const month = qs('monthSelect').value;
-  qs('selectedMonthLabel').textContent = month;
-  const adminLabel = qs('adminMonthLabel');
-  if(adminLabel) adminLabel.textContent = month;
+      const month = qs('monthSelect').value;
+      qs('selectedMonthLabel').textContent = month;
+      const adminLabel = qs('adminMonthLabel');
+      if(adminLabel) adminLabel.textContent = month;
 
-  try{
-    // Charger TOUT en parallèle
-    const [dashRes, elimRes, prodRes] = await Promise.all([
-      fetch(`${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`),
-      fetch(`${APPS_SCRIPT_URL}?mode=eliminations&month=${encodeURIComponent(month)}`),
-      fetch(`${APPS_SCRIPT_URL}?mode=production&month=${encodeURIComponent(month)}`)
-    ]);
+      try{
+        const [dashRes, elimRes, prodRes] = await Promise.all([
+          fetch(`${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`),
+          fetch(`${APPS_SCRIPT_URL}?mode=eliminations&month=${encodeURIComponent(month)}`),
+          fetch(`${APPS_SCRIPT_URL}?mode=production&month=${encodeURIComponent(month)}`)
+        ]);
 
-    const data = await dashRes.json();
-    if(!data.ok) throw new Error(data.error || 'Erreur dashboard');
+        const data = await dashRes.json();
+        if(!data.ok) throw new Error(data.error || 'Erreur dashboard');
 
-    const elimData = await elimRes.json();
-    const eliminations = (elimData.ok !== false) ? (elimData.eliminations || []) : [];
+        const elimData = await elimRes.json();
+        const eliminations = (elimData.ok !== false) ? (elimData.eliminations || []) : [];
 
-    const prodData = await prodRes.json();
-    const production = (prodData.ok !== false) ? (prodData.production || []) : [];
+        const prodData = await prodRes.json();
+        const production = (prodData.ok !== false) ? (prodData.production || []) : [];
 
-    currentEliminations = eliminations;
-    currentRanking = data.ranking || [];
-    currentLatestEntries = data.latestEntries || [];
-    allProductionData = production;
+        currentEliminations = eliminations;
+        currentRanking = data.ranking || [];
+        currentLatestEntries = data.latestEntries || [];
+        allProductionData = production;
 
-    console.log('Eliminations chargées:', eliminations.length);
-    console.log('Production chargée:', production.length);
+        renderDashboard(data, eliminations);
+        renderProdRanking(data.productionRanking || []);
+        renderLatestEntries();
+      }catch(err){
+        console.error('Error:', err);
+        renderEmpty(err.message || 'Erreur');
+      }
+    }
 
-    renderDashboard(data, month, eliminations);
-    renderProdRanking(data.productionRanking || []);
-    renderLatestEntries();
-  }catch(err){
-    console.error('Erreur loadDashboard:', err);
-    renderEmpty(err.message || 'Erreur');
-  }
-}
-    
     function renderEmpty(msg){
       qs('winnerName').textContent='—';
       qs('winnerScore').textContent='0';
@@ -475,10 +356,11 @@
       qs('staffCount').textContent='0';
       qs('rankingBody').innerHTML=`<tr><td colspan="6" class="empty">${escapeHtml(msg)}</td></tr>`;
       qs('winnerCard').innerHTML=`<div class="empty">${escapeHtml(msg)}</div>`;
+      qs('prodRanking').innerHTML=`<div class="empty">${escapeHtml(msg)}</div>`;
       qs('latestEntries').innerHTML=`<div class="empty">${escapeHtml(msg)}</div>`;
     }
 
-    function renderDashboard(data, month, eliminations){
+    function renderDashboard(data, eliminations){
       const ranking = data.ranking || [];
       const elimSet = new Map();
       eliminations.forEach(e => elimSet.set(e.staff, e));
@@ -500,56 +382,46 @@
 
       const body = qs('rankingBody');
       if(!ranking.length){
-        body.innerHTML = `<tr><td colspan="6" class="empty">Aucune donnée pour ${escapeHtml(month)}.</td></tr>`;
-        qs('winnerCard').innerHTML = `<div class="empty">Aucune donnée pour ${escapeHtml(month)}.</div>`;
+        body.innerHTML = `<tr><td colspan="6" class="empty">Aucune donnée.</td></tr>`;
+        qs('winnerCard').innerHTML = `<div class="empty">Aucune donnée.</div>`;
         return;
       }
 
       body.innerHTML = ranking.map((r, idx) => {
         const elim = elimSet.get(r.staff);
         const isEliminated = !!elim;
-        const isWinner = trueWinner && r.staff === trueWinner.staff;
         const elimBadge = isEliminated ? `<span class="elim-badge">éliminé</span>` : '';
-        const trophy = isWinner ? `<span class="winner-trophy">🏆</span>` : '';
         const reason = isEliminated ? `<span class="elim-reason">${escapeHtml(elim.criteria || '')}${elim.comment ? ' — ' + escapeHtml(elim.comment) : ''}</span>` : '';
         return `
-  <tr style="${isEliminated ? 'background-color: #fef3f2 !important; color: #b42318 !important;' : ''}">
-    <td>${idx + 1}</td>
-    <td><span style="${isEliminated ? 'text-decoration: line-through;' : ''}">${escapeHtml(r.staff)}</span>${elimBadge}${trophy}${reason}</td>
-    <td><b>${r.avgScoreBoosted}</b></td>
-    <td>${r.productionBonus > 0 ? '+' + r.productionBonus : '—'}</td>
-    <td>${r.avgPct}%</td>
-    <td>${r.services}</td>
-  </tr>
-`;
+          <tr style="${isEliminated ? 'background-color:#fef3f2;color:#b42318' : ''}">
+            <td>${idx + 1}</td>
+            <td><span style="${isEliminated ? 'text-decoration:line-through' : ''}">${escapeHtml(r.staff)}</span>${elimBadge}${reason}</td>
+            <td><b>${r.avgScoreBoosted}</b></td>
+            <td>${r.productionBonus > 0 ? '+' + r.productionBonus : '—'}</td>
+            <td>${r.avgPct}%</td>
+            <td>${r.services}</td>
+          </tr>
+        `;
       }).join('');
 
       if(allEliminated){
         qs('winnerCard').innerHTML = `<div class="empty">Aucun équipier ne peut prétendre au trophée ce mois (tous éliminés).</div>`;
       } else if(trueWinner){
         const noteHtml = topRankIsEliminated
-          ? `<div class="winner-note">${escapeHtml(topRank.staff)} avait le meilleur score mais a été éliminé(e). Le trophée revient à ${escapeHtml(trueWinner.staff)}.</div>`
+          ? `<div style="font-size:12px;color:#8a4b00;font-style:italic;margin-top:10px;padding:8px 10px;background:#fff4e6;border:1px solid #ffd8a8;border-radius:10px">${escapeHtml(topRank.staff)} avait le meilleur score mais a été éliminé(e). Le trophée revient à ${escapeHtml(trueWinner.staff)}.</div>`
           : '';
         qs('winnerCard').innerHTML = `
           <div style="font-size:26px;font-weight:900;margin-bottom:6px">🏆 ${escapeHtml(trueWinner.staff)}</div>
-          <div style="color:#6c7480;margin-bottom:14px;font-size:13px">${escapeHtml(month)}</div>
-          <div style="display:grid;gap:10px">
-            ${metric("Score moyen (avec bonus production)", trueWinner.avgScoreBoosted + ' pts')}
-            ${metric("Score moyen brut", trueWinner.avgScore + ' pts')}
-            ${metric("Bonus production", (trueWinner.productionBonus > 0 ? '+' + trueWinner.productionBonus : '—'))}
-            ${metric("Pourcentage moyen", trueWinner.avgPct + '%')}
-            ${metric("Score cumulé", trueWinner.totalScore + ' pts')}
-            ${metric("Services évalués", trueWinner.services)}
+          <div style="color:var(--muted);margin-bottom:14px;font-size:13px">${escapeHtml(qs('monthSelect').value)}</div>
+          <div style="display:grid;gap:10px;font-size:13px">
+            <div><div style="color:var(--muted)">Score moyen (avec bonus production)</div><div style="font-size:18px;font-weight:800">${trueWinner.avgScoreBoosted} pts</div></div>
+            <div><div style="color:var(--muted)">Bonus production</div><div style="font-size:18px;font-weight:800">${trueWinner.productionBonus > 0 ? '+' + trueWinner.productionBonus : '—'}</div></div>
+            <div><div style="color:var(--muted)">Pourcentage moyen</div><div style="font-size:18px;font-weight:800">${trueWinner.avgPct}%</div></div>
+            <div><div style="color:var(--muted)">Services évalués</div><div style="font-size:18px;font-weight:800">${trueWinner.services}</div></div>
           </div>
           ${noteHtml}
         `;
-      } else {
-        qs('winnerCard').innerHTML = `<div class="empty">Aucun gagnant pour le moment.</div>`;
       }
-    }
-
-    function metric(label, value){
-      return `<div><div style="font-size:12px;color:#6c7480">${escapeHtml(label)}</div><div style="font-size:18px;font-weight:800">${escapeHtml(String(value))}</div></div>`;
     }
 
     function renderProdRanking(ranking){
@@ -557,10 +429,10 @@
       if(!ranking || !ranking.length){ box.innerHTML = `<div class="empty">Aucun test production ce mois.</div>`; return; }
       box.innerHTML = ranking.map((r,idx)=>`
         <div class="prod-row">
-          <span class="prod-rank-num">${idx+1}</span>
-          <span class="prod-rank-name">${escapeHtml(r.staff)}</span>
-          <span class="prod-rank-stats">${r.tests} test${r.tests>1?'s':''}</span>
-          <span class="prod-rank-note">⭐ ${r.totalNote} pts (moy. ${r.avgNote})</span>
+          <span style="font-weight:900;font-size:16px;color:var(--orange);min-width:30px">${idx+1}</span>
+          <span style="flex:1;font-weight:700">${escapeHtml(r.staff)}</span>
+          <span style="font-size:13px;color:var(--muted)">${r.tests} test${r.tests>1?'s':''}</span>
+          <span style="font-weight:900;color:var(--orange)">⭐ ${r.totalNote} pts</span>
         </div>
       `).join('');
     }
@@ -623,7 +495,7 @@
 
     function answerRow(q, answers){
       const val = answers && answers[q.key];
-      let pill = `<span class="answer-pill a-skip">—</span>`;
+      let pill = `<span class="answer-pill" style="background:#f3f4f6;color:#9ca3af">—</span>`;
       if(val==='oui') pill=`<span class="answer-pill a-oui">Oui</span>`;
       else if(val==='non') pill=`<span class="answer-pill a-non">Non</span>`;
       else if(val==='na') pill=`<span class="answer-pill a-na">N/A</span>`;
@@ -683,11 +555,11 @@
       }
       box.innerHTML = currentEliminations.map(e=>`
         <div class="elim-item">
-          <div class="elim-info">
-            <div class="elim-staff">${escapeHtml(e.staff)}</div>
-            <div class="elim-date">Enregistré le ${escapeHtml(e.timestamp || '')}</div>
-            <div class="elim-criteria"><b>Critères :</b> ${escapeHtml(e.criteria || '—')}</div>
-            ${e.comment ? `<div class="elim-comment">"${escapeHtml(e.comment)}"</div>` : ''}
+          <div style="flex:1">
+            <div style="font-weight:800;font-size:14px">${escapeHtml(e.staff)}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Enregistré le ${escapeHtml(e.timestamp || '')}</div>
+            <div style="font-size:12px;margin-top:4px"><b>Critères :</b> ${escapeHtml(e.criteria || '—')}</div>
+            ${e.comment ? `<div style="font-size:11px;color:#666;margin-top:3px;font-style:italic">"${escapeHtml(e.comment)}"</div>` : ''}
           </div>
           <button class="btn btn-danger" onclick="cancelElimination('${escapeHtml(e.staff).replace(/'/g,"\\'")}')">Annuler</button>
         </div>
@@ -714,9 +586,9 @@
         qs('elimStaff').value = '';
         qs('elimCriteriaList').querySelectorAll('input:checked').forEach(c=>c.checked=false);
         qs('elimComment').value = '';
-        await loadDashboard();
         populateStaffSelect();
         renderEliminationsList();
+        await loadDashboard();
       }catch(err){
         showStatus('adminStatus','err', err.message);
       }
@@ -734,9 +606,9 @@
         const data = JSON.parse(await res.text());
         if(!data.ok) throw new Error(data.error || 'Annulation impossible.');
         showStatus('adminStatus','ok','Élimination annulée.');
-        await loadDashboard();
         populateStaffSelect();
         renderEliminationsList();
+        await loadDashboard();
       }catch(err){
         showStatus('adminStatus','err', err.message);
       }
@@ -810,8 +682,6 @@
         showStatus('securityStatus','err', err.message);
       }
     }
-
-    applyViewMode();
 
     if(VIEW_MODE === 'manager'){
       qs('adminBtn').addEventListener('click', () => {
