@@ -392,6 +392,7 @@
   <div class="save-bar" id="saveBar" style="display:none">
     <div class="btns-left">
       <button class="btn btn-secondary" id="backStepBtn" type="button">← Retour</button>
+      <button class="btn btn-primary" id="recoverBtn" type="button" style="display:none">🔄 Récupérer</button>
       <button class="btn btn-danger" id="clearBtn" type="button" style="display:none">Effacer</button>
     </div>
     <div class="btns-right">
@@ -842,6 +843,7 @@
       const next = qs('nextStepBtn');
       const save = qs('saveBtn');
       const clear = qs('clearBtn');
+      const recover = qs('recoverBtn');
 
       if(n===1){
         bar.style.display='none';
@@ -851,6 +853,7 @@
         next.style.display='inline-flex';
         save.style.display='none';
         clear.style.display='none';
+        recover.style.display='inline-flex';
         next.textContent='Suivant — Évaluer →';
       } else if(n===3){
         bar.style.display='flex';
@@ -858,6 +861,21 @@
         next.style.display='none';
         save.style.display='inline-flex';
         clear.style.display='inline-flex';
+        recover.style.display='none';
+      }
+    }
+
+    function showRecoverBar(){
+      const date = qs('serviceDate').value;
+      const service = qs('serviceType').value;
+      const bar = qs('saveBar');
+      const recover = qs('recoverBtn');
+      
+      if(currentStep === 1 && date && service){
+        bar.style.display='flex';
+        recover.style.display='inline-flex';
+      } else {
+        bar.style.display='none';
       }
     }
 
@@ -938,6 +956,82 @@
       }catch(error){
         hideOverlay();
         showStatus('bottomStatus','err',error.message||"Erreur lors de l'enregistrement.");
+      }
+    }
+
+    async function recoverLastEntry(){
+      try {
+        const date = qs('serviceDate').value;
+        const serviceType = qs('serviceType').value;
+        const selectedTeam = [...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+        
+        if(!date || !serviceType){
+          showStatus('bottomStatus','err','Choisir une date et un service d\'abord.');
+          return;
+        }
+
+        if(!selectedTeam.length){
+          showStatus('bottomStatus','err','Choisir au moins un équipier.');
+          return;
+        }
+
+        showStatus('bottomStatus','ok','Récupération en cours...');
+        const month = date.substring(0, 7);
+        const res = await fetch(`${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`);
+        const data = await res.json();
+        
+        if(!data.ok || !data.latestEntries || !data.latestEntries.length){
+          showStatus('bottomStatus','err','Aucune évaluation trouvée.');
+          return;
+        }
+
+        // Pour chaque équipier sélectionné, chercher son évaluation
+        selectedTeam.forEach(staff => {
+          let foundEntry = null;
+          
+          for(let entry of data.latestEntries){
+            if(entry.staff === staff && entry.services && entry.services[serviceType]){
+              const svc = entry.services[serviceType];
+              // Vérifier que la date correspond
+              if(entry.date === date){
+                foundEntry = entry;
+                break;
+              }
+            }
+          }
+
+          if(foundEntry){
+            const svc = foundEntry.services[serviceType];
+            const postes = svc.postes || [];
+            const answers = svc.answers || {};
+
+            // Mémoriser les postes
+            staffPostes[staff] = postes;
+
+            // Remplir les réponses
+            Object.keys(answers).forEach(qKey => {
+              const answer = answers[qKey];
+              const elem = document.querySelector(`[data-staff="${staff}"][data-question="${qKey}"][value="${answer}"]`);
+              if(elem) elem.checked = true;
+            });
+          }
+        });
+
+        // Mettre à jour le manager si on l'a trouvé
+        const firstEntry = data.latestEntries.find(e => 
+          selectedTeam.includes(e.staff) && e.services && e.services[serviceType] && e.date === date
+        );
+        if(firstEntry) qs('managerName').value = firstEntry.manager || '';
+
+        // Recréer l'étape 2 et 3 avec les données
+        renderStep2(selectedTeam);
+        renderStep3(selectedTeam);
+
+        showStep(3);
+        window.scrollTo({top:qs('step3Section').offsetTop-20,behavior:'smooth'});
+        showStatus('bottomStatus','ok','Évaluations récupérées ! Modifie et enregistre.');
+      }catch(err){
+        showStatus('bottomStatus','err','Erreur récupération: '+err.message);
       }
     }
 
@@ -1273,6 +1367,7 @@
         });
 
         qs('saveBtn').addEventListener('click', submitService);
+        qs('recoverBtn').addEventListener('click', recoverLastEntry);
         qs('clearBtn').addEventListener('click', clearAll);
 
         // Settings
