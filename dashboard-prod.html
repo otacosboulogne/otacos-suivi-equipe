@@ -2,32 +2,51 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Analytics Production - O'Tacos</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root { --orange: #f08a00; --blue: #185fa5; --bg: #f4f7f6; --card: #ffffff; --green: #2ecc71; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #2d3436; margin: 0; padding: 20px; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #2d3436; margin: 0; padding: 10px; }
     .container { max-width: 1400px; margin: 0 auto; }
     
-    .header { background: var(--card); padding: 15px 25px; border-radius: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 8px solid var(--orange); }
-    .logo-area { display: flex; align-items: center; gap: 20px; }
-    .logo-area img { width: 55px; height: 55px; border-radius: 8px; }
+    /* Header Adaptatif */
+    .header { background: var(--card); padding: 12px 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 6px solid var(--orange); }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-area img { width: 40px; height: 40px; border-radius: 6px; }
+    .header-text h1 { margin:0; font-size: 16px; }
+    .header-text p { margin:0; font-size: 10px; color: #636e72; }
     
-    .status-badge { display: flex; align-items: center; gap: 8px; color: var(--green); font-size: 13px; font-weight: bold; background: #e8f8f0; padding: 6px 12px; border-radius: 20px; }
-    .dot { height: 8px; width: 8px; background-color: var(--green); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+    .status-badge { display: flex; align-items: center; gap: 6px; color: var(--green); font-size: 11px; font-weight: bold; background: #e8f8f0; padding: 4px 10px; border-radius: 20px; }
+    .dot { height: 6px; width: 6px; background-color: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
 
-    .controls { display: flex; gap: 15px; align-items: center; margin-bottom: 25px; flex-wrap: wrap; }
-    .btn-dashboard { background: var(--blue); color: white; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 6px rgba(24, 95, 165, 0.2); }
+    /* Contrôles Empilés sur Mobile */
+    .controls { display: flex; gap: 10px; flex-direction: column; margin-bottom: 20px; }
+    .btn-dashboard { background: var(--blue); color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; text-align: center; box-shadow: 0 4px 6px rgba(24, 95, 165, 0.2); transition: 0.2s; }
+    .btn-dashboard:active { transform: scale(0.98); }
     
-    .filter-card { background: var(--card); padding: 15px 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee; }
-    select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 14px; outline: none; cursor: pointer; background: white; }
+    .filter-group { display: flex; gap: 10px; width: 100%; }
+    .filter-card { background: var(--card); padding: 10px; border-radius: 10px; flex: 1; display: flex; flex-direction: column; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee; }
+    .filter-card label { font-weight: bold; font-size: 11px; color: var(--blue); text-transform: uppercase; }
+    select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; width: 100%; background: white; outline: none; }
 
-    .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .chart-container { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 350px; border-top: 4px solid #eee; }
-    .full-width { grid-column: span 2; height: 400px; }
+    /* Grille de Graphiques */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    .chart-container { background: var(--card); padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 300px; border-top: 3px solid #eee; position: relative; }
     
-    h2 { font-size: 14px; color: var(--blue); margin-top: 0; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
+    h2 { font-size: 12px; color: var(--blue); margin-top: 0; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 10px; }
+
+    /* Ajustements Tablettes et PC */
+    @media (min-width: 768px) {
+      body { padding: 20px; }
+      .header { padding: 15px 25px; }
+      .header-text h1 { font-size: 22px; }
+      .controls { flex-direction: row; align-items: center; }
+      .filter-group { width: auto; flex-grow: 1; }
+      .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+      .full-width { grid-column: span 2; height: 380px; }
+      .chart-container { height: 320px; }
+    }
 
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
   </style>
@@ -38,37 +57,37 @@
   <div class="header">
     <div class="logo-area">
       <img src="./otacos-logo.png" alt="Logo">
-      <div>
-        <h1 style="margin:0; font-size: 20px;">Analytics Production</h1>
-        <p style="margin:0; font-size: 12px; color: #636e72;">Analyse Expert O'Tacos</p>
+      <div class="header-text">
+        <h1>Analytics Production</h1>
+        <p>Performance Technique Restaurant</p>
       </div>
     </div>
-    <div class="status-badge"><span class="dot"></span> Connecté</div>
+    <div class="status-badge"><span class="dot"></span> CONNECTÉ</div>
   </div>
 
   <div class="controls">
     <a href="index.html" class="btn-dashboard">← REVENIR AU DASHBOARD</a>
-    
-    <div class="filter-card">
-      <label style="font-weight: bold; font-size: 12px;">ÉQUIPIER :</label>
-      <select id="staffSelect" onchange="updateDashboard()">
-        <option value="all">Chargement...</option>
-      </select>
-    </div>
-
-    <div class="filter-card">
-      <label style="font-weight: bold; font-size: 12px;">PÉRIODE :</label>
-      <select id="monthSelect" onchange="updateDashboard()">
-        <option value="all">Toute l'année</option>
-      </select>
+    <div class="filter-group">
+      <div class="filter-card">
+        <label>Équipier</label>
+        <select id="staffSelect" onchange="updateDashboard()">
+          <option value="all">Chargement...</option>
+        </select>
+      </div>
+      <div class="filter-card">
+        <label>Période</label>
+        <select id="monthSelect" onchange="updateDashboard()">
+          <option value="all">Toute l'année</option>
+        </select>
+      </div>
     </div>
   </div>
 
   <div class="dashboard-grid">
-    <div class="chart-container full-width"><h2>📈 Évolution du Score Global (/10)</h2><canvas id="chartScore"></canvas></div>
+    <div class="chart-container full-width"><h2>📈 Évolution Score Global (/10)</h2><canvas id="chartScore"></canvas></div>
     <div class="chart-container"><h2>⚖️ Précision Poids (g)</h2><canvas id="chartPoids"></canvas></div>
     <div class="chart-container"><h2>⏱️ Temps de Préparation (sec)</h2><canvas id="chartTime"></canvas></div>
-    <div class="chart-container"><h2>📏 Taille (cm)</h2><canvas id="chartTaille"></canvas></div>
+    <div class="chart-container"><h2>📏 Longueur / Taille (cm)</h2><canvas id="chartTaille"></canvas></div>
     <div class="chart-container"><h2>↔️ Largeur (cm)</h2><canvas id="chartLargeur"></canvas></div>
     <div class="chart-container full-width"><h2>↕️ Épaisseur (cm)</h2><canvas id="chartEpaisseur"></canvas></div>
   </div>
@@ -86,43 +105,40 @@
       if (!json.ok || !json.production) return;
       rawData = json.production;
 
-      // Remplir Équipiers
+      // Remplissage Équipiers
       const selectStaff = document.getElementById('staffSelect');
       const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s).sort();
-      selectStaff.innerHTML = '<option value="all">Tous les équipiers (Moyenne)</option>';
+      selectStaff.innerHTML = '<option value="all">Moyenne Restaurant</option>';
       staffs.forEach(s => { selectStaff.innerHTML += `<option value="${s}">${s}</option>`; });
 
-      // Remplir Mois/Année
+      // Remplissage Mois
       const selectMonth = document.getElementById('monthSelect');
       const periods = [...new Set(rawData.map(d => d.month))].filter(m => m).sort().reverse();
       periods.forEach(p => { selectMonth.innerHTML += `<option value="${p}">${p}</option>`; });
 
       updateDashboard();
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Erreur de chargement", e); }
   }
 
   function updateDashboard() {
     const staffVal = document.getElementById('staffSelect').value;
     const monthVal = document.getElementById('monthSelect').value;
-
-    // 1. Filtrer par mois d'abord
+    
     let filtered = (monthVal === 'all') ? rawData : rawData.filter(d => d.month === monthVal);
 
-    // 2. Traiter les données (Moyenne ou Individuel)
     let finalData = [];
     if (staffVal === 'all') {
       const dates = [...new Set(filtered.map(d => d.date))].sort();
       finalData = dates.map(date => {
         const tests = filtered.filter(d => d.date === date);
-        const avg = (k) => tests.reduce((a, c) => a + (Number(c[k]) || 0), 0) / tests.length;
+        const avg = (k) => tests.reduce((a, c) => a + (parseFloat(c[k]) || 0), 0) / tests.length;
         return { date, note: avg('note'), poids: avg('poids'), tempsSec: avg('tempsSec'), taille: avg('taille'), largeur: avg('largeur'), epaisseur: avg('epaisseur') };
       });
     } else {
       finalData = filtered.filter(d => d.staff === staffVal).sort((a,b) => new Date(a.date) - new Date(b.date));
     }
 
-    // 3. Forcer la mise à jour de TOUS les graphiques
-    const charts = [
+    const config = [
       { id: 'chartScore', key: 'note', label: 'Score' },
       { id: 'chartPoids', key: 'poids', label: 'Poids' },
       { id: 'chartTime', key: 'tempsSec', label: 'Temps' },
@@ -131,55 +147,42 @@
       { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur' }
     ];
 
-    charts.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all'));
+    config.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all'));
   }
 
   function renderChart(id, key, label, data, isGlobal) {
     const ctx = document.getElementById(id).getContext('2d');
     if (activeCharts[id]) activeCharts[id].destroy();
     
-    // On s'assure que les valeurs sont bien des nombres pour que l'échelle s'adapte
-    const dataPoints = data.map(d => {
-      const val = parseFloat(d[key]);
-      return isNaN(val) ? 0 : val;
-    });
-
     activeCharts[id] = new Chart(ctx, {
       type: 'line',
       data: {
         labels: data.map(d => d.date),
         datasets: [{
-          label: isGlobal ? label + " (Moyenne)" : label,
-          data: dataPoints,
+          label: isGlobal ? label + " (Moyenne Resto)" : label,
+          data: data.map(d => parseFloat(d[key]) || 0),
           borderColor: isGlobal ? '#185fa5' : '#f08a00',
           backgroundColor: isGlobal ? 'rgba(24, 95, 165, 0.1)' : 'rgba(240, 138, 0, 0.1)',
-          borderWidth: 3, 
-          tension: 0.4, 
-          fill: true, 
-          pointRadius: 5,
-          pointBackgroundColor: isGlobal ? '#185fa5' : '#f08a00'
+          borderWidth: 3, tension: 0.35, fill: true, pointRadius: 4, pointHoverRadius: 7
         }]
       },
       options: {
-        responsive: true, 
+        responsive: true,
         maintainAspectRatio: false,
         plugins: { 
-          legend: { display: true } 
+          legend: { display: true, position: 'top', labels: { boxWidth: 10, font: { size: 11 } } }
         },
         scales: { 
-          x: {
-            grid: { display: false },
-            ticks: { font: { size: 10 } }
-          },
           y: { 
-            beginAtZero: false, // Permet de mieux voir les variations
-            suggestedMin: 0,
+            beginAtZero: false, 
+            suggestedMin: 0, 
             grid: { color: '#f0f0f0' },
-            ticks: {
-              // Cette partie force l'affichage de nombres entiers si nécessaire
-              font: { weight: 'bold' }
-            }
-          } 
+            ticks: { font: { size: 11, weight: 'bold' } } 
+          },
+          x: { 
+            grid: { display: false },
+            ticks: { font: { size: 10 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 10 }
+          }
         }
       }
     });
@@ -188,3 +191,4 @@
 </script>
 </body>
 </html>
+```[cite: 1]
