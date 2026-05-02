@@ -1,179 +1,1319 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Analytics Production - O'Tacos</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ÉVALUATION EQUIPIER DU MOIS</title>
   <style>
-    :root { --orange: #f08a00; --blue: #185fa5; --bg: #f4f7f6; --card: #ffffff; --green: #2ecc71; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #2d3436; margin: 0; padding: 10px; }
-    .container { max-width: 1400px; margin: 0 auto; }
-    
-    .header { background: var(--card); padding: 12px 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 6px solid var(--orange); }
-    .logo-area { display: flex; align-items: center; gap: 12px; }
-    .logo-area img { width: 40px; height: 40px; border-radius: 6px; }
-    
-    .status-badge { display: flex; align-items: center; gap: 6px; color: var(--green); font-size: 11px; font-weight: bold; background: #e8f8f0; padding: 4px 10px; border-radius: 20px; }
-    .dot { height: 6px; width: 6px; background-color: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
-
-    .controls { display: flex; gap: 10px; flex-direction: column; margin-bottom: 20px; }
-    .btn-dashboard { background: var(--blue); color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; text-align: center; box-shadow: 0 4px 6px rgba(24, 95, 165, 0.2); }
-    
-    .filter-group { display: flex; gap: 10px; width: 100%; }
-    .filter-card { background: var(--card); padding: 10px; border-radius: 10px; flex: 1; display: flex; flex-direction: column; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee; }
-    .filter-card label { font-weight: bold; font-size: 11px; color: var(--blue); text-transform: uppercase; }
-    select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; width: 100%; background: white; outline: none; }
-
-    .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-    .chart-container { background: var(--card); padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 300px; border-top: 3px solid #eee; position: relative; }
-    
-    h2 { font-size: 12px; color: var(--blue); margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 10px; }
-
-    @media (min-width: 768px) {
-      .controls { flex-direction: row; align-items: center; }
-      .filter-group { width: auto; flex-grow: 1; }
-      .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
-      .full-width { grid-column: span 2; height: 380px; }
-      .chart-container { height: 320px; }
+    :root{
+      --bg:#fff8f1;--card:#ffffff;--text:#1f2430;--muted:#6c7480;
+      --orange:#f08a00;--orange-2:#ffb347;--orange-3:#fff1dd;--line:#e9e0d3;
+      --shadow:0 16px 40px rgba(240,138,0,.12);--danger:#b42318;--ok:#067647;
+      --blue:#185fa5;--blue-light:#e6f1fb;
     }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
+         background:linear-gradient(180deg,#fff8f1 0%,#fffdf9 100%);color:var(--text);
+         font-size:16px;line-height:1.5}
+    .wrap{max-width:1200px;margin:0 auto;padding:16px;padding-bottom:120px}
+    .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+    .hero{padding:18px;margin-bottom:14px;background:radial-gradient(circle at top right,rgba(240,138,0,.15),transparent 30%),linear-gradient(135deg,rgba(255,179,71,.16),rgba(255,255,255,.9))}
+    .card{padding:16px;margin-bottom:14px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    h1,h2,h3{margin:0}
+    h1{font-size:22px}
+    h3{font-size:18px}
+    .logo-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .logo-title img{width:48px;height:48px;object-fit:contain;border-radius:12px;background:#fff;border:1px solid var(--line);padding:4px}
+    .sub{color:var(--muted);margin-top:4px;font-size:14px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    label{font-size:14px;font-weight:700}
+    input,select,textarea,button{font:inherit}
+    input[type="date"],input[type="datetime-local"],input[type="text"],input[type="password"],input[type="number"],select,textarea{
+      width:100%;padding:14px 14px;border:1px solid var(--line);border-radius:14px;
+      background:#fff;color:var(--text);font-size:16px
+    }
+    textarea{min-height:80px;resize:vertical}
+    .muted{color:var(--muted);font-size:14px}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{border:0;border-radius:14px;padding:14px 18px;cursor:pointer;font-weight:800;font-size:15px;min-height:48px}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff}
+    .btn-secondary{background:#fff4e6;color:#8a4b00;border:1px solid #ffd8a8}
+    .btn-danger{background:#fff1f1;color:var(--danger);border:1px solid #ffd0d0}
+    .btn-icon{padding:10px 14px;background:#fff4e6;border:1px solid #ffd8a8;color:#8a4b00;border-radius:12px;font-weight:700;cursor:pointer;font-size:14px}
+    .section-title{font-size:18px;font-weight:900;margin-bottom:10px}
+    .status{padding:12px 14px;border-radius:14px;margin-top:10px;font-weight:700;font-size:14px}
+    .status.ok{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
+    .status.warn{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+    .status.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
 
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    /* Overlays */
+    .overlay{position:fixed;inset:0;background:rgba(16,21,29,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:14px}
+    .overlay.show{display:flex}
+    .overlay-box{background:#fff;border-radius:18px;padding:24px;box-shadow:0 30px 70px rgba(0,0,0,.2);font-size:16px;font-weight:900;text-align:center;max-width:420px;width:100%}
+    .overlay-box.is-success{background:#ecfdf3;color:#067647;border:2px solid #abefc6}
+    .overlay-box.is-success .icon{font-size:48px;display:block;margin-bottom:8px}
+
+    .modal{background:#fff;border-radius:18px;padding:20px;box-shadow:0 30px 70px rgba(0,0,0,.2);max-width:520px;width:100%;max-height:88vh;overflow-y:auto}
+    .modal h3{margin:0 0 12px 0}
+    .modal-row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+    .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+    a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+
+    /* Team list */
+    .team-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+    @media(min-width:700px){ .team-list{grid-template-columns:repeat(4,minmax(0,1fr))} }
+    .check{display:flex;align-items:center;gap:10px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;cursor:pointer;min-height:52px}
+    .check input{width:20px;height:20px;flex-shrink:0}
+    .check span{font-size:15px;font-weight:600}
+
+    /* Step 2 */
+    .step2-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+    @media(min-width:700px){ .step2-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+    .staff-poste-card{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fffdf9}
+    .staff-name{font-size:16px;font-weight:800;margin-bottom:10px}
+    .postes-wrap{display:flex;flex-wrap:wrap;gap:6px}
+    .poste-chip{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:13px;font-weight:700;cursor:pointer;user-select:none;min-height:38px}
+    .poste-chip.selected.zone-cuisine{background:var(--orange);color:#fff;border-color:var(--orange)}
+    .poste-chip.zone-caisse{border-color:#b5d4f4}
+    .poste-chip.selected.zone-caisse{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+    /* Member card avec sticky header (score) */
+    .member-card{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fffdf9;margin-bottom:14px;position:relative}
+    .member-head{
+      position:sticky;top:0;z-index:5;
+      display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+      padding:10px 12px;margin:-14px -14px 12px -14px;
+      background:linear-gradient(180deg, #fffdf9 80%, rgba(255,253,249,.95));
+      border-bottom:1px solid var(--line);
+      border-radius:18px 18px 0 0;
+    }
+    .score-box{min-width:110px;text-align:center;padding:8px 12px;border-radius:12px;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;font-weight:900}
+    .score-box .s-label{font-size:10px;opacity:.9;letter-spacing:.05em}
+    .score-box .s-value{font-size:22px;line-height:1.1}
+    .score-box .s-pct{font-size:11px;opacity:.85}
+    .score-box .s-niveau{font-size:11px;font-weight:700;opacity:.95;margin-top:2px;letter-spacing:.02em}
+
+    .poste-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .poste-tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fff1dd;color:#8a4b00;border:1px solid #ffd8a8}
+    .poste-tag.zone-caisse{background:var(--blue-light);color:var(--blue);border-color:#b5d4f4}
+
+    /* Questions */
+    .q-section{margin-bottom:14px}
+    .q-section-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;padding:6px 10px;background:#f8f3ee;border-radius:8px}
+    .question{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff;margin-bottom:6px}
+    .q-text{font-size:14px;line-height:1.4;margin-bottom:10px}
+    .q-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .q-pts{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap}
+    .q-answers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-radius:12px;overflow:hidden;border:1px solid var(--line);min-width:180px}
+    .q-answers button{padding:10px 8px;font-size:13px;font-weight:800;border:none;background:#fff;color:var(--muted);cursor:pointer;border-right:1px solid var(--line);min-height:42px}
+    .q-answers button:last-child{border-right:none}
+    .q-answers button.active-oui{background:#ecfdf3;color:#067647}
+    .q-answers button.active-non{background:#fef3f2;color:#b42318}
+    .q-answers button.active-na{background:var(--blue-light);color:var(--blue)}
+
+    /* Settings panel */
+    .settings-modal{background:#fff;border-radius:18px;padding:20px;max-width:760px;width:100%;max-height:88vh;overflow-y:auto}
+    .settings-poste-block{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;background:#fffdf9}
+    .settings-poste-title{font-weight:800;font-size:15px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+    .settings-q-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed #f0e8db}
+    .settings-q-row:last-child{border-bottom:none}
+    .settings-q-text{flex:1;font-size:13px;line-height:1.3}
+    .settings-q-pts{width:60px;flex-shrink:0}
+    .settings-q-pts input{padding:6px 8px;text-align:center;font-weight:700;font-size:14px}
+
+    /* Bottom action bar */
+    .save-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:8px;justify-content:space-between;align-items:center;z-index:50;box-shadow:0 -8px 24px rgba(0,0,0,.05)}
+    .save-bar .btns-left,.save-bar .btns-right{display:flex;gap:8px}
+    .save-bar .btn{padding:12px 16px;font-size:14px}
+
+    /* Production challenge specific */
+    .prod-card{background:#fffaf5;border:1px solid #ffe1c2;border-radius:14px;padding:14px;margin-bottom:12px}
+    .prod-card h2{color:var(--orange);font-size:16px;margin:0 0 8px}
+    .prod-input-group{display:flex;gap:6px;align-items:flex-start}
+    .prod-input-group input{flex:1}
+    .prod-input-group select{width:80px;flex-shrink:0}
+    .timer{font-size:32px;text-align:center;font-weight:bold;color:var(--orange);margin:10px 0}
+    .help{font-size:12px;color:var(--muted);margin-top:4px}
+
+    @media(max-width:500px){
+      .q-bottom{flex-direction:column;align-items:stretch}
+      .q-pts{align-self:flex-end}
+      .q-answers{width:100%}
+      .grid-3{grid-template-columns:1fr}
+      h1{font-size:18px}
+    }
   </style>
 </head>
 <body>
-
-<div class="container">
-  <div class="header">
-    <div class="logo-area">
-      <img src="./otacos-logo.png" alt="Logo">
-      <div>
-        <h1 style="margin:0; font-size: 16px;">Analytics Prod</h1>
-        <p style="margin:0; font-size: 10px; color: #636e72;">Tableau de Bord Automatique</p>
-      </div>
-    </div>
-    <div class="status-badge"><span class="dot"></span> CONNECTÉ</div>
+  <!-- Overlay enregistrement (rouge → vert) -->
+  <div class="overlay" id="savingOverlay">
+    <div class="overlay-box" id="savingBox">Ne quittez pas, l'enregistrement est en cours…</div>
   </div>
 
-  <div class="controls">
-    <a href="index.html" class="btn-dashboard">← RETOUR</a>
-    <div class="filter-group">
-      <div class="filter-card">
-        <label>Équipier</label>
-        <select id="staffSelect" onchange="updateDashboard()"><option value="all">Tous (Moyenne)</option></select>
+  <!-- Modale login admin (UNIQUE pour tout) -->
+  <div class="overlay" id="adminLoginOverlay">
+    <div class="modal">
+      <h3>🔒 Accès administrateur</h3>
+      <div class="modal-row">
+        <label for="adminPwd">Mot de passe</label>
+        <input type="password" id="adminPwd" placeholder="Mot de passe" autocomplete="off" />
       </div>
-      <div class="filter-card">
-        <label>Mois</label>
-        <select id="monthSelect" onchange="updateDashboard()"><option value="all">Tout</option></select>
+      <div class="modal-btns">
+        <button class="btn btn-secondary" id="adminLoginCancel" type="button">Annuler</button>
+        <button class="btn btn-primary" id="adminLoginConfirm" type="button">Accéder</button>
       </div>
+      <div id="adminLoginStatus"></div>
     </div>
   </div>
 
-  <div class="dashboard-grid" id="mainGrid">
-    <!-- Les graphiques sont générés ici -->
+  <!-- Modale override (modification service clôturé) -->
+  <div class="overlay" id="overrideOverlay">
+    <div class="modal">
+      <h3>🔐 Service déjà clôturé</h3>
+      <div class="muted" style="margin-bottom:8px">Saisissez le code de validation pour modifier ce service.</div>
+      <div class="modal-row">
+        <label for="overridePwd">Code de validation</label>
+        <input type="password" id="overridePwd" placeholder="Code" autocomplete="off" />
+      </div>
+      <div class="modal-btns">
+        <button class="btn btn-secondary" id="overrideCancel" type="button">Annuler</button>
+        <button class="btn btn-primary" id="overrideConfirm" type="button">Valider</button>
+      </div>
+      <div id="overrideStatus"></div>
+    </div>
   </div>
-</div>
 
-<script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec"; 
-  let rawData = [];
-  let activeCharts = {};
+  <!-- Modale Paramètres (points) -->
+  <div class="overlay" id="settingsOverlay">
+    <div class="settings-modal">
+      <h3 style="margin-bottom:6px">⚙️ Modifier les points par question</h3>
+      <div class="muted" style="margin-bottom:14px">Modifiez les valeurs en points puis cliquez "Enregistrer".</div>
+      <div id="settingsContent"></div>
+      <div class="btns" style="margin-top:14px;justify-content:space-between;flex-wrap:wrap">
+        <button class="btn btn-danger" id="settingsResetBtn" type="button">Restaurer initial</button>
+        <div class="btns">
+          <button class="btn btn-secondary" id="settingsCloseBtn" type="button">Fermer</button>
+          <button class="btn btn-primary" id="settingsSaveBtn" type="button">Enregistrer</button>
+        </div>
+      </div>
+      <div id="settingsStatus"></div>
+    </div>
+  </div>
 
-  const chartConfigs = [
-    { id: 'chartScore', key: 'note', label: 'Score Global (/10)', full: true },
-    { id: 'chartPoids', key: 'poids', label: 'Poids (g)', full: false },
-    { id: 'chartTime', key: 'tempsSec', label: 'Temps (sec)', full: false },
-    { id: 'chartLongueur', key: 'longueur', label: 'Longueur (cm)', full: false },
-    { id: 'chartLargeur', key: 'largeur', label: 'Largeur (cm)', full: false },
-    { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur (cm)', full: true }
-  ];
+  <!-- Modale Production -->
+  <div class="overlay" id="productionOverlay">
+    <div class="modal" style="max-width:560px">
+      <h3>🥙 Challenge production</h3>
 
-  // Crée les conteneurs HTML automatiquement
-  const grid = document.getElementById('mainGrid');
-  chartConfigs.forEach(c => {
-    grid.innerHTML += `<div class="chart-container ${c.full ? 'full-width' : ''}"><h2>${c.label}</h2><canvas id="${c.id}"></canvas></div>`;
-  });
+      <div class="prod-card">
+        <h2>Informations</h2>
+        <div class="modal-row">
+          <label>Date du test</label>
+          <input type="date" id="prodDate" />
+        </div>
+        <div class="modal-row">
+          <label>Manager / Responsable</label>
+          <select id="prodManager">
+            <option value="">Choisir</option>
+            <option value="Imane">Imane</option>
+            <option value="Guillaume">Guillaume</option>
+            <option value="Pape">Pape</option>
+            <option value="Omar">Omar</option>
+          </select>
+        </div>
+        <div class="modal-row">
+          <label>Équipier testé</label>
+          <select id="prodStaff">
+            <option value="">Choisir un équipier</option>
+          </select>
+        </div>
+      </div>
 
-  async function init() {
-    try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);
-      const json = await res.json();
-      if (!json.ok || !json.production) return;
-      rawData = json.production;
-      console.log("Production data:", rawData);
-      console.log("Premier test:", rawData[0]);
-      
-      const selectStaff = document.getElementById('staffSelect');
-      const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s).sort();
-      staffs.forEach(s => { selectStaff.innerHTML += `<option value="${s}">${s}</option>`; });
-      
-      const selectMonth = document.getElementById('monthSelect');
-      const periods = [...new Set(rawData.map(d => d.month))].filter(m => m).sort().reverse();
-      periods.forEach(p => { selectMonth.innerHTML += `<option value="${p}">${p}</option>`; });
-      
-      updateDashboard();
-    } catch (e) { console.error("Erreur init:", e); }
-  }
+      <div class="prod-card">
+        <h2>Poids</h2>
+        <div class="modal-row">
+          <label>Poids du tacos (g)</label>
+          <input type="number" id="prodPoids" placeholder="Ex : 300" />
+          <div class="help">Conforme entre 285 et 315 g (±15 g)</div>
+        </div>
+      </div>
 
-  function parseVal(val) {
-    if (val === undefined || val === null || val === "") return 0;
-    // Remplace la virgule par un point et force en nombre
-    let n = parseFloat(String(val).replace(',', '.'));
-    return isNaN(n) ? 0 : n;
-  }
+      <div class="prod-card">
+        <h2>Taille</h2>
+        <div class="modal-row">
+          <label>Longueur</label>
+          <div class="prod-input-group">
+            <input type="number" step="0.1" id="prodLongueur" placeholder="Ex : 15.2" />
+            <select id="prodLongueurUnit"><option value="cm">cm</option><option value="mm">mm</option></select>
+          </div>
+        </div>
+        <div class="modal-row">
+          <label>Largeur</label>
+          <div class="prod-input-group">
+            <input type="number" step="0.1" id="prodLargeur" placeholder="Ex : 11" />
+            <select id="prodLargeurUnit"><option value="cm">cm</option><option value="mm">mm</option></select>
+          </div>
+        </div>
+        <div class="modal-row">
+          <label>Épaisseur</label>
+          <div class="prod-input-group">
+            <input type="number" step="0.1" id="prodEpaisseur" placeholder="Ex : 2.5" />
+            <select id="prodEpaisseurUnit"><option value="cm">cm</option><option value="mm">mm</option></select>
+          </div>
+        </div>
+      </div>
 
-  function updateDashboard() {
-    const staffVal = document.getElementById('staffSelect').value;
-    const monthVal = document.getElementById('monthSelect').value;
-    let filtered = (monthVal === 'all') ? rawData : rawData.filter(d => d.month === monthVal);
-    
-    let finalData = [];
-    if (staffVal === 'all') {
-      const dates = [...new Set(filtered.map(d => d.date))].sort();
-      finalData = dates.map(date => {
-        const tests = filtered.filter(d => d.date === date);
-        const avg = (k) => tests.reduce((a, c) => a + parseVal(c[k]), 0) / tests.length;
-        return { date, note: avg('note'), poids: avg('poids'), tempsSec: avg('tempsSec'), longueur: avg('longueur'), largeur: avg('largeur'), epaisseur: avg('epaisseur') };
-      });
-    } else {
-      finalData = filtered.filter(d => d.staff === staffVal).sort((a,b) => new Date(a.date) - new Date(b.date));
+      <div class="prod-card">
+        <h2>Chronomètre</h2>
+        <div class="timer" id="prodTimer">00:00</div>
+        <div class="btns" style="margin-bottom:8px">
+          <button class="btn btn-secondary" id="prodTimerToggle" type="button" style="flex:1">▶ Démarrer / Pause</button>
+          <button class="btn btn-secondary" id="prodTimerReset" type="button">↺</button>
+        </div>
+        <div class="help">Conforme entre 30 s et 60 s</div>
+      </div>
+
+      <div class="prod-card">
+        <h2>Toaster</h2>
+        <div class="modal-row">
+          <label>Croisillons visibles ?</label>
+          <select id="prodCroisillons"><option value="oui">Oui</option><option value="non">Non</option></select>
+        </div>
+        <div class="modal-row">
+          <label>Emballage conforme ?</label>
+          <select id="prodEmballage"><option value="oui">Oui</option><option value="non">Non</option></select>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <h2>Sauces</h2>
+        <div class="modal-row">
+          <label>Homogénéité correcte ?</label>
+          <select id="prodSauces"><option value="oui">Oui</option><option value="non">Non</option></select>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <h2>Commentaires</h2>
+        <textarea id="prodComment" placeholder="Ajouter un commentaire..."></textarea>
+      </div>
+
+      <div id="prodResult" style="font-size:18px;font-weight:900;color:var(--orange);text-align:center;margin:10px 0"></div>
+
+      <div class="modal-btns">
+        <button class="btn btn-secondary" id="prodCloseBtn" type="button">Fermer</button>
+        <button class="btn btn-primary" id="prodCalcBtn" type="button">Calculer la note</button>
+        <button class="btn btn-primary" id="prodSaveBtn" type="button" style="display:none">💾 Enregistrer</button>
+      </div>
+      <div id="prodStatus"></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section class="hero">
+      <div class="top">
+        <div class="logo-title">
+          <img src="./otacos-logo.png" alt="Logo O'TACOS" />
+          <div>
+            <h1>ÉVALUATION EQUIPIER DU MOIS</h1>
+            <div class="sub">O'TACOS BOULOGNE SUR MER</div>
+          </div>
+        </div>
+        <div class="btns">
+          <button class="btn-icon" id="openProductionBtn" type="button">🥙 Challenge production</button>
+          <button class="btn-icon" id="openSettingsBtn" type="button">⚙️ Accès administrateur</button>
+        </div>
+      </div>
+      <div class="btns" style="margin-top:14px">
+        <a class="btn btn-secondary" href="https://otacosboulogne.github.io/otacos-suivi-equipe/dashboard.html">Accès dashboard</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Étape 1 — Préparer le service</div>
+      <div class="grid-3">
+        <div class="field">
+          <label for="serviceDate">Date</label>
+          <input type="date" id="serviceDate" />
+        </div>
+        <div class="field">
+          <label for="serviceType">Service</label>
+          <select id="serviceType">
+            <option value="">Choisir</option>
+            <option value="Matin">Matin</option>
+            <option value="Soir">Soir</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="managerName">Manager</label>
+          <select id="managerName">
+            <option value="">Choisir</option>
+            <option value="Imane">Imane</option>
+            <option value="Guillaume">Guillaume</option>
+            <option value="Pape">Pape</option>
+            <option value="Omar">Omar</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="section-title" style="font-size:16px">Équipe présente</div>
+        <div class="muted">Sélectionne les équipiers présents.</div>
+        <div id="teamList" class="team-list"></div>
+      </div>
+      <div class="btns" style="margin-top:14px">
+        <button class="btn btn-primary" id="goStep2Btn" type="button" style="width:100%">Suivant — Attribuer les postes →</button>
+      </div>
+      <div id="topStatus"></div>
+    </section>
+
+    <section class="card" id="step2Section" style="display:none">
+      <div class="section-title">Étape 2 — Attribuer les postes</div>
+      <div class="muted">Pour chaque équipier, coche le ou les postes tenus sur ce service.</div>
+      <div id="step2Grid" class="step2-grid"></div>
+      <div id="step2Status"></div>
+    </section>
+
+    <section class="card" id="step3Section" style="display:none">
+      <div class="section-title">Étape 3 — Évaluation de l'équipe</div>
+      <div class="muted" style="margin-bottom:12px">
+        <b>Oui</b> = +X pts &nbsp;•&nbsp; <b>Non</b> = −0,5 pt &nbsp;•&nbsp; <b>N/A</b> = retiré du calcul<br>
+        <span style="font-size:12px">Le score ne descend jamais sous 0.</span>
+      </div>
+      <div id="membersContainer" class="muted">Les fiches apparaîtront ici.</div>
+      <div id="bottomStatus"></div>
+    </section>
+  </div>
+
+  <!-- Sticky bottom bar (visible selon l'étape) -->
+  <div class="save-bar" id="saveBar" style="display:none">
+    <div class="btns-left">
+      <button class="btn btn-secondary" id="backStepBtn" type="button">← Retour</button>
+      <button class="btn btn-danger" id="clearBtn" type="button" style="display:none">Effacer</button>
+    </div>
+    <div class="btns-right">
+      <button class="btn btn-primary" id="nextStepBtn" type="button" style="display:none">Suivant →</button>
+      <button class="btn btn-primary" id="saveBtn" type="button" style="display:none">💾 Enregistrer</button>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════
+    //  CONFIGURATION
+    // ═══════════════════════════════════════════════════════════
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec";
+    const DRAFT_KEY = "otacos_eval_draft_v7";
+    const POINTS_KEY = "otacos_eval_points_v1";
+    const NEGATIVE_PENALTY = 0.5;
+
+    // Tokens (en mémoire seulement, jamais en localStorage)
+    let adminToken = null;
+    let overrideToken = null;
+    let pendingOverrideAction = null; // callback à exécuter une fois l'override validé
+
+    const POSTES = [
+      { id: "caisse",      label: "Caisse",                zone: "caisse" },
+      { id: "ouverture",   label: "Ouverture caisse",      zone: "caisse" },
+      { id: "fermeture_c", label: "Fermeture caisse",      zone: "caisse" },
+      { id: "friture",     label: "Friture & cuisson",     zone: "cuisine" },
+      { id: "toaster",     label: "Toaster",               zone: "cuisine" },
+      { id: "envoi",       label: "Envoi",                 zone: "cuisine" },
+      { id: "pliage",      label: "Pliage",                zone: "cuisine" },
+      { id: "prepa_matin", label: "Prépa matin",           zone: "cuisine" },
+      { id: "prepa_soir",  label: "Prépa soir",            zone: "cuisine" },
+      { id: "fermeture_k", label: "Fermeture cuisine",     zone: "cuisine" },
+      { id: "reception",   label: "Réception livraison",   zone: "cuisine" },
+    ];
+
+    const QUESTIONS_DEFAULT = [
+      { key:"c_tenue",      label:"Sur ce service, sa tenue était propre et son hygiène corporelle irréprochable", defaultPts:2, poste:"commun" },
+      { key:"c_mains",      label:"Sur ce service, il s'est lavé les mains systématiquement", defaultPts:2, poste:"commun" },
+      { key:"c_concentre",  label:"Sur ce service, il est resté concentré (pas de discussions inutiles au poste)", defaultPts:2, poste:"commun" },
+      { key:"c_rythme",     label:"Sur ce service, son rythme de production était soutenu et constant", defaultPts:2, poste:"commun" },
+      { key:"c_aide",       label:"Sur ce service, il a aidé spontanément un collègue", defaultPts:1, poste:"commun" },
+      { key:"c_erreur",     label:"Sur ce service, aucune erreur n'a été constatée", defaultPts:2, poste:"commun" },
+      { key:"c_energie",    label:"Sur ce service, son énergie et son attitude étaient positives pour l'équipe", defaultPts:1, poste:"commun" },
+      { key:"c_propre_fin", label:"En fin de service, il a laissé son poste propre et rangé", defaultPts:2, poste:"commun" },
+      { key:"c_poubelle",   label:"Si demandé, il a sorti la poubelle et respecté le timing", defaultPts:2, poste:"commun" },
+      { key:"c_epack",      label:"Validation des nettoyages des postes sur Epack hygiène", defaultPts:2, poste:"commun" },
+      { key:"c_dlc",        label:"Le salarié met les DLC sur les produits sans qu'on lui demande", defaultPts:3, poste:"commun" },
+      { key:"c_traca",      label:"Traçabilité faite systématiquement", defaultPts:3, poste:"commun" },
+      // CAISSE
+      { key:"p_caisse_accueil",       label:"Il a accueilli chaque client avec le discours O'Tacos", defaultPts:2, poste:"caisse" },
+      { key:"p_caisse_boisson",       label:"La boisson a été remise sans que le client ait à revenir", defaultPts:2, poste:"caisse" },
+      { key:"p_caisse_fidelite",      label:"Le programme de fidélité a été proposé aux bornes", defaultPts:1, poste:"caisse" },
+      { key:"p_caisse_aucune_err",    label:"Aucune erreur dans les commandes Uber, Deliveroo ou C&C", defaultPts:5, poste:"caisse" },
+      { key:"p_caisse_uber",          label:"Les commandes Uber/Deliveroo données rapidement et bien filmées", defaultPts:2, poste:"caisse" },
+      { key:"p_caisse_borne",         label:"Les bornes ont été surveillées et les clients en difficulté guidés", defaultPts:1, poste:"caisse" },
+      { key:"p_caisse_vente",         label:"Vente additionnelle proposée (boisson, dessert, menu)", defaultPts:1, poste:"caisse" },
+      { key:"p_caisse_sac",           label:"Aucune commande donnée à un livreur sans sac", defaultPts:2, poste:"caisse" },
+      { key:"p_caisse_aucune_err_ck", label:"Aucune erreur de caisse (mauvais mode de paiement = erreur)", defaultPts:5, poste:"caisse" },
+      { key:"p_caisse_glace",         label:"La préparation de la glace & O'Shake est conforme", defaultPts:1, poste:"caisse" },
+      { key:"p_caisse_priorite",      label:"L'ordre de priorité respecté (WC propre, salle…)", defaultPts:3, poste:"caisse" },
+      { key:"p_caisse_avis",          label:"Avis Google 5★ obtenu sur le service", defaultPts:2, poste:"caisse" },
+      // OUVERTURE
+      { key:"p_ouv_vitrine",  label:"La vitrine était remplie et bien présentée", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_lumieres", label:"Lumières, écrans, vitrine, bornes allumés", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_machine",  label:"Machine à glace propre + température prise", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_devant",   label:"Devant le restaurant propre", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_drapeau",  label:"Drapeau sorti", defaultPts:1, poste:"ouverture" },
+      { key:"p_ouv_terrasse", label:"Terrasse mise et propre (été)", defaultPts:2, poste:"ouverture" },
+      { key:"p_ouv_dlc",      label:"DLC conformes", defaultPts:3, poste:"ouverture" },
+      // FERMETURE CAISSE
+      { key:"p_ferm_c_terrasse",   label:"Terrasse rangée (été)", defaultPts:2, poste:"fermeture_c" },
+      { key:"p_ferm_c_extinction", label:"Écrans, enseigne éteints + bornes en veille + tablette en charge", defaultPts:2, poste:"fermeture_c" },
+      { key:"p_ferm_c_plateau",    label:"Plateau propre et frigo boisson rempli", defaultPts:1, poste:"fermeture_c" },
+      { key:"p_ferm_c_drapeau",    label:"Drapeau rentré", defaultPts:2, poste:"fermeture_c" },
+      { key:"p_ferm_c_dlc",        label:"DLC conformes", defaultPts:3, poste:"fermeture_c" },
+      { key:"p_ferm_c_machine",    label:"Machine à glace en veille + tapping couvert", defaultPts:1, poste:"fermeture_c" },
+      { key:"p_ferm_c_timing",     label:"Timing fermeture conforme", defaultPts:2, poste:"fermeture_c" },
+      // FRITURE
+      { key:"p_frit_programmes", label:"Programmes appropriés respectés", defaultPts:2, poste:"friture" },
+      { key:"p_frit_rupture",    label:"Pas de rupture de fritures / blocage de production", defaultPts:2, poste:"friture" },
+      { key:"p_frit_viande",     label:"Viandes/fromagère lancées en temps", defaultPts:1, poste:"friture" },
+      { key:"p_frit_tickets",    label:"Tickets regardés régulièrement", defaultPts:1, poste:"friture" },
+      { key:"p_frit_appro",      label:"Approvisionnement frigo / suppléments sans bloquer la prod", defaultPts:1, poste:"friture" },
+      // TOASTER
+      { key:"p_toast_qualite",   label:"Tacos bien toastés, croisillons visibles", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_rythme",    label:"Le rythme au toaster ne bloque pas la ligne", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_gratin",    label:"Gratinage conforme", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_emballage", label:"Emballages propres, présentation soignée", defaultPts:1, poste:"toaster" },
+      { key:"p_toast_propre",    label:"Toaster et zone nettoyés régulièrement", defaultPts:1, poste:"toaster" },
+      { key:"p_toast_discours",  label:"Discours client (regard, sourire à la remise)", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_appel",     label:"Appel caisse dès commande Uber/Deliveroo/C&C prête", defaultPts:2, poste:"toaster" },
+      { key:"p_toast_verif",     label:"Vérification commande avant remise client", defaultPts:2, poste:"toaster" },
+      // ENVOI
+      { key:"p_envoi_rythme",  label:"Rythme à l'envoi sans blocage de la ligne", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_commu",   label:"Bonne communication avec pliage / friture", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_ordre",   label:"Ordre des tickets respecté (C&C / Uber / restaurant)", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_louches", label:"Pas de surdosage des louches", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_lance",   label:"Regarde ce qu'il faut lancer (finger food / fritures)", defaultPts:1, poste:"envoi" },
+      { key:"p_envoi_viande",  label:"Prévient le responsable des niveaux de viandes", defaultPts:2, poste:"envoi" },
+      { key:"p_envoi_avance",  label:"Avance les gratinages + pots de sauces", defaultPts:1, poste:"envoi" },
+      // PLIAGE
+      { key:"p_pliage_qualite", label:"Tacos bien pliés", defaultPts:2, poste:"pliage" },
+      { key:"p_pliage_rythme",  label:"Le rythme au pliage ne crée pas de goulot", defaultPts:2, poste:"pliage" },
+      { key:"p_pliage_propre",  label:"Zone de pliage nettoyée régulièrement", defaultPts:1, poste:"pliage" },
+      { key:"p_pliage_louche",  label:"Louche bleue utilisée pour suppléments/petit tacos", defaultPts:3, poste:"pliage" },
+      { key:"p_pliage_avance",  label:"Avance les frites et finger food au toaster", defaultPts:1, poste:"pliage" },
+      { key:"p_pliage_dose",    label:"Pas de surdosage frites/fromagère", defaultPts:2, poste:"pliage" },
+      // PREPA MATIN
+      { key:"p_prepa_m_dlc",     label:"DLC posées sur tous les produits dès l'ouverture", defaultPts:2, poste:"prepa_matin" },
+      { key:"p_prepa_m_epack",   label:"Epack hygiène à jour (T°, traçabilité, refroidissement)", defaultPts:2, poste:"prepa_matin" },
+      { key:"p_prepa_m_stock",   label:"Stocks préparés et vérifiés avant ouverture", defaultPts:2, poste:"prepa_matin" },
+      { key:"p_prepa_m_feuille", label:"Feuille de production utilisée et remplie", defaultPts:2, poste:"prepa_matin" },
+      { key:"p_prepa_m_decong",  label:"Process de décongélation respecté", defaultPts:2, poste:"prepa_matin" },
+      // PREPA SOIR
+      { key:"p_prepa_s_feuille", label:"Feuille de production utilisée et remplie", defaultPts:2, poste:"prepa_soir" },
+      { key:"p_prepa_s_plonge",  label:"Plonge faite, plateaux gastro rangés", defaultPts:1, poste:"prepa_soir" },
+      { key:"p_prepa_s_dlc",     label:"DLC et traçabilités à jour", defaultPts:2, poste:"prepa_soir" },
+      { key:"p_prepa_s_decong",  label:"Process de décongélation respecté", defaultPts:2, poste:"prepa_soir" },
+      { key:"p_prepa_s_frigo",   label:"Frigo, emballages, suppléments remplis", defaultPts:2, poste:"prepa_soir" },
+      { key:"p_prepa_s_epack",   label:"Epack hygiène à jour", defaultPts:5, poste:"prepa_soir" },
+      { key:"p_prepa_s_propre",  label:"Zone cuisine et plonge propres", defaultPts:2, poste:"prepa_soir" },
+      // FERMETURE CUISINE
+      { key:"p_ferm_k_cello",   label:"Produits cellophanés et DLC conformes", defaultPts:2, poste:"fermeture_k" },
+      { key:"p_ferm_k_timing",  label:"Timing fermeture conforme", defaultPts:2, poste:"fermeture_k" },
+      { key:"p_ferm_k_decong",  label:"Process de décongélation respecté", defaultPts:2, poste:"fermeture_k" },
+      { key:"p_ferm_k_chambre", label:"Produits rangés en chambre + et −", defaultPts:2, poste:"fermeture_k" },
+      // RECEPTION
+      { key:"p_recep_verif",  label:"Livraison vérifiée (quantités, état, T°)", defaultPts:2, poste:"reception" },
+      { key:"p_recep_fifo",   label:"Rangement immédiat selon FIFO", defaultPts:2, poste:"reception" },
+      { key:"p_recep_carton", label:"Cartons pliés et mis en poubelle", defaultPts:1, poste:"reception" },
+      { key:"p_recep_sol",    label:"Aucun produit au sol, tout sur cailloutis", defaultPts:2, poste:"reception" },
+      { key:"p_recep_signal", label:"Produit non conforme signalé au manager immédiatement", defaultPts:2, poste:"reception" },
+    ];
+
+    let QUESTIONS = [];
+    let staffPostes = {};
+    let currentStep = 1;
+
+    // ─── HELPERS ──────────────────────────────────────────────
+    function qs(id){ return document.getElementById(id); }
+    function showStatus(id, type, msg){ const el=qs(id); if(el) el.innerHTML=`<div class="status ${type}">${escapeHtml(msg)}</div>`; }
+    function clearStatus(id){ const el=qs(id); if(el) el.innerHTML=''; }
+
+    function showOverlayLoading(){
+      qs('savingBox').className = 'overlay-box';
+      qs('savingBox').innerHTML = "Ne quittez pas, l'enregistrement est en cours…";
+      qs('savingOverlay').classList.add('show');
+    }
+    function showOverlaySuccess(){
+      qs('savingBox').className = 'overlay-box is-success';
+      qs('savingBox').innerHTML = "<span class='icon'>✓</span>Évaluation envoyée avec succès";
+      qs('savingOverlay').classList.add('show');
+      setTimeout(()=>qs('savingOverlay').classList.remove('show'), 1800);
+    }
+    function hideOverlay(){ qs('savingOverlay').classList.remove('show'); }
+
+    function todayLocal(){
+      const d=new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
-    chartConfigs.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all'));
-  }
+    function escapeHtml(str){
+      return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    }
 
-  function renderChart(id, key, label, data, isGlobal) {
-    const ctx = document.getElementById(id).getContext('2d');
-    if (activeCharts[id]) activeCharts[id].destroy();
-    
-    const values = data.map(d => parseVal(d[key]));
+    // ─── QUESTIONS (avec override des points) ─────────────────
+    function loadQuestions(){
+      let overrides = {};
+      try{
+        const raw = localStorage.getItem(POINTS_KEY);
+        if(raw) overrides = JSON.parse(raw);
+      }catch{}
+      QUESTIONS = QUESTIONS_DEFAULT.map(q => ({
+        ...q,
+        pts: (overrides[q.key]!==undefined && !isNaN(Number(overrides[q.key])))
+              ? Number(overrides[q.key])
+              : q.defaultPts
+      }));
+    }
+    function saveQuestions(){
+      const overrides = {};
+      QUESTIONS.forEach(q => { if(Number(q.pts)!==Number(q.defaultPts)) overrides[q.key]=Number(q.pts); });
+      localStorage.setItem(POINTS_KEY, JSON.stringify(overrides));
+    }
+    function resetQuestionsLocal(){
+      localStorage.removeItem(POINTS_KEY);
+      loadQuestions();
+    }
 
-    activeCharts[id] = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: data.map(d => d.date),
-        datasets: [{
-          label: label,
-          data: values,
-          borderColor: isGlobal ? '#185fa5' : '#f08a00',
-          backgroundColor: isGlobal ? 'rgba(24, 95, 165, 0.1)' : 'rgba(240, 138, 0, 0.1)',
-          borderWidth: 3, tension: 0.3, fill: true, pointRadius: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: { 
-          y: { 
-            beginAtZero: false, // L'échelle s'adapte toute seule à partir de 0
-            grid: { color: '#f0f0f0' },
-            ticks: { font: { weight: 'bold' } }
-          }
-        }
+    // ─── DRAFT ────────────────────────────────────────────────
+    function defaultDraft(){
+      return { serviceDate:todayLocal(), serviceType:"", managerName:"", selectedTeam:[], staffPostes:{}, membersData:{} };
+    }
+    function loadDraft(){
+      try{
+        const raw=localStorage.getItem(DRAFT_KEY);
+        if(!raw) return defaultDraft();
+        const p=JSON.parse(raw);
+        return {
+          serviceDate: p.serviceDate||todayLocal(),
+          serviceType: p.serviceType||"",
+          managerName: p.managerName||"",
+          selectedTeam: Array.isArray(p.selectedTeam)?p.selectedTeam:[],
+          staffPostes: p.staffPostes||{},
+          membersData: p.membersData||{}
+        };
+      }catch{ return defaultDraft(); }
+    }
+
+    let _saveDraftTimer=null;
+    function saveDraft(){
+      clearTimeout(_saveDraftTimer);
+      _saveDraftTimer=setTimeout(()=>{
+        const draft=collectDraftFromUI();
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      }, 250);
+    }
+
+    function collectDraftFromUI(){
+      const selectedTeam=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+      const membersData={};
+      document.querySelectorAll('.member-card').forEach(card=>{
+        const staff=card.dataset.staff;
+        const d={};
+        card.querySelectorAll('.q-answers').forEach(group=>{
+          const key=group.dataset.qkey;
+          const oui=group.querySelector('button.active-oui');
+          const non=group.querySelector('button.active-non');
+          const na=group.querySelector('button.active-na');
+          if(oui) d[key]='oui';
+          else if(non) d[key]='non';
+          else if(na) d[key]='na';
+        });
+        const ta=card.querySelector('textarea[name="comment"]');
+        if(ta) d.comment=ta.value;
+        membersData[staff]=d;
+      });
+      return {
+        serviceDate:qs('serviceDate').value||todayLocal(),
+        serviceType:qs('serviceType').value||"",
+        managerName:qs('managerName').value||"",
+        selectedTeam, staffPostes, membersData
+      };
+    }
+
+    function applyDraftToHeader(draft){
+      qs('serviceDate').value=draft.serviceDate||todayLocal();
+      qs('serviceType').value=draft.serviceType||"";
+      qs('managerName').value=draft.managerName||"";
+    }
+
+    function clearDraftStorage(){ localStorage.removeItem(DRAFT_KEY); }
+
+    // ─── ROSTER ───────────────────────────────────────────────
+    let cachedRoster = [];
+    async function loadRoster(){
+      const res=await fetch(`${APPS_SCRIPT_URL}?mode=roster`);
+      const data=await res.json();
+      if(!data.ok) throw new Error(data.error||"Impossible de charger l'équipe.");
+      cachedRoster = data.roster || [];
+      return cachedRoster;
+    }
+
+    function renderTeamList(roster, draft){
+      const box=qs('teamList');
+      if(!roster.length){ box.innerHTML=`<div class="muted">Aucun équipier dans la feuille Équipe.</div>`; return; }
+      box.innerHTML=roster.map(name=>`
+        <label class="check">
+          <input type="checkbox" class="team-check" value="${escapeHtml(name)}" ${draft.selectedTeam.includes(name)?'checked':''}>
+          <span>${escapeHtml(name)}</span>
+        </label>
+      `).join('');
+      box.querySelectorAll('.team-check').forEach(el=>el.addEventListener('change', saveDraft));
+    }
+
+    // ─── STEP 2 ───────────────────────────────────────────────
+    function renderStep2(selectedTeam){
+      const grid=qs('step2Grid');
+      grid.innerHTML=selectedTeam.map(name=>{
+        const assigned=staffPostes[name]||[];
+        return `
+          <div class="staff-poste-card" data-staff="${escapeHtml(name)}">
+            <div class="staff-name">${escapeHtml(name)}</div>
+            <div class="postes-wrap">
+              ${POSTES.map(p=>`
+                <div class="poste-chip zone-${p.zone} ${assigned.includes(p.id)?'selected':''}"
+                     data-poste="${p.id}"
+                     data-staff="${escapeHtml(name)}"
+                     onclick="togglePoste(this)">
+                  ${escapeHtml(p.label)}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function togglePoste(chip){
+      const staff=chip.dataset.staff;
+      const poste=chip.dataset.poste;
+      if(!staffPostes[staff]) staffPostes[staff]=[];
+      const idx=staffPostes[staff].indexOf(poste);
+      if(idx>=0){ staffPostes[staff].splice(idx,1); chip.classList.remove('selected'); }
+      else{ staffPostes[staff].push(poste); chip.classList.add('selected'); }
+      saveDraft();
+    }
+
+    // ─── STEP 3 ───────────────────────────────────────────────
+    function renderMemberCards(selectedTeam, membersData){
+      const box=qs('membersContainer');
+      if(!selectedTeam.length){ box.innerHTML=`<div class="muted">Aucun équipier sélectionné.</div>`; return; }
+      box.innerHTML=selectedTeam.map(name=>memberCardHtml(name, membersData[name]||{}, staffPostes[name]||[])).join('');
+      box.querySelectorAll('textarea').forEach(el=>{
+        el.addEventListener('change', saveDraft);
+        el.addEventListener('input', saveDraft);
+      });
+      updateAllScores();
+    }
+
+    function memberCardHtml(staff, data, postes){
+      const posteLabels=postes.map(pid=>{
+        const p=POSTES.find(x=>x.id===pid);
+        return p?`<span class="poste-tag zone-${p.zone}">${escapeHtml(p.label)}</span>`:'';
+      }).join('');
+
+      const commonQs=QUESTIONS.filter(q=>q.poste==='commun');
+      const maxPts=commonQs.reduce((a,q)=>a+Number(q.pts),0) +
+                   QUESTIONS.filter(q=>postes.includes(q.poste)).reduce((a,q)=>a+Number(q.pts),0);
+
+      return `
+        <div class="member-card" data-staff="${escapeHtml(staff)}">
+          <div class="member-head">
+            <div>
+              <h3 style="font-size:16px">${escapeHtml(staff)}</h3>
+              <div class="muted" style="font-size:12px">Score sur <span class="member-max">${maxPts}</span> pts</div>
+            </div>
+            <div class="score-box">
+              <div class="s-label">SCORE</div>
+              <div class="s-value member-total">0</div>
+              <div class="s-pct member-pct">0%</div>
+              <div class="s-niveau member-niveau">—</div>
+            </div>
+          </div>
+
+          ${posteLabels ? `<div class="poste-tags">${posteLabels}</div>` : ''}
+
+          <div class="q-section">
+            <div class="q-section-title">Questions communes</div>
+            ${commonQs.map(q=>questionHtml(q, data)).join('')}
+          </div>
+
+          ${postes.map(pid=>{
+            const pLabel=POSTES.find(x=>x.id===pid)?.label||pid;
+            const pQs=QUESTIONS.filter(q=>q.poste===pid);
+            if(!pQs.length) return '';
+            return `
+              <div class="q-section">
+                <div class="q-section-title">Poste : ${escapeHtml(pLabel)}</div>
+                ${pQs.map(q=>questionHtml(q, data)).join('')}
+              </div>
+            `;
+          }).join('')}
+
+          <div class="field" style="margin-top:10px">
+            <label>Commentaire manager</label>
+            <textarea name="comment" placeholder="Points forts, axes d'amélioration...">${escapeHtml(data.comment||'')}</textarea>
+          </div>
+        </div>
+      `;
+    }
+
+    function questionHtml(q, data){
+      const val=data[q.key]||'';
+      return `
+        <div class="question">
+          <div class="q-text">${escapeHtml(q.label)}</div>
+          <div class="q-bottom">
+            <span class="q-pts">+${q.pts} pt${q.pts>1?'s':''} si Oui &nbsp;•&nbsp; −${NEGATIVE_PENALTY} pt si Non</span>
+            <div class="q-answers" data-qkey="${escapeHtml(q.key)}">
+              <button type="button" onclick="setAnswer(this,'oui')" class="${val==='oui'?'active-oui':''}">Oui</button>
+              <button type="button" onclick="setAnswer(this,'non')" class="${val==='non'?'active-non':''}">Non</button>
+              <button type="button" onclick="setAnswer(this,'na')" class="${val==='na'?'active-na':''}">N/A</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setAnswer(btn, value){
+      const group=btn.closest('.q-answers');
+      const buttons=group.querySelectorAll('button');
+      const wasActive=btn.classList.contains('active-oui')||btn.classList.contains('active-non')||btn.classList.contains('active-na');
+      buttons.forEach(b=>b.classList.remove('active-oui','active-non','active-na'));
+      if(!wasActive) btn.classList.add('active-'+value);
+      updateAllScores();
+      saveDraft();
+    }
+
+    // ─── CALCUL SCORE CANADIEN ────────────────────────────────
+    function computeCardScore(card){
+      const staff=card.dataset.staff;
+      const postes=staffPostes[staff]||[];
+      const relevantQs=QUESTIONS.filter(q=>q.poste==='commun'||postes.includes(q.poste));
+      let score=0, max=0;
+      relevantQs.forEach(q=>{
+        const group=card.querySelector(`.q-answers[data-qkey="${q.key}"]`);
+        if(!group) return;
+        const oui=group.querySelector('button.active-oui');
+        const non=group.querySelector('button.active-non');
+        const na=group.querySelector('button.active-na');
+        if(na) return;
+        max += Number(q.pts);
+        if(oui) score += Number(q.pts);
+        else if(non) score -= NEGATIVE_PENALTY;
+      });
+      if(score < 0) score = 0;
+      const pct=max>0?Math.round(score/max*100):0;
+      return { score: roundScore(score), max, pct };
+    }
+
+    function roundScore(n){ return Math.round(n*2)/2; }
+
+    function updateAllScores(){
+      document.querySelectorAll('.member-card').forEach(card=>{
+        const {score,max,pct}=computeCardScore(card);
+        card.querySelector('.member-total').textContent=score;
+        card.querySelector('.member-pct').textContent=pct+'%';
+        card.querySelector('.member-max').textContent=max;
+        let niveau='—';
+        if(pct>=90) niveau='Excellent';
+        else if(pct>=75) niveau='Bon';
+        else if(pct>=50) niveau='Moyen';
+        else if(score>0) niveau='Insuffisant';
+        card.querySelector('.member-niveau').textContent=niveau;
+      });
+    }
+
+    // ─── NAVIGATION + STICKY BAR ──────────────────────────────
+    function showStep(n){
+      currentStep = n;
+      qs('step2Section').style.display = n===2 ? 'block' : 'none';
+      qs('step3Section').style.display = n===3 ? 'block' : 'none';
+
+      const bar = qs('saveBar');
+      const back = qs('backStepBtn');
+      const next = qs('nextStepBtn');
+      const save = qs('saveBtn');
+      const clear = qs('clearBtn');
+
+      if(n===1){
+        bar.style.display='none';
+      } else if(n===2){
+        bar.style.display='flex';
+        back.style.display='inline-flex';
+        next.style.display='inline-flex';
+        save.style.display='none';
+        clear.style.display='none';
+        next.textContent='Suivant — Évaluer →';
+      } else if(n===3){
+        bar.style.display='flex';
+        back.style.display='inline-flex';
+        next.style.display='none';
+        save.style.display='inline-flex';
+        clear.style.display='inline-flex';
       }
-    });
-  }
-  init();
-</script>
+    }
+
+    // ─── PAYLOAD + SUBMIT ─────────────────────────────────────
+    function validateBeforeSubmit(){
+      if(!qs('serviceDate').value) return "Merci de choisir une date.";
+      if(!qs('serviceType').value) return "Merci de choisir le service.";
+      if(!qs('managerName').value) return "Merci de choisir le nom du manager.";
+      if(!document.querySelectorAll('.member-card').length) return "Aucun équipier à évaluer.";
+      return "";
+    }
+
+    function buildPayloadRows(){
+      const serviceDate=qs('serviceDate').value;
+      const serviceType=qs('serviceType').value;
+      const managerName=qs('managerName').value;
+      return [...document.querySelectorAll('.member-card')].map(card=>{
+        const staff=card.dataset.staff;
+        const {score,max,pct}=computeCardScore(card);
+        const comment=card.querySelector('[name="comment"]')?.value||'';
+        const postes=(staffPostes[staff]||[]).join(',');
+        const answers={};
+        card.querySelectorAll('.q-answers').forEach(group=>{
+          const key=group.dataset.qkey;
+          const oui=group.querySelector('button.active-oui');
+          const non=group.querySelector('button.active-non');
+          const na=group.querySelector('button.active-na');
+          if(oui) answers[key]='oui';
+          else if(non) answers[key]='non';
+          else if(na) answers[key]='na';
+        });
+        return {
+          restaurant:"O'TACOS",
+          serviceDate, serviceType, manager:managerName,
+          staff, postes, score, max, pct, comment,
+          answers: JSON.stringify(answers)
+        };
+      });
+    }
+
+    async function submitService(){
+      clearStatus('bottomStatus');
+      const err=validateBeforeSubmit();
+      if(err){ showStatus('bottomStatus','err',err); return; }
+      if(!navigator.onLine){ showStatus('bottomStatus','warn',"Hors connexion. Brouillon conservé localement."); saveDraft(); return; }
+
+      await doSubmit();
+    }
+
+    async function doSubmit(){
+      const payload={
+        action:"submitScores",
+        rows:buildPayloadRows(),
+        overrideToken: overrideToken || ''
+      };
+      try{
+        showOverlayLoading();
+        const res=await fetch(APPS_SCRIPT_URL,{
+          method:"POST",
+          headers:{"Content-Type":"text/plain;charset=utf-8"},
+          body:JSON.stringify(payload)
+        });
+        const data=JSON.parse(await res.text());
+
+        if(data.code==='VALIDATION_REQUIRED'){
+          hideOverlay();
+          // Demande l'override via modale, puis re-submit
+          pendingOverrideAction = doSubmit;
+          showOverrideModal();
+          return;
+        }
+        if(!data.ok) throw new Error(data.error||"Enregistrement impossible.");
+
+        saveDraft();
+        showOverlaySuccess();
+        // Reset overrideToken après succès
+        overrideToken = null;
+      }catch(error){
+        hideOverlay();
+        showStatus('bottomStatus','err',error.message||"Erreur lors de l'enregistrement.");
+      }
+    }
+
+    function clearAll(){
+      if(!confirm("Voulez-vous vraiment tout effacer ?")) return;
+      clearDraftStorage();
+      overrideToken = null;
+      staffPostes={};
+      const draft=defaultDraft();
+      applyDraftToHeader(draft);
+      document.querySelectorAll('.team-check').forEach(ch=>ch.checked=false);
+      qs('membersContainer').innerHTML=`<div class="muted">Les fiches apparaîtront ici.</div>`;
+      showStep(1);
+      window.scrollTo({top:0,behavior:'smooth'});
+      clearStatus('topStatus');
+      showStatus('bottomStatus','ok',"Brouillon effacé.");
+    }
+
+    // ─── PRÉCHARGEMENT D'UN SERVICE EXISTANT ──────────────────
+    // Quand on revient sur un service déjà enregistré, on ne doit pas écraser :
+    // on récupère les données existantes et on les fusionne dans le draft.
+    async function preloadExistingService(){
+      const date = qs('serviceDate').value;
+      const service = qs('serviceType').value;
+      if(!date || !service) return;
+
+      // On ne fait ça qu'une fois par changement
+      const draft = loadDraft();
+      const selectedTeam = draft.selectedTeam || [];
+
+      const fetches = selectedTeam.map(async (staff) => {
+        try{
+          const res = await fetch(`${APPS_SCRIPT_URL}?mode=serviceForStaff&date=${encodeURIComponent(date)}&service=${encodeURIComponent(service)}&staff=${encodeURIComponent(staff)}`);
+          const data = await res.json();
+          if(data.ok && data.entry){
+            // S'il y a déjà des données pour cet équipier dans le draft, ne pas écraser
+            if(!draft.membersData[staff] || Object.keys(draft.membersData[staff]).length === 0){
+              draft.membersData[staff] = { ...data.entry.answers, comment: data.entry.comment || '' };
+              if(data.entry.postes && data.entry.postes.length){
+                staffPostes[staff] = data.entry.postes;
+              }
+            }
+          }
+        }catch{}
+      });
+
+      await Promise.all(fetches);
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({...draft, staffPostes}));
+    }
+
+    // ─── ADMIN LOGIN ──────────────────────────────────────────
+    function showAdminLogin(callback){
+      qs('adminPwd').value='';
+      qs('adminLoginStatus').innerHTML='';
+      qs('adminLoginOverlay').classList.add('show');
+      qs('adminLoginOverlay').dataset.callback = callback || '';
+      setTimeout(()=>qs('adminPwd').focus(),100);
+    }
+    function hideAdminLogin(){ qs('adminLoginOverlay').classList.remove('show'); }
+
+    async function tryAdminLogin(){
+      const pwd = qs('adminPwd').value;
+      if(!pwd) return;
+      try{
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({ action:'login', type:'admin', password: pwd, fingerprint: getFingerprint_() })
+        });
+        const data = JSON.parse(await res.text());
+        if(!data.ok) throw new Error(data.error || 'Échec authentification.');
+
+        adminToken = data.token;
+        // Auto-expire le token côté client
+        setTimeout(()=>{ adminToken = null; }, (data.expiresIn-30)*1000);
+
+        const cb = qs('adminLoginOverlay').dataset.callback;
+        hideAdminLogin();
+        if(cb === 'settings') showSettings();
+      }catch(err){
+        showStatus('adminLoginStatus','err', err.message);
+      }
+    }
+
+    function getFingerprint_(){
+      // Identifiant client basique pour anti-brute-force
+      return (navigator.userAgent + screen.width + screen.height).split('').reduce((a,c)=>{a=((a<<5)-a)+c.charCodeAt(0);return a&a},0).toString(36);
+    }
+
+    // ─── OVERRIDE MODAL ───────────────────────────────────────
+    function showOverrideModal(){
+      qs('overridePwd').value='';
+      qs('overrideStatus').innerHTML='';
+      qs('overrideOverlay').classList.add('show');
+      setTimeout(()=>qs('overridePwd').focus(),100);
+    }
+    function hideOverrideModal(){
+      qs('overrideOverlay').classList.remove('show');
+      pendingOverrideAction = null;
+    }
+
+    async function tryOverride(){
+      const pwd = qs('overridePwd').value;
+      if(!pwd) return;
+      try{
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({ action:'verifyOverride', password: pwd, fingerprint: getFingerprint_() })
+        });
+        const data = JSON.parse(await res.text());
+        if(!data.ok) throw new Error(data.error || 'Échec.');
+
+        overrideToken = data.token;
+        qs('overrideOverlay').classList.remove('show');
+
+        if(typeof pendingOverrideAction === 'function'){
+          const cb = pendingOverrideAction;
+          pendingOverrideAction = null;
+          cb();
+        }
+      }catch(err){
+        showStatus('overrideStatus','err', err.message);
+      }
+    }
+
+    // ─── SETTINGS (POINTS) ────────────────────────────────────
+    function showSettings(){ renderSettings(); qs('settingsOverlay').classList.add('show'); }
+    function hideSettings(){ qs('settingsOverlay').classList.remove('show'); }
+
+    function renderSettings(){
+      const groups = [{ id:'commun', label:'Questions communes' }].concat(POSTES.map(p=>({id:p.id,label:p.label})));
+      const html = groups.map(g=>{
+        const qsInGroup = QUESTIONS.filter(q=>q.poste===g.id);
+        if(!qsInGroup.length) return '';
+        return `
+          <div class="settings-poste-block">
+            <div class="settings-poste-title">${escapeHtml(g.label)}</div>
+            ${qsInGroup.map(q=>`
+              <div class="settings-q-row">
+                <div class="settings-q-text">${escapeHtml(q.label)}</div>
+                <div class="settings-q-pts">
+                  <input type="number" step="0.5" min="0" value="${q.pts}" data-qkey="${escapeHtml(q.key)}" />
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }).join('');
+      qs('settingsContent').innerHTML = html;
+    }
+
+    function saveSettings(){
+      qs('settingsContent').querySelectorAll('input[data-qkey]').forEach(input=>{
+        const key=input.dataset.qkey;
+        const val=Number(input.value);
+        const q=QUESTIONS.find(x=>x.key===key);
+        if(q && !isNaN(val) && val>=0) q.pts=val;
+      });
+      saveQuestions();
+      if(qs('step3Section').style.display!=='none'){
+        const draft=loadDraft();
+        const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+        renderMemberCards(selected, draft.membersData||{});
+      }
+      showStatus('settingsStatus','ok','Points enregistrés.');
+    }
+
+    function resetSettings(){
+      if(!confirm('Restaurer les valeurs initiales pour TOUTES les questions ?')) return;
+      resetQuestionsLocal();
+      renderSettings();
+      if(qs('step3Section').style.display!=='none'){
+        const draft=loadDraft();
+        const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+        renderMemberCards(selected, draft.membersData||{});
+      }
+      showStatus('settingsStatus','ok','Valeurs initiales restaurées.');
+    }
+
+    // ─── PRODUCTION CHALLENGE ─────────────────────────────────
+    let prodSeconds = 0, prodInterval = null, prodRunning = false, prodCalculatedNote = null;
+
+    function showProductionModal(){
+      qs('prodDate').value = todayLocal();
+      qs('prodStaff').innerHTML = '<option value="">Choisir un équipier</option>' +
+        cachedRoster.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+      qs('prodResult').textContent = '';
+      qs('prodSaveBtn').style.display = 'none';
+      qs('prodStatus').innerHTML = '';
+      ['prodPoids','prodLongueur','prodLargeur','prodEpaisseur','prodComment','prodManager'].forEach(id=>qs(id).value='');
+      qs('prodCroisillons').value='oui'; qs('prodEmballage').value='oui'; qs('prodSauces').value='oui';
+      prodSeconds=0; prodRunning=false; clearInterval(prodInterval);
+      updateProdTimer();
+      qs('productionOverlay').classList.add('show');
+    }
+    function hideProductionModal(){ clearInterval(prodInterval); qs('productionOverlay').classList.remove('show'); }
+
+    function updateProdTimer(){
+      const m=Math.floor(prodSeconds/60).toString().padStart(2,'0');
+      const s=(prodSeconds%60).toString().padStart(2,'0');
+      qs('prodTimer').textContent = `${m}:${s}`;
+    }
+    function toggleProdTimer(){
+      if(!prodRunning){ prodRunning=true; prodInterval=setInterval(()=>{prodSeconds++;updateProdTimer();},1000); }
+      else{ prodRunning=false; clearInterval(prodInterval); }
+    }
+    function resetProdTimer(){ clearInterval(prodInterval); prodRunning=false; prodSeconds=0; updateProdTimer(); }
+
+    function calculateProdNote(){
+      let note=0; const details={};
+
+      const poids=parseFloat(qs('prodPoids').value);
+      if(!isNaN(poids) && poids>=285 && poids<=315){ note+=2; details.poids='2/2'; } else { details.poids='0/2'; }
+
+      let longueur=parseFloat(qs('prodLongueur').value);
+      if(qs('prodLongueurUnit').value==='mm') longueur=longueur/10;
+      if(!isNaN(longueur) && longueur>=14.5 && longueur<=15.5){ note+=1; details.longueur='1/1'; } else { details.longueur='0/1'; }
+
+      let largeur=parseFloat(qs('prodLargeur').value);
+      if(qs('prodLargeurUnit').value==='mm') largeur=largeur/10;
+      if(!isNaN(largeur) && largeur>=10.5 && largeur<=11.5){ note+=1; details.largeur='1/1'; } else { details.largeur='0/1'; }
+
+      let epaisseur=parseFloat(qs('prodEpaisseur').value);
+      if(qs('prodEpaisseurUnit').value==='mm') epaisseur=epaisseur/10;
+      if(!isNaN(epaisseur) && epaisseur>=2 && epaisseur<=3){ note+=1; details.epaisseur='1/1'; } else { details.epaisseur='0/1'; }
+
+      if(prodSeconds>=30 && prodSeconds<=60){ note+=2; details.temps='2/2'; }
+      else if(prodSeconds<=90 && prodSeconds>0){ note+=0.5; details.temps='0.5/2'; }
+      else { details.temps='0/2'; }
+
+      if(qs('prodCroisillons').value==='oui'){ note+=1; details.croisillons='1/1'; } else details.croisillons='0/1';
+      if(qs('prodEmballage').value==='oui'){ note+=1; details.emballage='1/1'; } else details.emballage='0/1';
+      if(qs('prodSauces').value==='oui'){ note+=1; details.sauces='1/1'; } else details.sauces='0/1';
+
+      prodCalculatedNote = note;
+      qs('prodResult').textContent = `⭐ Note : ${note}/10`;
+      qs('prodSaveBtn').style.display = 'inline-flex';
+      return { note, details };
+    }
+
+    async function saveProduction(){
+      const staff = qs('prodStaff').value;
+      const manager = qs('prodManager').value;
+      const date = qs('prodDate').value;
+      if(!staff || !manager || !date){ showStatus('prodStatus','err','Date, manager et équipier obligatoires.'); return; }
+      if(prodCalculatedNote === null){ showStatus('prodStatus','err','Veuillez calculer la note d\'abord.'); return; }
+
+      const { note, details } = calculateProdNote();
+
+      const payload = {
+        action:'submitProduction',
+        testDate: date,
+        manager: manager,
+        staff: staff,
+        poids: Number(qs('prodPoids').value || 0),
+        longueur: Number(qs('prodLongueur').value || 0),
+        largeur: Number(qs('prodLargeur').value || 0),
+        epaisseur: Number(qs('prodEpaisseur').value || 0),
+        tempsSec: prodSeconds,
+        note: note,
+        comment: qs('prodComment').value || '',
+        details: details
+      };
+
+      try{
+        showOverlayLoading();
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify(payload)
+        });
+        const data = JSON.parse(await res.text());
+        if(!data.ok) throw new Error(data.error || 'Enregistrement impossible.');
+        showOverlaySuccess();
+        setTimeout(()=>{ hideProductionModal(); }, 1500);
+      }catch(err){
+        hideOverlay();
+        showStatus('prodStatus','err', err.message);
+      }
+    }
+
+    // ─── INIT ─────────────────────────────────────────────────
+    async function init(){
+      try{
+        loadQuestions();
+        const draft=loadDraft();
+        applyDraftToHeader(draft);
+        staffPostes=draft.staffPostes||{};
+
+        const roster=await loadRoster();
+        renderTeamList(roster, draft);
+
+        ['serviceDate','serviceType','managerName'].forEach(id=>{
+          qs(id).addEventListener('change', ()=>{ overrideToken=null; saveDraft(); });
+        });
+
+        qs('goStep2Btn').addEventListener('click', async ()=>{
+          clearStatus('topStatus');
+          if(!qs('serviceDate').value){ showStatus('topStatus','err',"Choisissez une date."); return; }
+          if(!qs('serviceType').value){ showStatus('topStatus','err',"Choisissez le service."); return; }
+          const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+          if(!selected.length){ showStatus('topStatus','err',"Sélectionnez au moins un équipier."); return; }
+
+          // Précharger les données existantes (si service déjà saisi)
+          await preloadExistingService();
+
+          renderStep2(selected);
+          showStep(2);
+          window.scrollTo({top:qs('step2Section').offsetTop-20,behavior:'smooth'});
+        });
+
+        qs('backStepBtn').addEventListener('click', ()=>{
+          if(currentStep===2){ showStep(1); window.scrollTo({top:0,behavior:'smooth'}); }
+          else if(currentStep===3){
+            const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+            renderStep2(selected); showStep(2);
+            window.scrollTo({top:qs('step2Section').offsetTop-20,behavior:'smooth'});
+          }
+        });
+
+        qs('nextStepBtn').addEventListener('click', ()=>{
+          if(currentStep===2){
+            clearStatus('step2Status');
+            const selected=[...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+            const missing=selected.filter(s=>!staffPostes[s]||!staffPostes[s].length);
+            if(missing.length){ showStatus('step2Status','warn',`Postes manquants : ${missing.join(', ')}`); return; }
+            const draft = loadDraft();
+            renderMemberCards(selected, draft.membersData||{});
+            showStep(3);
+            window.scrollTo({top:qs('step3Section').offsetTop-20,behavior:'smooth'});
+          }
+        });
+
+        qs('saveBtn').addEventListener('click', submitService);
+        qs('clearBtn').addEventListener('click', clearAll);
+
+        // Settings
+        qs('openSettingsBtn').addEventListener('click', ()=>{
+          if(adminToken) showSettings();
+          else showAdminLogin('settings');
+        });
+        qs('adminLoginCancel').addEventListener('click', hideAdminLogin);
+        qs('adminLoginConfirm').addEventListener('click', tryAdminLogin);
+        qs('adminPwd').addEventListener('keydown', e=>{ if(e.key==='Enter') tryAdminLogin(); });
+        qs('settingsCloseBtn').addEventListener('click', hideSettings);
+        qs('settingsSaveBtn').addEventListener('click', saveSettings);
+        qs('settingsResetBtn').addEventListener('click', resetSettings);
+        qs('adminLoginOverlay').addEventListener('click', e=>{ if(e.target===qs('adminLoginOverlay')) hideAdminLogin(); });
+        qs('settingsOverlay').addEventListener('click', e=>{ if(e.target===qs('settingsOverlay')) hideSettings(); });
+
+        // Override
+        qs('overrideCancel').addEventListener('click', hideOverrideModal);
+        qs('overrideConfirm').addEventListener('click', tryOverride);
+        qs('overridePwd').addEventListener('keydown', e=>{ if(e.key==='Enter') tryOverride(); });
+
+        // Production
+        qs('openProductionBtn').addEventListener('click', showProductionModal);
+        qs('prodCloseBtn').addEventListener('click', hideProductionModal);
+        qs('prodCalcBtn').addEventListener('click', calculateProdNote);
+        qs('prodSaveBtn').addEventListener('click', saveProduction);
+        qs('prodTimerToggle').addEventListener('click', toggleProdTimer);
+        qs('prodTimerReset').addEventListener('click', resetProdTimer);
+        qs('productionOverlay').addEventListener('click', e=>{ if(e.target===qs('productionOverlay')) hideProductionModal(); });
+
+        showStep(1);
+
+      }catch(error){
+        showStatus('topStatus','err',error.message||"Impossible de charger la page.");
+      }
+    }
+
+    window.addEventListener('online', ()=>showStatus('topStatus','ok',"Connexion rétablie."));
+    window.addEventListener('offline', ()=>{ saveDraft(); showStatus('topStatus','warn',"Hors connexion. Brouillon conservé."); });
+
+    init();
+  </script>
 </body>
 </html>
