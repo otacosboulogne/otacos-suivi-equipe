@@ -2,97 +2,108 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>ÉVALUATION EQUIPIER DU MOIS — Dashboard</title>
   <style>
     :root{
       --bg:#fff8f1;--card:#ffffff;--text:#1f2430;--muted:#6c7480;
       --orange:#f08a00;--orange-2:#ffb347;--line:#ece2d6;
-      --shadow:0 16px 40px rgba(240,138,0,.12)
+      --shadow:0 16px 40px rgba(240,138,0,.12);
+      --danger:#b42318;--danger-bg:#fef3f2;--danger-border:#fecdca;
+      --blue:#185fa5;--blue-light:#e6f1fb;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;font-family:Inter,Arial,sans-serif;
-      background:linear-gradient(180deg,#fff8f1 0%, #fffdf9 100%);
-      color:var(--text)
-    }
-    .wrap{max-width:1280px;margin:0 auto;padding:24px}
-    .hero,.card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:24px;
-      box-shadow:var(--shadow)
-    }
-    .hero{
-      padding:24px;margin-bottom:20px;
-      background:
-        radial-gradient(circle at top right, rgba(240,138,0,.15), transparent 28%),
-        linear-gradient(135deg, rgba(255,179,71,.16), rgba(255,255,255,.9))
-    }
-    .top{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap
-    }
-    .logo-title{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    .logo-title img{
-      width:54px;height:54px;object-fit:contain;border-radius:14px;background:#fff;
-      border:1px solid var(--line);padding:6px
-    }
-    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:20px}
-    .stat{padding:18px;border-radius:18px;background:#fff7ed;border:1px solid #ffe0b2}
-    .k{font-size:13px;color:var(--muted)}
-    .v{font-size:30px;font-weight:900;margin-top:8px}
-    .main{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
-    .card{padding:20px}
+    html,body{margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
+         background:linear-gradient(180deg,#fff8f1 0%,#fffdf9 100%);color:var(--text);
+         font-size:16px;line-height:1.5}
+    .wrap{max-width:1280px;margin:0 auto;padding:18px}
+    .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+    .hero{padding:18px;margin-bottom:14px;background:radial-gradient(circle at top right,rgba(240,138,0,.15),transparent 28%),linear-gradient(135deg,rgba(255,179,71,.16),rgba(255,255,255,.9))}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .logo-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .logo-title img{width:48px;height:48px;object-fit:contain;border-radius:12px;background:#fff;border:1px solid var(--line);padding:4px}
+    h1{margin:0;font-size:20px}
+    h2,h3{margin:0}
+    .grid-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+    @media(min-width:760px){ .grid-stats{grid-template-columns:repeat(4,minmax(0,1fr))} }
+    .stat{padding:14px;border-radius:14px;background:#fff7ed;border:1px solid #ffe0b2}
+    .k{font-size:12px;color:var(--muted)}
+    .v{font-size:24px;font-weight:900;margin-top:6px}
+    .main{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:980px){ .main{grid-template-columns:1.1fr .9fr} }
+    .card{padding:16px;margin-bottom:14px}
     table{width:100%;border-collapse:collapse}
-    th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left}
-    th{color:#5e6570;font-size:13px}
-    .badge{
-      display:inline-block;padding:8px 12px;border-radius:999px;
-      background:linear-gradient(135deg,var(--orange),var(--orange-2));
-      color:#fff;font-weight:900
-    }
-    .bar{
-      height:10px;background:#fff;border:1px solid #ffd8a8;
-      border-radius:999px;overflow:hidden
-    }
-    .fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--orange-2))}
-    select{
-      padding:12px 14px;border-radius:14px;border:1px solid var(--line);
-      background:#fff;color:var(--text)
-    }
-    .empty{color:var(--muted)}
-    .entry{
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:16px;
-      margin-bottom:14px;
-      background:#fffdf9
-    }
-    .service-box{
-      padding:12px;border-radius:14px;background:#fff;
-      border:1px solid var(--line)
-    }
-    .service-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:8px
-    }
-    @media(max-width:980px){
-      .grid,.main,.service-grid{grid-template-columns:1fr}
-      .wrap{padding:14px}
-    }
-    .btn-back{
-  padding:12px 14px;
-  border-radius:14px;
-  border:1px solid var(--line);
-  background:#fff;
-  color:var(--text);
-  text-decoration:none;
-  font-weight:700;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
+    th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+    th{color:#5e6570;font-size:12px;font-weight:700}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;font-weight:900;font-size:13px}
+    select,input[type="text"],input[type="password"],textarea{padding:12px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;font-size:15px}
+    textarea{min-height:60px;resize:vertical;width:100%}
+    .empty{color:var(--muted);font-size:14px}
+    .entry{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;background:#fffdf9}
+    .btn{border:0;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:800;font:inherit;font-size:14px}
+    .btn-back{padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--text);text-decoration:none;font-weight:700;display:inline-flex;align-items:center;cursor:pointer;font-size:14px}
+    .btn-admin{padding:10px 14px;border-radius:12px;border:1px solid #ffd8a8;background:#fff4e6;color:#8a4b00;font-weight:700;cursor:pointer;font-size:14px}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff}
+    .btn-secondary{background:#fff4e6;color:#8a4b00;border:1px solid #ffd8a8}
+    .btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+
+    /* Lignes éliminées */
+    tr.eliminated{background:#fef3f2}
+    tr.eliminated td{color:var(--danger)}
+    tr.eliminated .name-col{text-decoration:line-through}
+    .elim-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#fecdca;color:#7f1d1d;margin-left:6px}
+    .elim-reason{display:block;font-size:11px;color:#991b1b;font-style:italic;margin-top:3px;text-decoration:none}
+    .winner-trophy{display:inline-block;margin-left:6px}
+    .winner-note{font-size:12px;color:#8a4b00;font-style:italic;margin-top:10px;padding:8px 10px;background:#fff4e6;border:1px solid #ffd8a8;border-radius:10px}
+
+    /* Bloc évaluation détaillée */
+    .eval-detail{margin-bottom:14px}
+    .eval-staff{font-size:18px;font-weight:800}
+    .eval-meta{font-size:13px;color:var(--muted);margin-top:2px;margin-bottom:10px}
+    .service-block{padding:14px;border-radius:14px;background:#fff;border:1px solid var(--line);margin-bottom:10px}
+    .service-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+    .service-label{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px}
+    .service-score{font-weight:900;font-size:14px;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;padding:4px 10px;border-radius:999px}
+    .service-postes{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+    .post-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:#fff1dd;color:#8a4b00;border:1px solid #ffd8a8}
+    .post-tag.zone-caisse{background:var(--blue-light);color:var(--blue);border-color:#b5d4f4}
+    .answer-section{margin-top:8px}
+    .answer-section-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+    .answer-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dashed #f0e8db;font-size:13px}
+    .answer-row:last-child{border-bottom:none}
+    .answer-text{flex:1;line-height:1.3}
+    .answer-pill{font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;flex-shrink:0}
+    .a-oui{background:#ecfdf3;color:#067647}
+    .a-non{background:#fef3f2;color:#b42318}
+    .a-na{background:var(--blue-light);color:var(--blue)}
+    .a-skip{background:#f3f4f6;color:#9ca3af}
+    .comment-box{margin-top:10px;padding:10px;background:#f8f3ee;border-radius:10px;font-size:13px}
+    .comment-box-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:3px}
+    .filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+    .filter-bar select,.filter-bar input{flex:1;min-width:160px}
+
+    /* Modale */
+    .overlay{position:fixed;inset:0;background:rgba(16,21,29,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:14px}
+    .overlay.show{display:flex}
+    .modal{background:#fff;border-radius:18px;padding:20px;box-shadow:0 30px 70px rgba(0,0,0,.2);max-width:600px;width:100%;max-height:88vh;overflow-y:auto}
+    .modal h2{margin:0 0 14px 0;font-size:18px}
+    .modal-row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+    .modal-row label{font-size:14px;font-weight:700}
+    .checks-grid{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+    .check-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px;cursor:pointer}
+    .check-row input{width:18px;height:18px;flex-shrink:0}
+    .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+    .status{padding:10px 12px;border-radius:12px;margin-top:10px;font-weight:700;font-size:13px}
+    .status.ok{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
+    .status.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
+    .elim-list{margin-top:14px}
+    .elim-item{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fffdf9;margin-bottom:6px}
+    .elim-info{flex:1}
+    .elim-staff{font-weight:800;font-size:14px}
+    .elim-date{font-size:11px;color:var(--muted);margin-top:2px}
+    .elim-criteria{font-size:12px;margin-top:4px}
+    .elim-comment{font-size:11px;color:#666;margin-top:3px;font-style:italic}
   </style>
 </head>
 <body>
@@ -102,21 +113,21 @@
         <div class="logo-title">
           <img src="./otacos-logo.png" alt="Logo O'TACOS" />
           <div>
-            <h1 style="margin:0 0 8px 0">ÉVALUATION EQUIPIER DU MOIS</h1>
-            <div style="color:var(--muted)">Dashboard</div>
+            <h1>ÉVALUATION EQUIPIER DU MOIS</h1>
+            <div style="color:var(--muted);font-size:13px;margin-top:2px">Dashboard</div>
           </div>
         </div>
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-  <a class="btn-back" href="https://otacosboulogne.github.io/otacos-suivi-equipe/">Retour saisie</a>
-  <select id="monthSelect"></select>
-</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center" id="topActions">
+          <a class="btn-back" href="https://otacosboulogne.github.io/otacos-suivi-equipe/">↩ Retour saisie</a>
+          <button class="btn-admin" id="adminBtn" type="button">🔒 Espace directeur</button>
+          <select id="monthSelect"></select>
+        </div>
       </div>
     </section>
 
-    <div class="grid">
-      <div class="stat"><div class="k">Gagnant(provisoire si le mois en cours n’est pas terminé)</div><div class="v" id="winnerName">—</div></div>
-      <div class="stat"><div class="k">Score cumulé gagnant (provisoire si le mois en cours n’est pas terminé)</div><div class="v" id="winnerScore">0</div></div>
+    <div class="grid-stats">
+      <div class="stat"><div class="k">Gagnant (provisoire)</div><div class="v" id="winnerName">—</div></div>
+      <div class="stat"><div class="k">Score moyen gagnant</div><div class="v" id="winnerScore">0</div></div>
       <div class="stat"><div class="k">Services évalués</div><div class="v" id="servicesCount">0</div></div>
       <div class="stat"><div class="k">Équipiers évalués</div><div class="v" id="staffCount">0</div></div>
     </div>
@@ -124,7 +135,7 @@
     <div class="main">
       <section class="card">
         <div class="top" style="margin-bottom:10px">
-          <div style="font-size:20px;font-weight:800">Classement du mois</div>
+          <div style="font-size:18px;font-weight:800">Classement du mois</div>
           <div class="badge" id="selectedMonthLabel">—</div>
         </div>
         <table>
@@ -132,9 +143,9 @@
             <tr>
               <th>Rang</th>
               <th>Équipier</th>
-              <th>Score cumulé</th>
-              <th>Nombre de services faits</th>
-              <th>Tendance</th>
+              <th>Score moy.</th>
+              <th>%</th>
+              <th>Services</th>
             </tr>
           </thead>
           <tbody id="rankingBody"></tbody>
@@ -142,51 +153,250 @@
       </section>
 
       <section class="card">
-        <div style="font-size:20px;font-weight:800;margin-bottom:12px">Équipier du mois (provisoire si le mois en cours n’est pas terminé)</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:10px">🏆 Équipier du mois</div>
         <div id="winnerCard" class="empty">Charge un mois pour voir les résultats.</div>
       </section>
     </div>
 
-    <section class="card" style="margin-top:20px">
-      <div style="font-size:20px;font-weight:800;margin-bottom:12px">Dernière saisie par équipier</div>
+    <section class="card">
+      <div style="font-size:18px;font-weight:800;margin-bottom:10px">Dernière évaluation détaillée par équipier</div>
+      <div class="filter-bar">
+        <input type="text" id="filterStaff" placeholder="Filtrer par nom d'équipier..." />
+        <select id="filterServiceType">
+          <option value="">Tous les services</option>
+          <option value="Matin">Matin uniquement</option>
+          <option value="Soir">Soir uniquement</option>
+        </select>
+      </div>
       <div id="latestEntries"></div>
     </section>
   </div>
 
+  <!-- MODALE LOGIN ADMIN -->
+  <div class="overlay" id="loginOverlay">
+    <div class="modal">
+      <h2>🔒 Espace directeur</h2>
+      <div class="modal-row">
+        <label for="adminPwd">Mot de passe</label>
+        <input type="password" id="adminPwd" placeholder="Saisissez le mot de passe directeur" />
+      </div>
+      <div class="modal-btns">
+        <button class="btn btn-secondary" id="cancelLoginBtn" type="button">Annuler</button>
+        <button class="btn btn-primary" id="confirmLoginBtn" type="button">Accéder</button>
+      </div>
+      <div id="loginStatus"></div>
+    </div>
+  </div>
+
+  <!-- MODALE ÉLIMINATIONS -->
+  <div class="overlay" id="adminOverlay">
+    <div class="modal" style="max-width:720px">
+      <h2>Gestion des éliminations — <span id="adminMonthLabel">—</span></h2>
+      <div style="background:#fff7ed;border:1px solid #ffd8a8;border-radius:12px;padding:10px;margin-bottom:14px;font-size:13px;color:#8a4b00">
+        L'équipier éliminé apparaît dans le classement avec son nom barré. Le trophée passe au suivant.
+      </div>
+
+      <div class="modal-row">
+        <label for="elimStaff">Équipier à éliminer</label>
+        <select id="elimStaff">
+          <option value="">— Choisir un équipier —</option>
+        </select>
+      </div>
+
+      <div class="modal-row">
+        <label>Critères éliminatoires (cocher au moins un)</label>
+        <div class="checks-grid" id="elimCriteriaList">
+          <label class="check-row"><input type="checkbox" value="Refus de poste / insubordination"> Refus de poste / insubordination</label>
+          <label class="check-row"><input type="checkbox" value="Attitude grave envers client/collègue"> Attitude grave envers client/collègue</label>
+          <label class="check-row"><input type="checkbox" value="Absence non justifiée"> Absence non justifiée</label>
+          <label class="check-row"><input type="checkbox" value="Retard répétitif"> Retard répétitif</label>
+          <label class="check-row"><input type="checkbox" value="Absence justifiée +10 jours dans le mois"> Absence justifiée +10 jours dans le mois</label>
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <label for="elimComment">Commentaire libre (optionnel)</label>
+        <textarea id="elimComment" placeholder="Précisions, dates, contexte..."></textarea>
+      </div>
+
+      <div class="modal-btns">
+        <button class="btn btn-secondary" id="closeAdminBtn" type="button">Fermer</button>
+        <button class="btn btn-primary" id="saveElimBtn" type="button">Enregistrer l'élimination</button>
+      </div>
+      <div id="adminStatus"></div>
+
+      <div style="margin-top:20px">
+        <h3 style="margin:0 0 8px 0;font-size:15px">Éliminations du mois</h3>
+        <div id="elimList" class="elim-list"><div class="empty">Aucune élimination enregistrée pour ce mois.</div></div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQzbs9zVUQXHpc1DmMXI4JAUlh2naT0dCLDIKVfas2UL3hmgXj8VOGJ51S2_phrbm3/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyH8BAyPtgmnpgXdQFCSKF0ORm5Ern09hUFIW5sqll25jF3j0VAM8_Wrq1nqDxihW8Z/exec";
+    const ADMIN_PASSWORD = "Otacos2026!";
+    const VIEW_MODE = "manager"; // "manager" ou "equipier"
+
+    // Liste des questions (synchronisée avec index.html)
+    const QUESTIONS_LIST = [
+      // COMMUN
+      { key:"c_tenue",      label:"Tenue propre et hygiène corporelle irréprochable", poste:"commun" },
+      { key:"c_mains",      label:"Lavage des mains systématique", poste:"commun" },
+      { key:"c_concentre",  label:"Resté concentré, pas de discussions inutiles", poste:"commun" },
+      { key:"c_rythme",     label:"Rythme de production soutenu et constant", poste:"commun" },
+      { key:"c_aide",       label:"A aidé spontanément un collègue", poste:"commun" },
+      { key:"c_erreur",     label:"Aucune erreur constatée", poste:"commun" },
+      { key:"c_energie",    label:"Énergie et attitude positives pour l'équipe", poste:"commun" },
+      { key:"c_propre_fin", label:"Poste propre et rangé en fin de service", poste:"commun" },
+      { key:"c_poubelle",   label:"Sortie poubelle (timing respecté)", poste:"commun" },
+      { key:"c_epack",      label:"Validation Epack hygiène", poste:"commun" },
+      { key:"c_dlc",        label:"DLC posées sans qu'on lui demande", poste:"commun" },
+      { key:"c_traca",      label:"Traçabilité faite systématiquement", poste:"commun" },
+      // CAISSE
+      { key:"p_caisse_accueil",       label:"Accueil avec discours O'Tacos", poste:"caisse" },
+      { key:"p_caisse_boisson",       label:"Boisson remise sans retour client", poste:"caisse" },
+      { key:"p_caisse_fidelite",      label:"Programme fidélité proposé aux bornes", poste:"caisse" },
+      { key:"p_caisse_aucune_err",    label:"Aucune erreur Uber/Deliveroo/C&C", poste:"caisse" },
+      { key:"p_caisse_uber",          label:"Commandes livraison rapides et bien filmées", poste:"caisse" },
+      { key:"p_caisse_borne",         label:"Bornes surveillées, clients guidés", poste:"caisse" },
+      { key:"p_caisse_vente",         label:"Vente additionnelle proposée", poste:"caisse" },
+      { key:"p_caisse_sac",           label:"Aucune commande à un livreur sans sac", poste:"caisse" },
+      { key:"p_caisse_aucune_err_ck", label:"Aucune erreur de caisse", poste:"caisse" },
+      { key:"p_caisse_glace",         label:"Préparation glace & O'Shake conforme", poste:"caisse" },
+      { key:"p_caisse_priorite",      label:"Ordre de priorité respecté (WC, salle…)", poste:"caisse" },
+      { key:"p_caisse_avis",          label:"Avis Google 5★ sur le service", poste:"caisse" },
+      // OUVERTURE CAISSE
+      { key:"p_ouv_vitrine",  label:"Vitrine remplie et bien présentée", poste:"ouverture" },
+      { key:"p_ouv_lumieres", label:"Lumières, écrans, vitrine, bornes allumés", poste:"ouverture" },
+      { key:"p_ouv_machine",  label:"Machine à glace propre + température prise", poste:"ouverture" },
+      { key:"p_ouv_devant",   label:"Devant du restaurant propre", poste:"ouverture" },
+      { key:"p_ouv_drapeau",  label:"Drapeau sorti", poste:"ouverture" },
+      { key:"p_ouv_terrasse", label:"Terrasse mise et propre (été)", poste:"ouverture" },
+      { key:"p_ouv_dlc",      label:"DLC conformes", poste:"ouverture" },
+      // FERMETURE CAISSE
+      { key:"p_ferm_c_terrasse",   label:"Terrasse rangée (été)", poste:"fermeture_c" },
+      { key:"p_ferm_c_extinction", label:"Écrans/enseigne éteints, bornes en veille", poste:"fermeture_c" },
+      { key:"p_ferm_c_plateau",    label:"Plateau propre, frigo boisson rempli", poste:"fermeture_c" },
+      { key:"p_ferm_c_drapeau",    label:"Drapeau rentré", poste:"fermeture_c" },
+      { key:"p_ferm_c_dlc",        label:"DLC conformes", poste:"fermeture_c" },
+      { key:"p_ferm_c_machine",    label:"Machine à glace en veille, tapping couvert", poste:"fermeture_c" },
+      { key:"p_ferm_c_timing",     label:"Timing fermeture conforme", poste:"fermeture_c" },
+      // FRITURE & CUISSON
+      { key:"p_frit_programmes", label:"Programmes appropriés respectés", poste:"friture" },
+      { key:"p_frit_rupture",    label:"Pas de rupture friture / blocage prod", poste:"friture" },
+      { key:"p_frit_viande",     label:"Viandes/fromagère lancées en temps", poste:"friture" },
+      { key:"p_frit_tickets",    label:"Tickets regardés régulièrement", poste:"friture" },
+      { key:"p_frit_appro",      label:"Approvisionnement frigo / suppléments", poste:"friture" },
+      // TOASTER
+      { key:"p_toast_qualite",   label:"Tacos bien toastés, croisillons visibles", poste:"toaster" },
+      { key:"p_toast_rythme",    label:"Rythme au toaster sans blocage", poste:"toaster" },
+      { key:"p_toast_gratin",    label:"Gratinage conforme", poste:"toaster" },
+      { key:"p_toast_emballage", label:"Emballages propres, présentation soignée", poste:"toaster" },
+      { key:"p_toast_propre",    label:"Toaster et zone nettoyés régulièrement", poste:"toaster" },
+      { key:"p_toast_discours",  label:"Discours client (regard, sourire)", poste:"toaster" },
+      { key:"p_toast_appel",     label:"Appel caisse dès commande prête", poste:"toaster" },
+      { key:"p_toast_verif",     label:"Vérification commande avant remise", poste:"toaster" },
+      // ENVOI
+      { key:"p_envoi_rythme",  label:"Rythme à l'envoi sans blocage", poste:"envoi" },
+      { key:"p_envoi_commu",   label:"Bonne communication pliage / friture", poste:"envoi" },
+      { key:"p_envoi_ordre",   label:"Ordre tickets respecté (C&C/Uber/resto)", poste:"envoi" },
+      { key:"p_envoi_louches", label:"Pas de surdosage des louches", poste:"envoi" },
+      { key:"p_envoi_lance",   label:"Regarde ce qu'il faut lancer", poste:"envoi" },
+      { key:"p_envoi_viande",  label:"Prévient niveaux de viandes", poste:"envoi" },
+      { key:"p_envoi_avance",  label:"Avance gratinages + pots de sauces", poste:"envoi" },
+      // PLIAGE
+      { key:"p_pliage_qualite", label:"Tacos bien pliés", poste:"pliage" },
+      { key:"p_pliage_rythme",  label:"Rythme au pliage sans blocage", poste:"pliage" },
+      { key:"p_pliage_propre",  label:"Zone pliage nettoyée régulièrement", poste:"pliage" },
+      { key:"p_pliage_louche",  label:"Louche bleue pour fromagère/petit tacos", poste:"pliage" },
+      { key:"p_pliage_avance",  label:"Avance frites/finger food au toaster", poste:"pliage" },
+      { key:"p_pliage_dose",    label:"Pas de surdosage frites/fromagère", poste:"pliage" },
+      // PRÉPA MATIN
+      { key:"p_prepa_m_dlc",     label:"DLC posées dès l'ouverture", poste:"prepa_matin" },
+      { key:"p_prepa_m_epack",   label:"Epack hygiène à jour", poste:"prepa_matin" },
+      { key:"p_prepa_m_stock",   label:"Stocks préparés avant ouverture", poste:"prepa_matin" },
+      { key:"p_prepa_m_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_matin" },
+      { key:"p_prepa_m_decong",  label:"Process décongélation respecté", poste:"prepa_matin" },
+      // PRÉPA SOIR
+      { key:"p_prepa_s_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_soir" },
+      { key:"p_prepa_s_plonge",  label:"Plonge faite, plateaux gastro rangés", poste:"prepa_soir" },
+      { key:"p_prepa_s_dlc",     label:"DLC et traçabilités à jour", poste:"prepa_soir" },
+      { key:"p_prepa_s_decong",  label:"Process décongélation respecté", poste:"prepa_soir" },
+      { key:"p_prepa_s_frigo",   label:"Frigo, emballages, suppléments remplis", poste:"prepa_soir" },
+      { key:"p_prepa_s_epack",   label:"Epack hygiène à jour", poste:"prepa_soir" },
+      { key:"p_prepa_s_propre",  label:"Zone cuisine et plonge propres", poste:"prepa_soir" },
+      // FERMETURE CUISINE
+      { key:"p_ferm_k_cello",   label:"Produits cellophanés et DLC conformes", poste:"fermeture_k" },
+      { key:"p_ferm_k_timing",  label:"Timing fermeture conforme", poste:"fermeture_k" },
+      { key:"p_ferm_k_decong",  label:"Process décongélation respecté", poste:"fermeture_k" },
+      { key:"p_ferm_k_chambre", label:"Produits rangés en chambre + et −", poste:"fermeture_k" },
+      // RÉCEPTION LIVRAISON
+      { key:"p_recep_verif",  label:"Livraison vérifiée (quantités, état, T°)", poste:"reception" },
+      { key:"p_recep_fifo",   label:"Rangement FIFO immédiat", poste:"reception" },
+      { key:"p_recep_carton", label:"Cartons pliés et mis en poubelle", poste:"reception" },
+      { key:"p_recep_sol",    label:"Aucun produit au sol, rangé sur cailloutis", poste:"reception" },
+      { key:"p_recep_signal", label:"Produit non conforme signalé au manager", poste:"reception" },
+    ];
+
+    const POSTES_LABELS = {
+      caisse:"Caisse", ouverture:"Ouverture caisse", fermeture_c:"Fermeture caisse",
+      friture:"Friture & cuisson", toaster:"Toaster", envoi:"Envoi", pliage:"Pliage",
+      prepa_matin:"Prépa matin", prepa_soir:"Prépa soir", fermeture_k:"Fermeture cuisine",
+      reception:"Réception livraison"
+    };
+    const POSTES_ZONE = {
+      caisse:"caisse", ouverture:"caisse", fermeture_c:"caisse",
+      friture:"cuisine", toaster:"cuisine", envoi:"cuisine", pliage:"cuisine",
+      prepa_matin:"cuisine", prepa_soir:"cuisine", fermeture_k:"cuisine", reception:"cuisine"
+    };
+
+    let isAdminAuthenticated = false;
+    let currentEliminations = [];
+    let currentRanking = [];
+    let currentLatestEntries = [];
+
+    function qs(id){ return document.getElementById(id); }
+    function escapeHtml(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+    function showStatus(id, type, message){
+      const el = qs(id);
+      if(!el) return;
+      el.innerHTML = `<div class="status ${type}">${escapeHtml(message)}</div>`;
+      setTimeout(()=>{ if(el.firstChild) el.innerHTML=''; }, 4000);
+    }
+
+    function applyViewMode(){
+      if(VIEW_MODE === "equipier"){
+        qs('topActions').innerHTML = `<select id="monthSelect"></select>`;
+      }
+    }
 
     async function initMonths(){
-      const sel = document.getElementById('monthSelect');
+      const sel = qs('monthSelect');
       sel.innerHTML = '';
-
       try{
-        const url = `${APPS_SCRIPT_URL}?mode=months`;
-        const res = await fetch(url);
+        const res = await fetch(`${APPS_SCRIPT_URL}?mode=months`);
         const data = await res.json();
-
         const months = (data.months || []).sort().reverse();
-
         if(!months.length){
-          const now = new Date();
-          const fallback = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+          const fallback = currentMonth();
           addMonthOption(sel, fallback);
           sel.value = fallback;
         }else{
           months.forEach(m => addMonthOption(sel, m));
           sel.value = months[0];
         }
-
-        sel.addEventListener('change', loadDashboard);
-        loadDashboard();
-      }catch(err){
-        const now = new Date();
-        const fallback = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+      }catch{
+        const fallback = currentMonth();
         addMonthOption(sel, fallback);
         sel.value = fallback;
-        sel.addEventListener('change', loadDashboard);
-        loadDashboard();
       }
+      sel.addEventListener('change', loadDashboard);
+      loadDashboard();
+    }
+
+    function currentMonth(){
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
     }
 
     function addMonthOption(select, value){
@@ -197,84 +407,120 @@
     }
 
     async function loadDashboard(){
-      const month = document.getElementById('monthSelect').value;
-      document.getElementById('selectedMonthLabel').textContent = month;
+      const month = qs('monthSelect').value;
+      qs('selectedMonthLabel').textContent = month;
+      const adminLabel = qs('adminMonthLabel');
+      if(adminLabel) adminLabel.textContent = month;
 
       try{
-        const url = `${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`;
-        const res = await fetch(url);
-        const data = await res.json();
+        const [dashboardRes, elimRes] = await Promise.all([
+          fetch(`${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`),
+          fetch(`${APPS_SCRIPT_URL}?mode=eliminations&month=${encodeURIComponent(month)}`).catch(()=>null)
+        ]);
 
-        if(data.ok === false){
-          throw new Error(data.error || 'Erreur backend');
+        const data = await dashboardRes.json();
+        if(data.ok === false) throw new Error(data.error || 'Erreur backend');
+
+        let eliminations = [];
+        if(elimRes){
+          try{
+            const elimData = await elimRes.json();
+            if(elimData.ok !== false) eliminations = elimData.eliminations || [];
+          }catch{}
         }
 
-        renderDashboard(data, month);
+        currentEliminations = eliminations;
+        currentRanking = data.ranking || [];
+        currentLatestEntries = data.latestEntries || [];
+
+        renderDashboard(data, month, eliminations);
+        renderLatestEntries();
       }catch(err){
         renderEmpty(err.message);
       }
     }
 
     function renderEmpty(message){
-      document.getElementById('winnerName').textContent='—';
-      document.getElementById('winnerScore').textContent='0';
-      document.getElementById('servicesCount').textContent='0';
-      document.getElementById('staffCount').textContent='0';
-      document.getElementById('rankingBody').innerHTML=`<tr><td colspan="5" class="empty">${escapeHtml(message)}</td></tr>`;
-      document.getElementById('winnerCard').innerHTML=`<div class="empty">${escapeHtml(message)}</div>`;
-      document.getElementById('latestEntries').innerHTML=`<div class="empty">${escapeHtml(message)}</div>`;
+      qs('winnerName').textContent='—';
+      qs('winnerScore').textContent='0';
+      qs('servicesCount').textContent='0';
+      qs('staffCount').textContent='0';
+      qs('rankingBody').innerHTML=`<tr><td colspan="5" class="empty">${escapeHtml(message)}</td></tr>`;
+      qs('winnerCard').innerHTML=`<div class="empty">${escapeHtml(message)}</div>`;
+      qs('latestEntries').innerHTML=`<div class="empty">${escapeHtml(message)}</div>`;
     }
 
-    function renderDashboard(data, month){
-  const ranking = data.ranking || [];
-  const winner = ranking[0];
+    function renderDashboard(data, month, eliminations){
+      const ranking = data.ranking || [];
+      const elimSet = new Map();
+      eliminations.forEach(e => elimSet.set(e.staff, e));
 
-  document.getElementById('winnerName').textContent = winner ? winner.staff : '—';
-  document.getElementById('winnerScore').textContent = winner ? winner.totalScore : '0';
-  document.getElementById('servicesCount').textContent = String(data.totalServiceRows || 0);
-  document.getElementById('staffCount').textContent = String(ranking.length);
+      const trueWinner = ranking.find(r => !elimSet.has(r.staff));
+      const topRank = ranking[0];
+      const topRankIsEliminated = topRank && elimSet.has(topRank.staff);
 
-  const body = document.getElementById('rankingBody');
+      qs('winnerName').textContent = trueWinner ? trueWinner.staff : '—';
+      qs('winnerScore').textContent = trueWinner ? (trueWinner.avgScore + ' pts') : '0';
+      qs('servicesCount').textContent = String(data.totalServiceRows || 0);
+      qs('staffCount').textContent = String(ranking.length);
 
-  if(!ranking.length){
-    body.innerHTML=`<tr><td colspan="5" class="empty">Aucune donnée pour ${escapeHtml(month)}.</td></tr>`;
-    document.getElementById('winnerCard').innerHTML=`<div class="empty">Aucune donnée pour ${escapeHtml(month)}.</div>`;
-  }else{
-    body.innerHTML = ranking.map((r,idx)=>`
-      <tr>
-        <td>${idx+1}</td>
-        <td>${escapeHtml(r.staff)}</td>
-        <td><b>${r.totalScore}</b></td>
-        <td>${r.services}</td>
-        <td><div class="bar"><div class="fill" style="width:${Math.max(0, Math.min(100, Number(r.avgScore)||0))}%"></div></div></td>
-      </tr>
-    `).join("");
+      const body = qs('rankingBody');
+      if(!ranking.length){
+        body.innerHTML = `<tr><td colspan="5" class="empty">Aucune donnée pour ${escapeHtml(month)}.</td></tr>`;
+        qs('winnerCard').innerHTML = `<div class="empty">Aucune donnée pour ${escapeHtml(month)}.</div>`;
+        return;
+      }
 
-    document.getElementById('winnerCard').innerHTML = `
-      <div style="font-size:30px;font-weight:900;margin-bottom:8px">${escapeHtml(winner.staff)}</div>
-      <div style="color:#6c7480;margin-bottom:16px">${escapeHtml(month)}</div>
-      <div style="display:grid;gap:12px">
-        ${metric("Score cumulé", winner.totalScore)}
-        ${metric("Score moyen des services", winner.avgScore)}
-        ${metric("NBR Services évalués", winner.services)}
-        ${metric("Score des éléments essentiels du quotidien / moyenne", winner.avgBasicScore)}
-        ${metric("Critères pondérés / moyenne", winner.avgWeightedScore)}
-        ${metric("Productivité / moyenne", winner.avgProductivity + " / 5")}
-        ${metric("Score de production / moyenne", winner.avgProduction10 + " / 10")}
-        ${metric("Polyvalence / moyenne", winner.avgVersatility + " / 5")}
-        ${metric("Esprit d’équipe / moyenne", winner.avgTeamwork + " / 5")}
-        ${metric("Satisfaction client / moyenne", winner.avgCustomer + " / 5")}
-        ${metric("Respect et manipulation du matériel / moyenne", winner.avgBreakage5 + " / 5")}
-      </div>
-    `;
-  }
+      body.innerHTML = ranking.map((r, idx) => {
+        const elim = elimSet.get(r.staff);
+        const isEliminated = !!elim;
+        const isWinner = trueWinner && r.staff === trueWinner.staff;
+        const elimBadge = isEliminated ? `<span class="elim-badge">éliminé</span>` : '';
+        const trophy = isWinner ? `<span class="winner-trophy">🏆</span>` : '';
+        const reason = isEliminated ? `<span class="elim-reason">${escapeHtml(elim.criteria || '')}${elim.comment ? ' — ' + escapeHtml(elim.comment) : ''}</span>` : '';
+        return `
+          <tr class="${isEliminated ? 'eliminated' : ''}">
+            <td>${idx + 1}</td>
+            <td><span class="name-col">${escapeHtml(r.staff)}</span>${elimBadge}${trophy}${reason}</td>
+            <td><b>${r.avgScore}</b></td>
+            <td>${r.avgPct}%</td>
+            <td>${r.services}</td>
+          </tr>
+        `;
+      }).join('');
 
-  renderLatestEntries(data.latestDailyEntries || []);
-}
-    
-    function renderLatestEntries(entries){
-      const box = document.getElementById('latestEntries');
-      if(!box) return;
+      if(trueWinner){
+        const noteHtml = topRankIsEliminated
+          ? `<div class="winner-note">${escapeHtml(topRank.staff)} avait le meilleur score mais a été éliminé(e). Le trophée revient à ${escapeHtml(trueWinner.staff)}.</div>`
+          : '';
+        qs('winnerCard').innerHTML = `
+          <div style="font-size:26px;font-weight:900;margin-bottom:6px">🏆 ${escapeHtml(trueWinner.staff)}</div>
+          <div style="color:#6c7480;margin-bottom:14px;font-size:13px">${escapeHtml(month)}</div>
+          <div style="display:grid;gap:10px">
+            ${metric("Score moyen", trueWinner.avgScore + ' pts')}
+            ${metric("Pourcentage moyen", trueWinner.avgPct + '%')}
+            ${metric("Score cumulé", trueWinner.totalScore + ' pts')}
+            ${metric("Services évalués", trueWinner.services)}
+          </div>
+          ${noteHtml}
+        `;
+      }else{
+        qs('winnerCard').innerHTML = `<div class="empty">Tous les équipiers évalués sont éliminés ce mois.</div>`;
+      }
+    }
+
+    function metric(label, value){
+      return `<div><div style="font-size:12px;color:#6c7480">${escapeHtml(label)}</div><div style="font-size:18px;font-weight:800">${escapeHtml(String(value))}</div></div>`;
+    }
+
+    // ─── DERNIÈRES ÉVALUATIONS DÉTAILLÉES ─────────────────
+    function renderLatestEntries(){
+      const filterStaff = qs('filterStaff').value.toLowerCase().trim();
+      const filterService = qs('filterServiceType').value;
+      const box = qs('latestEntries');
+
+      let entries = currentLatestEntries.slice();
+      if(filterStaff) entries = entries.filter(e => e.staff.toLowerCase().includes(filterStaff));
 
       if(!entries.length){
         box.innerHTML = `<div class="empty">Aucune dernière saisie disponible.</div>`;
@@ -284,56 +530,219 @@
       box.innerHTML = entries.map(entry => {
         const matin = entry.services?.Matin;
         const soir = entry.services?.Soir;
+        const showMatin = (!filterService || filterService === 'Matin') && matin;
+        const showSoir = (!filterService || filterService === 'Soir') && soir;
+        if(!showMatin && !showSoir) return '';
 
         return `
           <div class="entry">
-            <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px">
-              <div>
-                <div style="font-size:20px;font-weight:800">${escapeHtml(entry.staff)}</div>
-                <div style="color:#6c7480">Date : ${escapeHtml(entry.date)} • Responsable : ${escapeHtml(entry.manager || '—')}</div>
-              </div>
-            </div>
-
-            <div style="display:grid;gap:12px">
-              ${matin ? serviceBlock('Matin', matin) : ''}
-              ${soir ? serviceBlock('Soir', soir) : ''}
-            </div>
+            <div class="eval-staff">${escapeHtml(entry.staff)}</div>
+            <div class="eval-meta">Date : ${escapeHtml(entry.date)} • Manager : ${escapeHtml(entry.manager || '—')}</div>
+            ${showMatin ? renderServiceBlock('Matin', matin) : ''}
+            ${showSoir ? renderServiceBlock('Soir', soir) : ''}
           </div>
         `;
       }).join('');
     }
 
-    function serviceBlock(label, s){
-      return `
-        <div class="service-box">
-          <div style="font-weight:800;margin-bottom:8px">${escapeHtml(label)} — Score ${escapeHtml(String(s.total))}</div>
-          <div class="service-grid">
-            <div><span style="color:#6c7480">Questions</span><br>${escapeHtml(String(s.basic))} / 15</div>
-            <div><span style="color:#6c7480">Pondérés</span><br>${escapeHtml(String(s.weighted))} / 85</div>
-            <div><span style="color:#6c7480">Productivité</span><br>${escapeHtml(String(s.productivity))} / 5</div>
-            <div><span style="color:#6c7480">Production</span><br>${escapeHtml(String(s.production10))} / 10</div>
-            <div><span style="color:#6c7480">Polyvalence</span><br>${escapeHtml(String(s.versatility))} / 5</div>
-            <div><span style="color:#6c7480">Équipe</span><br>${escapeHtml(String(s.teamwork))} / 5</div>
-            <div><span style="color:#6c7480">Client</span><br>${escapeHtml(String(s.customer))} / 5</div>
-            <div><span style="color:#6c7480">Casse</span><br>${escapeHtml(String(s.breakage5))} / 5</div>
+    function renderServiceBlock(label, s){
+      const postesHtml = (s.postes || []).map(pid => {
+        const lbl = POSTES_LABELS[pid] || pid;
+        const zone = POSTES_ZONE[pid] || 'cuisine';
+        return `<span class="post-tag zone-${zone}">${escapeHtml(lbl)}</span>`;
+      }).join('');
+
+      // Questions communes
+      const commonQs = QUESTIONS_LIST.filter(q => q.poste === 'commun');
+      const commonHtml = commonQs.map(q => answerRow(q, s.answers)).join('');
+
+      // Questions par poste
+      const posteSections = (s.postes || []).map(pid => {
+        const pQs = QUESTIONS_LIST.filter(q => q.poste === pid);
+        if(!pQs.length) return '';
+        const lbl = POSTES_LABELS[pid] || pid;
+        return `
+          <div class="answer-section">
+            <div class="answer-section-title">Poste : ${escapeHtml(lbl)}</div>
+            ${pQs.map(q => answerRow(q, s.answers)).join('')}
           </div>
-          ${s.comment ? `<div style="margin-top:10px;color:#1f2430"><span style="color:#6c7480">Commentaire :</span> ${escapeHtml(s.comment)}</div>` : ''}
+        `;
+      }).join('');
+
+      return `
+        <div class="service-block">
+          <div class="service-head">
+            <div class="service-label">${label === 'Matin' ? '☀️' : '🌙'} ${escapeHtml(label)}</div>
+            <div class="service-score">${s.score} / ${s.max} pts (${s.pct}%)</div>
+          </div>
+          ${postesHtml ? `<div class="service-postes">${postesHtml}</div>` : ''}
+          <div class="answer-section">
+            <div class="answer-section-title">Questions communes</div>
+            ${commonHtml}
+          </div>
+          ${posteSections}
+          ${s.comment ? `<div class="comment-box"><div class="comment-box-label">Commentaire manager</div>${escapeHtml(s.comment)}</div>` : ''}
         </div>
       `;
     }
 
-    function metric(label, value){
-      return `<div><div style="font-size:13px;color:#6c7480">${escapeHtml(label)}</div><div style="font-size:22px;font-weight:800">${escapeHtml(String(value))}</div></div>`;
+    function answerRow(q, answers){
+      const val = answers && answers[q.key];
+      let pill = `<span class="answer-pill a-skip">—</span>`;
+      if(val === 'oui') pill = `<span class="answer-pill a-oui">Oui</span>`;
+      else if(val === 'non') pill = `<span class="answer-pill a-non">Non</span>`;
+      else if(val === 'na') pill = `<span class="answer-pill a-na">N/A</span>`;
+      return `
+        <div class="answer-row">
+          <div class="answer-text">${escapeHtml(q.label)}</div>
+          ${pill}
+        </div>
+      `;
     }
 
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    // ─── ADMIN — LOGIN ET GESTION ────────────────────────
+    function showLoginModal(){
+      qs('adminPwd').value = '';
+      qs('loginStatus').innerHTML = '';
+      qs('loginOverlay').classList.add('show');
+      setTimeout(()=>qs('adminPwd').focus(), 100);
     }
+    function hideLoginModal(){ qs('loginOverlay').classList.remove('show'); }
+
+    function tryLogin(){
+      if(qs('adminPwd').value === ADMIN_PASSWORD){
+        isAdminAuthenticated = true;
+        hideLoginModal();
+        showAdminModal();
+      }else{
+        showStatus('loginStatus', 'err', 'Mot de passe incorrect.');
+      }
+    }
+
+    function showAdminModal(){
+      populateStaffSelect();
+      renderEliminationsList();
+      qs('adminOverlay').classList.add('show');
+    }
+    function hideAdminModal(){ qs('adminOverlay').classList.remove('show'); }
+
+    function populateStaffSelect(){
+      const sel = qs('elimStaff');
+      sel.innerHTML = '<option value="">— Choisir un équipier —</option>';
+      currentRanking.forEach(r => {
+        const already = currentEliminations.some(e => e.staff === r.staff);
+        if(!already){
+          const opt = document.createElement('option');
+          opt.value = r.staff;
+          opt.textContent = r.staff;
+          sel.appendChild(opt);
+        }
+      });
+    }
+
+    function renderEliminationsList(){
+      const box = qs('elimList');
+      if(!currentEliminations.length){
+        box.innerHTML = '<div class="empty">Aucune élimination enregistrée pour ce mois.</div>';
+        return;
+      }
+      box.innerHTML = currentEliminations.map(e => `
+        <div class="elim-item">
+          <div class="elim-info">
+            <div class="elim-staff">${escapeHtml(e.staff)}</div>
+            <div class="elim-date">Enregistré le ${escapeHtml(e.timestamp || '')}</div>
+            <div class="elim-criteria"><b>Critères :</b> ${escapeHtml(e.criteria || '—')}</div>
+            ${e.comment ? `<div class="elim-comment">"${escapeHtml(e.comment)}"</div>` : ''}
+          </div>
+          <button class="btn btn-danger" onclick="cancelElimination('${escapeHtml(e.staff).replace(/'/g,"\\'")}')">Annuler</button>
+        </div>
+      `).join('');
+    }
+
+    async function saveElimination(){
+      const staff = qs('elimStaff').value;
+      const checks = [...qs('elimCriteriaList').querySelectorAll('input:checked')].map(c => c.value);
+      const comment = qs('elimComment').value.trim();
+      const month = qs('monthSelect').value;
+
+      if(!staff){ showStatus('adminStatus','err','Choisissez un équipier.'); return; }
+      if(!checks.length){ showStatus('adminStatus','err','Cochez au moins un critère.'); return; }
+
+      const payload = {
+        action: 'addElimination',
+        password: ADMIN_PASSWORD,
+        month, staff,
+        criteria: checks.join(' • '),
+        comment
+      };
+
+      try{
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const data = JSON.parse(await res.text());
+        if(!data.ok) throw new Error(data.error || 'Enregistrement impossible.');
+
+        showStatus('adminStatus', 'ok', 'Élimination enregistrée.');
+        qs('elimStaff').value = '';
+        qs('elimCriteriaList').querySelectorAll('input:checked').forEach(c => c.checked = false);
+        qs('elimComment').value = '';
+
+        await loadDashboard();
+        populateStaffSelect();
+        renderEliminationsList();
+      }catch(err){
+        showStatus('adminStatus','err', err.message);
+      }
+    }
+
+    async function cancelElimination(staff){
+      if(!confirm(`Annuler l'élimination de ${staff} ?`)) return;
+      const payload = {
+        action: 'cancelElimination',
+        password: ADMIN_PASSWORD,
+        month: qs('monthSelect').value,
+        staff
+      };
+
+      try{
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const data = JSON.parse(await res.text());
+        if(!data.ok) throw new Error(data.error || 'Annulation impossible.');
+
+        showStatus('adminStatus','ok','Élimination annulée.');
+        await loadDashboard();
+        populateStaffSelect();
+        renderEliminationsList();
+      }catch(err){
+        showStatus('adminStatus','err',err.message);
+      }
+    }
+
+    // ─── INIT ─────────────────────────────────────────────
+    applyViewMode();
+
+    if(VIEW_MODE === 'manager'){
+      qs('adminBtn').addEventListener('click', () => {
+        if(isAdminAuthenticated) showAdminModal(); else showLoginModal();
+      });
+      qs('cancelLoginBtn').addEventListener('click', hideLoginModal);
+      qs('confirmLoginBtn').addEventListener('click', tryLogin);
+      qs('adminPwd').addEventListener('keydown', e => { if(e.key === 'Enter') tryLogin(); });
+      qs('closeAdminBtn').addEventListener('click', hideAdminModal);
+      qs('saveElimBtn').addEventListener('click', saveElimination);
+      qs('loginOverlay').addEventListener('click', e => { if(e.target === qs('loginOverlay')) hideLoginModal(); });
+      qs('adminOverlay').addEventListener('click', e => { if(e.target === qs('adminOverlay')) hideAdminModal(); });
+    }
+
+    qs('filterStaff').addEventListener('input', renderLatestEntries);
+    qs('filterServiceType').addEventListener('change', renderLatestEntries);
 
     initMonths();
   </script>
