@@ -1007,13 +1007,6 @@
 
             // Mémoriser les postes
             staffPostes[staff] = postes;
-
-            // Remplir les réponses
-            Object.keys(answers).forEach(qKey => {
-              const answer = answers[qKey];
-              const elem = document.querySelector(`[data-staff="${staff}"][data-question="${qKey}"][value="${answer}"]`);
-              if(elem) elem.checked = true;
-            });
           }
         });
 
@@ -1023,9 +1016,33 @@
         );
         if(firstEntry) qs('managerName').value = firstEntry.manager || '';
 
-        // Recréer l'étape 2 et 3 avec les données
+        // Recréer l'étape 2 (les fiches équipiers)
         renderStep2(selectedTeam);
-        renderStep3(selectedTeam);
+        
+        // MAINTENANT remplir les réponses
+        selectedTeam.forEach(staff => {
+          let foundEntry = null;
+          for(let entry of data.latestEntries){
+            if(entry.staff === staff && entry.services && entry.services[serviceType]){
+              if(entry.date === date){
+                foundEntry = entry;
+                break;
+              }
+            }
+          }
+
+          if(foundEntry){
+            const svc = foundEntry.services[serviceType];
+            const answers = svc.answers || {};
+
+            // Remplir les réponses
+            Object.keys(answers).forEach(qKey => {
+              const answer = answers[qKey];
+              const elem = document.querySelector(`[data-staff="${staff}"][data-question="${qKey}"][value="${answer}"]`);
+              if(elem) elem.checked = true;
+            });
+          }
+        });
 
         showStep(3);
         window.scrollTo({top:qs('step3Section').offsetTop-20,behavior:'smooth'});
