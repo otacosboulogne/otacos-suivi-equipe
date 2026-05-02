@@ -10,6 +10,7 @@
     body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #2d3436; margin: 0; padding: 10px; }
     .container { max-width: 1400px; margin: 0 auto; }
     
+    /* Header & Status */
     .header { background: var(--card); padding: 12px 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 6px solid var(--orange); }
     .logo-area { display: flex; align-items: center; gap: 12px; }
     .logo-area img { width: 40px; height: 40px; border-radius: 6px; }
@@ -18,6 +19,7 @@
     .status-badge { display: flex; align-items: center; gap: 6px; color: var(--green); font-size: 11px; font-weight: bold; background: #e8f8f0; padding: 4px 10px; border-radius: 20px; }
     .dot { height: 6px; width: 6px; background-color: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
 
+    /* Responsive Controls */
     .controls { display: flex; gap: 10px; flex-direction: column; margin-bottom: 20px; }
     .btn-dashboard { background: var(--blue); color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; text-align: center; box-shadow: 0 4px 6px rgba(24, 95, 165, 0.2); }
     
@@ -26,6 +28,7 @@
     .filter-card label { font-weight: bold; font-size: 11px; color: var(--blue); text-transform: uppercase; }
     select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; width: 100%; background: white; outline: none; }
 
+    /* Chart Grid Responsive */
     .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
     .chart-container { background: var(--card); padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 300px; border-top: 3px solid #eee; position: relative; }
     
@@ -49,22 +52,22 @@
     <div class="logo-area">
       <img src="./otacos-logo.png" alt="Logo">
       <div class="header-text">
-        <h1>Production Analytics</h1>
-        <p style="margin:0; font-size: 10px; color: #636e72;">Standards de Qualité O'Tacos</p>
+        <h1>Analytics Prod</h1>
+        <p style="margin:0; font-size: 10px; color: #636e72;">Contrôle Technique Restaurant</p>
       </div>
     </div>
-    <div class="status-badge"><span class="dot"></span> LIVE</div>
+    <div class="status-badge"><span class="dot"></span> CONNECTÉ</div>
   </div>
 
   <div class="controls">
-    <a href="index.html" class="btn-dashboard">← REVENIR AU DASHBOARD</a>
+    <a href="index.html" class="btn-dashboard">← RETOUR DASHBOARD</a>
     <div class="filter-group">
       <div class="filter-card">
         <label>Équipier</label>
-        <select id="staffSelect" onchange="updateDashboard()"><option value="all">Chargement...</option></select>
+        <select id="staffSelect" onchange="updateDashboard()"><option value="all">Moyenne Globale</option></select>
       </div>
       <div class="filter-card">
-        <label>Période</label>
+        <label>Mois</label>
         <select id="monthSelect" onchange="updateDashboard()"><option value="all">Toute l'année</option></select>
       </div>
     </div>
@@ -72,11 +75,11 @@
 
   <div class="dashboard-grid">
     <div class="chart-container full-width"><h2>📈 Score Global (/10)</h2><canvas id="chartScore"></canvas></div>
-    <div class="chart-container"><h2>⚖️ Poids (250g - 500g)</h2><canvas id="chartPoids"></canvas></div>
-    <div class="chart-container"><h2>⏱️ Temps (20s - 120s)</h2><canvas id="chartTime"></canvas></div>
-    <div class="chart-container"><h2>📏 Taille (10cm - 17cm)</h2><canvas id="chartTaille"></canvas></div>
-    <div class="chart-container"><h2>↔️ Largeur (12cm - 20cm)</h2><canvas id="chartLargeur"></canvas></div>
-    <div class="chart-container full-width"><h2>↕️ Épaisseur (1.5cm - 3.5cm)</h2><canvas id="chartEpaisseur"></canvas></div>
+    <div class="chart-container"><h2>⚖️ Poids (Ref. 300g-350g)</h2><canvas id="chartPoids"></canvas></div>
+    <div class="chart-container"><h2>⏱️ Temps de Préparation (sec)</h2><canvas id="chartTime"></canvas></div>
+    <div class="chart-container"><h2>📏 Longueur (cm)</h2><canvas id="chartTaille"></canvas></div>
+    <div class="chart-container"><h2>↔️ Largeur (cm)</h2><canvas id="chartLargeur"></canvas></div>
+    <div class="chart-container full-width"><h2>↕️ Épaisseur (cm)</h2><canvas id="chartEpaisseur"></canvas></div>
   </div>
 </div>
 
@@ -85,14 +88,14 @@
   let rawData = [];
   let activeCharts = {};
 
-  // Configuration des axes demandée
+  // Échelles adaptées aux données réelles observées[cite: 1]
   const AXIS_CONFIG = {
     chartScore: { min: 0, max: 10 },
-    chartPoids: { min: 250, max: 500 },
-    chartTime: { min: 20, max: 120 },
-    chartTaille: { min: 10, max: 17 },
-    chartLargeur: { min: 12, max: 20 },
-    chartEpaisseur: { min: 1.5, max: 3.5 }
+    chartPoids: { min: 250, max: 400 },     // Basé sur des valeurs de 300-350g[cite: 1]
+    chartTime: { min: 0, max: 150 },       // Pour inclure les pics à 109s[cite: 1]
+    chartTaille: { min: 8, max: 18 },      // Basé sur longueur 14-15cm[cite: 1]
+    chartLargeur: { min: 8, max: 15 },      // Basé sur largeur 11cm[cite: 1]
+    chartEpaisseur: { min: 1.5, max: 3.5 }  // Basé sur épaisseur 2,3-2,5cm[cite: 1]
   };
 
   async function init() {
@@ -101,41 +104,52 @@
       const json = await res.json();
       if (!json.ok || !json.production) return;
       rawData = json.production;
+      
       const selectStaff = document.getElementById('staffSelect');
       const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s).sort();
-      selectStaff.innerHTML = '<option value="all">Moyenne Restaurant</option>';
       staffs.forEach(s => { selectStaff.innerHTML += `<option value="${s}">${s}</option>`; });
+      
       const selectMonth = document.getElementById('monthSelect');
       const periods = [...new Set(rawData.map(d => d.month))].filter(m => m).sort().reverse();
       periods.forEach(p => { selectMonth.innerHTML += `<option value="${p}">${p}</option>`; });
+      
       updateDashboard();
     } catch (e) { console.error(e); }
+  }
+
+  // Nettoyage des données Sheets (Virgules -> Points)[cite: 1]
+  function cleanValue(val) {
+    if (val === undefined || val === null || val === "") return 0;
+    const cleaned = parseFloat(String(val).replace(',', '.'));
+    return isNaN(cleaned) ? 0 : cleaned;
   }
 
   function updateDashboard() {
     const staffVal = document.getElementById('staffSelect').value;
     const monthVal = document.getElementById('monthSelect').value;
     let filtered = (monthVal === 'all') ? rawData : rawData.filter(d => d.month === monthVal);
+    
     let finalData = [];
     if (staffVal === 'all') {
       const dates = [...new Set(filtered.map(d => d.date))].sort();
       finalData = dates.map(date => {
         const tests = filtered.filter(d => d.date === date);
-        const avg = (k) => tests.reduce((a, c) => a + (parseFloat(c[k]) || 0), 0) / tests.length;
+        const avg = (k) => tests.reduce((a, c) => a + cleanValue(c[k]), 0) / tests.length;
         return { date, note: avg('note'), poids: avg('poids'), tempsSec: avg('tempsSec'), taille: avg('taille'), largeur: avg('largeur'), epaisseur: avg('epaisseur') };
       });
     } else {
       finalData = filtered.filter(d => d.staff === staffVal).sort((a,b) => new Date(a.date) - new Date(b.date));
     }
-    const charts = [
+
+    const configs = [
       { id: 'chartScore', key: 'note', label: 'Score' },
       { id: 'chartPoids', key: 'poids', label: 'Poids (g)' },
       { id: 'chartTime', key: 'tempsSec', label: 'Temps (s)' },
-      { id: 'chartTaille', key: 'taille', label: 'Taille (cm)' },
+      { id: 'chartTaille', key: 'taille', label: 'Longueur (cm)' },
       { id: 'chartLargeur', key: 'largeur', label: 'Largeur (cm)' },
       { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur (cm)' }
     ];
-    charts.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all'));
+    configs.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all'));
   }
 
   function renderChart(id, key, label, data, isGlobal) {
@@ -148,23 +162,23 @@
         labels: data.map(d => d.date),
         datasets: [{
           label: label,
-          data: data.map(d => parseFloat(d[key]) || 0),
+          data: data.map(d => cleanValue(d[key])),
           borderColor: isGlobal ? '#185fa5' : '#f08a00',
           backgroundColor: isGlobal ? 'rgba(24, 95, 165, 0.1)' : 'rgba(240, 138, 0, 0.1)',
-          borderWidth: 3, tension: 0.3, fill: true, pointRadius: 4
+          borderWidth: 3, tension: 0.4, fill: true, pointRadius: 4
         }]
       },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: true, position: 'top' } },
+        plugins: { legend: { display: true, position: 'top', labels: { boxWidth: 12, font: { size: 10 } } } },
         scales: { 
           y: { 
             min: AXIS_CONFIG[id].min, 
             max: AXIS_CONFIG[id].max,
             grid: { color: '#f0f0f0' },
-            ticks: { font: { weight: 'bold' } }
+            ticks: { font: { weight: 'bold', size: 10 } }
           },
-          x: { ticks: { font: { size: 10 }, maxRotation: 45 } }
+          x: { ticks: { font: { size: 9 }, maxRotation: 45 } }
         }
       }
     });
@@ -173,3 +187,4 @@
 </script>
 </body>
 </html>
+```[cite: 1]
