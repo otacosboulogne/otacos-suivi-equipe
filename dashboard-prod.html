@@ -4,165 +4,186 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analytics Production - O'Tacos</title>
-  
-  <!-- Chargement des bibliothèques via CDN ultra-fiables -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root { --orange: #f08a00; --blue: #185fa5; --bg: #fdfaf7; --card: #ffffff; --line: #e2d8ce; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: #1a1c1e; margin: 0; padding: 20px; }
-    .container { max-width: 1100px; margin: 0 auto; }
-    .header { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid var(--line); margin-bottom: 20px; text-align: center; }
-    .filter-card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid var(--line); margin-bottom: 20px; display: flex; justify-content: center; align-items: center; gap: 15px; }
-    .chart-box { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid var(--line); box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; height: 400px; }
-    select { padding: 10px; border-radius: 8px; border: 1px solid var(--line); font-size: 16px; width: 250px; cursor: pointer; }
-    h1 { color: var(--blue); margin: 0; font-size: 24px; }
-    h2 { color: var(--orange); font-size: 18px; margin-top: 0; }
-    .error-msg { color: red; background: #ffe6e6; padding: 10px; border-radius: 8px; display: none; margin-bottom: 20px; text-align: center; }
+    :root { --orange: #f08a00; --blue: #185fa5; --bg: #f4f7f6; --card: #ffffff; --text: #2d3436; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    
+    /* Header Style Power BI */
+    .header { background: var(--card); padding: 15px 25px; border-radius: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 8px solid var(--orange); }
+    .logo-area { display: flex; align-items: center; gap: 20px; }
+    .logo-area img { width: 55px; height: 55px; border-radius: 8px; }
+    
+    /* Filtres */
+    .filter-section { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 25px; display: flex; gap: 20px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+    select { padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; background: #fff; font-size: 14px; min-width: 250px; outline: none; }
+    select:focus { border-color: var(--orange); }
+
+    /* Grid Layout */
+    .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .chart-container { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 350px; position: relative; border-top: 4px solid #eee; }
+    .chart-container:hover { border-top-color: var(--orange); transition: 0.3s; }
+    .full-width { grid-column: span 2; height: 400px; }
+    
+    h2 { font-size: 16px; color: var(--blue); margin-top: 0; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .status-dot { height: 10px; width: 10px; background-color: var(--orange); border-radius: 50%; display: inline-block; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <div id="errorMessage" class="error-msg"></div>
-
   <div class="header">
-    <h1>Analytics Production - Suivi Technique</h1>
+    <div class="logo-area">
+      <img src="./otacos-logo.png" alt="O'Tacos Logo">
+      <div>
+        <h1 style="margin:0; font-size: 22px;">Production Analytics Pro</h1>
+        <p style="margin:0; font-size: 12px; color: #636e72;">Suivi technique en temps réel</p>
+      </div>
+    </div>
+    <div style="text-align: right;">
+      <span id="dataStatus" style="font-size: 12px; font-weight: bold; color: var(--blue);">Connecté au Sheets</span>
+    </div>
   </div>
 
-  <div class="filter-card">
-    <label style="font-weight: bold;">Équipier :</label>
-    <select id="staffSelect" onchange="updateDashboard()">
-      <option value="">Chargement des données...</option>
-    </select>
+  <div class="filter-section">
+    <div>
+      <label style="font-weight: bold; font-size: 13px;">FILTRER PAR ÉQUIPIER(S) :</label><br>
+      <select id="staffSelect" multiple onchange="updateDashboard()" title="Maintenez Ctrl pour en sélectionner plusieurs">
+        <option value="all">Chargement...</option>
+      </select>
+      <small style="display:block; color:#999; margin-top:4px;">Ctrl+Clic pour comparer plusieurs salariés</small>
+    </div>
   </div>
 
-  <div class="chart-box">
-    <h2>⭐ Évolution du Score (/10)</h2>
-    <canvas id="chartScore"></canvas>
-  </div>
+  <div class="dashboard-grid">
+    <!-- Score Global -->
+    <div class="chart-container full-width">
+      <h2><span class="status-dot"></span> Évolution du Score Global (/10)</h2>
+      <canvas id="chartScore"></canvas>
+    </div>
 
-  <div class="chart-box">
-    <h2>📊 Volume de tests</h2>
-    <canvas id="chartBar"></canvas>
+    <!-- Poids -->
+    <div class="chart-container">
+      <h2><span class="status-dot"></span> Précision du Poids (g)</h2>
+      <canvas id="chartPoids"></canvas>
+    </div>
+
+    <!-- Timing -->
+    <div class="chart-container">
+      <h2><span class="status-dot"></span> Temps de Préparation (sec)</h2>
+      <canvas id="chartTime"></canvas>
+    </div>
+
+    <!-- Taille -->
+    <div class="chart-container">
+      <h2><span class="status-dot"></span> Taille (cm)</h2>
+      <canvas id="chartTaille"></canvas>
+    </div>
+
+    <!-- Largeur -->
+    <div class="chart-container">
+      <h2><span class="status-dot"></span> Largeur (cm)</h2>
+      <canvas id="chartLargeur"></canvas>
+    </div>
+
+    <!-- Épaisseur -->
+    <div class="chart-container full-width">
+      <h2><span class="status-dot"></span> Épaisseur (cm)</h2>
+      <canvas id="chartEpaisseur"></canvas>
+    </div>
   </div>
 </div>
 
 <script>
-  // CONFIGURATION
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec"; 
-  
   let rawData = [];
-  let chartInstance1 = null;
-  let chartInstance2 = null;
-
-  // Lancement automatique
-  window.onload = init;
+  let activeCharts = {};
 
   async function init() {
-    const errorDiv = document.getElementById('errorMessage');
-    const select = document.getElementById('staffSelect');
-
     try {
-      console.log("Connexion à l'API...");
-      const response = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);
+      const res = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);
+      const json = await res.json();
+      if (!json.ok || !json.production) return;
       
-      if (!response.ok) throw new Error("Le serveur Google ne répond pas.");
+      rawData = json.production;
+      const select = document.getElementById('staffSelect');
+      const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s).sort();
       
-      const json = await response.json();
-      console.log("JSON reçu :", json);
+      select.innerHTML = '<option value="all" selected>Tous les salariés (Moyenne)</option>';
+      staffs.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s;
+        select.appendChild(opt);
+      });
 
-      if (json.ok && json.production && json.production.length > 0) {
-        rawData = json.production;
-        
-        // Extraire les noms uniques
-        const noms = [...new Set(rawData.map(d => d.staff))].filter(n => n).sort();
-        
-        // Remplir le select
-        select.innerHTML = '<option value="all">Tous les équipiers</option>';
-        noms.forEach(n => {
-          const opt = document.createElement('option');
-          opt.value = n;
-          opt.textContent = n;
-          select.appendChild(opt);
-        });
+      updateDashboard();
+    } catch (e) { console.error("Erreur de chargement", e); }
+  }
 
-        updateDashboard();
-      } else {
-        throw new Error("Aucune donnée trouvée dans la feuille 'Production'.");
-      }
-
-    } catch (e) {
-      console.error(e);
-      errorDiv.style.display = 'block';
-      errorDiv.textContent = "⚠️ Erreur : " + e.message;
-      select.innerHTML = '<option value="">Erreur de chargement</option>';
-    }
+  function getColors(index) {
+    const palette = ['#f08a00', '#185fa5', '#00b894', '#6c5ce7', '#d63031', '#fdcb6e', '#e84393'];
+    return palette[index % palette.length];
   }
 
   function updateDashboard() {
-    const val = document.getElementById('staffSelect').value;
-    if (!val) return;
-
-    const data = (val === 'all') ? rawData : rawData.filter(d => d.staff === val);
+    const select = document.getElementById('staffSelect');
+    const selectedOptions = Array.from(select.selectedOptions).map(o => o.value);
     
-    // Tri par date
-    data.sort((a, b) => new Date(a.date) - new Date(b.date));
+    // Si "all" est dans la sélection ou rien n'est coché
+    const isAll = selectedOptions.includes('all') || selectedOptions.length === 0;
+    const staffsToDisplay = isAll ? [...new Set(rawData.map(d => d.staff))] : selectedOptions;
 
-    renderLineChart(data);
-    renderBarChart(data);
+    const config = [
+      { id: 'chartScore', key: 'note', label: 'Score Global' },
+      { id: 'chartPoids', key: 'poids', label: 'Poids' },
+      { id: 'chartTime', key: 'tempsSec', label: 'Temps' },
+      { id: 'chartTaille', key: 'taille', label: 'Taille' },
+      { id: 'chartLargeur', key: 'largeur', label: 'Largeur' },
+      { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur' }
+    ];
+
+    config.forEach(c => renderMultiCurve(c.id, c.key, c.label, staffsToDisplay));
   }
 
-  function renderLineChart(data) {
-    const ctx = document.getElementById('chartScore').getContext('2d');
-    if (chartInstance1) chartInstance1.destroy();
+  function renderMultiCurve(chartId, dataKey, label, staffs) {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    if (activeCharts[chartId]) activeCharts[chartId].destroy();
 
-    chartInstance1 = new Chart(ctx, {
+    const datasets = staffs.map((name, index) => {
+      const staffData = rawData.filter(d => d.staff === name).sort((a,b) => new Date(a.date) - new Date(b.date));
+      return {
+        label: name,
+        data: staffData.map(d => d[dataKey] || 0),
+        borderColor: getColors(index),
+        backgroundColor: getColors(index) + '22',
+        borderWidth: 3,
+        pointRadius: 4,
+        tension: 0.4,
+        fill: staffs.length === 1 // On remplit seulement si un seul salarié est sélectionné
+      };
+    });
+
+    // On utilise les dates de l'ensemble des données triées pour l'axe X
+    const allLabels = [...new Set(rawData.map(d => d.date))].sort();
+
+    activeCharts[chartId] = new Chart(ctx, {
       type: 'line',
-      data: {
-        labels: data.map(d => d.date),
-        datasets: [{
-          label: 'Note Performance',
-          data: data.map(d => d.note),
-          borderColor: '#f08a00',
-          backgroundColor: 'rgba(240, 138, 0, 0.1)',
-          fill: true,
-          tension: 0.3
-        }]
-      },
-      options: { 
-        responsive: true, 
+      data: { labels: allLabels, datasets: datasets },
+      options: {
+        responsive: true,
         maintainAspectRatio: false,
-        scales: { y: { min: 0, max: 10 } }
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { beginAtZero: true, grid: { color: '#f0f0f0' } }
+        }
       }
     });
   }
 
-  function renderBarChart(data) {
-    const ctx = document.getElementById('chartBar').getContext('2d');
-    if (chartInstance2) chartInstance2.destroy();
-
-    // Compter les entrées par staff
-    const counts = {};
-    data.forEach(d => counts[d.staff] = (counts[d.staff] || 0) + 1);
-
-    chartInstance2 = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: Object.keys(counts),
-        datasets: [{
-          label: 'Nombre de tests effectués',
-          data: Object.values(counts),
-          backgroundColor: '#185fa5'
-        }]
-      },
-      options: { 
-        responsive: true, 
-        maintainAspectRatio: false 
-      }
-    });
-  }
+  init();
 </script>
-
 </body>
 </html>
