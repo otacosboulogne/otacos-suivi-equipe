@@ -4,227 +4,164 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analytics Production - O'Tacos</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- SlimSelect pour une liste multi-sélection élégante -->
-  <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet">
-  <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
   
+  <!-- Chargement des bibliothèques via CDN ultra-fiables -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
   <style>
-    :root {
-      --orange: #f08a00; --blue: #185fa5; --bg: #fdfaf7; --card: #ffffff; --line: #e2d8ce;
-    }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: #1a1c1e; margin: 0; padding: 20px; }
-    .container { max-width: 1300px; margin: 0 auto; }
-    
-    /* Header */
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; gap: 20px; }
-    .logo-area { display: flex; align-items: center; gap: 15px; }
-    .logo-area img { width: 60px; height: 60px; border-radius: 12px; border: 1px solid var(--line); background: #fff; padding: 5px; }
-    
-    /* Filtres */
-    .filter-card { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--line); margin-bottom: 25px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-    
-    /* Grille de Graphiques */
-    .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-    .chart-box { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,0.03); min-height: 400px; }
-    .full-width { grid-column: span 2; }
-    h2 { font-size: 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--blue); }
-
-    .btn-nav { padding: 12px 20px; border-radius: 12px; border: 1px solid var(--line); background: #fff; text-decoration: none; color: #444; font-weight: 600; transition: 0.2s; }
-    .btn-nav:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
-
-    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } .full-width { grid-column: span 1; } .filter-card { grid-template-columns: 1fr; } }
+    :root { --orange: #f08a00; --blue: #185fa5; --bg: #fdfaf7; --card: #ffffff; --line: #e2d8ce; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: #1a1c1e; margin: 0; padding: 20px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .header { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid var(--line); margin-bottom: 20px; text-align: center; }
+    .filter-card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid var(--line); margin-bottom: 20px; display: flex; justify-content: center; align-items: center; gap: 15px; }
+    .chart-box { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid var(--line); box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; height: 400px; }
+    select { padding: 10px; border-radius: 8px; border: 1px solid var(--line); font-size: 16px; width: 250px; cursor: pointer; }
+    h1 { color: var(--blue); margin: 0; font-size: 24px; }
+    h2 { color: var(--orange); font-size: 18px; margin-top: 0; }
+    .error-msg { color: red; background: #ffe6e6; padding: 10px; border-radius: 8px; display: none; margin-bottom: 20px; text-align: center; }
   </style>
 </head>
 <body>
 
 <div class="container">
+  <div id="errorMessage" class="error-msg"></div>
+
   <div class="header">
-    <div class="logo-area">
-      <img src="./otacos-logo.png" alt="Logo">
-      <div>
-        <h1 style="margin:0; font-size: 24px;">Analytics Production</h1>
-        <p style="margin:0; color: #666;">Suivi de performance technique</p>
-      </div>
-    </div>
-    <a href="index.html" class="btn-nav">← Formulaire</a>
+    <h1>Analytics Production - Suivi Technique</h1>
   </div>
 
   <div class="filter-card">
-    <div>
-      <label style="display:block; margin-bottom:8px; font-weight:700;">Comparer des équipiers :</label>
-      <select id="staffSelect" multiple></select>
-    </div>
-    <div>
-      <label style="display:block; margin-bottom:8px; font-weight:700;">Période :</label>
-      <select id="monthSelect">
-        <option value="all">Tout l'historique</option>
-      </select>
-    </div>
+    <label style="font-weight: bold;">Équipier :</label>
+    <select id="staffSelect" onchange="updateDashboard()">
+      <option value="">Chargement des données...</option>
+    </select>
   </div>
 
-  <div class="main-grid">
-    <div class="chart-box full-width">
-      <h2>⭐ Évolution du Score Global (/10)</h2>
-      <canvas id="chartScore"></canvas>
-    </div>
+  <div class="chart-box">
+    <h2>⭐ Évolution du Score (/10)</h2>
+    <canvas id="chartScore"></canvas>
+  </div>
 
-    <div class="chart-box">
-      <h2>⚖️ Performance Individuelle (Notes)</h2>
-      <canvas id="chartPoids"></canvas>
-    </div>
-
-    <div class="chart-box">
-      <h2>📊 Volume de tests par équipier</h2>
-      <canvas id="chartPie"></canvas>
-    </div>
+  <div class="chart-box">
+    <h2>📊 Volume de tests</h2>
+    <canvas id="chartBar"></canvas>
   </div>
 </div>
 
 <script>
-  // URL de ton API Google Apps Script
+  // CONFIGURATION
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec"; 
   
   let rawData = [];
-  let staffSelector, scoreChart, poidsChart, pieChart;
+  let chartInstance1 = null;
+  let chartInstance2 = null;
 
-  // Initialisation au chargement
+  // Lancement automatique
+  window.onload = init;
+
   async function init() {
+    const errorDiv = document.getElementById('errorMessage');
+    const select = document.getElementById('staffSelect');
+
     try {
-      console.log("Récupération des données...");
-      const res = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);
-      const json = await res.json();
+      console.log("Connexion à l'API...");
+      const response = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);
       
-      // On vérifie le format (doit être json.production d'après ton test)
-      if (!json.ok || !json.production) {
-        console.error("Données invalides ou vides", json);
-        return;
+      if (!response.ok) throw new Error("Le serveur Google ne répond pas.");
+      
+      const json = await response.json();
+      console.log("JSON reçu :", json);
+
+      if (json.ok && json.production && json.production.length > 0) {
+        rawData = json.production;
+        
+        // Extraire les noms uniques
+        const noms = [...new Set(rawData.map(d => d.staff))].filter(n => n).sort();
+        
+        // Remplir le select
+        select.innerHTML = '<option value="all">Tous les équipiers</option>';
+        noms.forEach(n => {
+          const opt = document.createElement('option');
+          opt.value = n;
+          opt.textContent = n;
+          select.appendChild(opt);
+        });
+
+        updateDashboard();
+      } else {
+        throw new Error("Aucune donnée trouvée dans la feuille 'Production'.");
       }
-      
-      rawData = json.production;
-      console.log("Données chargées :", rawData);
 
-      // Création de la liste unique des équipiers
-      const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s);
-      
-      // Initialisation du menu SlimSelect
-      staffSelector = new SlimSelect({
-        select: '#staffSelect',
-        data: staffs.map(s => ({ text: s, value: s })),
-        events: {
-          afterChange: () => updateDashboard()
-        }
-      });
-
-      // Premier affichage
-      updateDashboard();
     } catch (e) {
-      console.error("Erreur d'initialisation :", e);
+      console.error(e);
+      errorDiv.style.display = 'block';
+      errorDiv.textContent = "⚠️ Erreur : " + e.message;
+      select.innerHTML = '<option value="">Erreur de chargement</option>';
     }
   }
 
   function updateDashboard() {
-    const selectedStaffs = staffSelector.getSelected();
+    const val = document.getElementById('staffSelect').value;
+    if (!val) return;
+
+    const data = (val === 'all') ? rawData : rawData.filter(d => d.staff === val);
     
-    // Filtrage par équipier (si aucun sélectionné, on montre tout)
-    let filtered = (selectedStaffs.length > 0) 
-      ? rawData.filter(d => selectedStaffs.includes(d.staff)) 
-      : rawData;
+    // Tri par date
+    data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    // Tri chronologique
-    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    // Mise à jour des graphiques
-    renderScoreChart(filtered, selectedStaffs);
-    renderBarChart(filtered);
-    renderPieChart(filtered);
+    renderLineChart(data);
+    renderBarChart(data);
   }
 
-  function renderScoreChart(data, selected) {
+  function renderLineChart(data) {
     const ctx = document.getElementById('chartScore').getContext('2d');
-    if (scoreChart) scoreChart.destroy();
+    if (chartInstance1) chartInstance1.destroy();
 
-    // Si personne n'est sélectionné, on affiche une moyenne globale
-    // Sinon, on crée un dataset par personne
-    const datasets = selected.length === 0 ? [{
-      label: 'Score Global',
-      data: data.map(d => d.note),
-      borderColor: '#f08a00',
-      backgroundColor: 'rgba(240, 138, 0, 0.1)',
-      fill: true,
-      tension: 0.4
-    }] : selected.map(name => ({
-      label: name,
-      data: data.filter(d => d.staff === name).map(d => d.note),
-      borderColor: '#' + Math.floor(Math.random()*16777215).toString(16),
-      tension: 0.4,
-      fill: false
-    }));
-
-    scoreChart = new Chart(ctx, {
+    chartInstance1 = new Chart(ctx, {
       type: 'line',
       data: {
         labels: data.map(d => d.date),
-        datasets: datasets
+        datasets: [{
+          label: 'Note Performance',
+          data: data.map(d => d.note),
+          borderColor: '#f08a00',
+          backgroundColor: 'rgba(240, 138, 0, 0.1)',
+          fill: true,
+          tension: 0.3
+        }]
       },
-      options: {
-        responsive: true,
+      options: { 
+        responsive: true, 
         maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } },
         scales: { y: { min: 0, max: 10 } }
       }
     });
   }
 
   function renderBarChart(data) {
-    const ctx = document.getElementById('chartPoids').getContext('2d');
-    if (poidsChart) poidsChart.destroy();
+    const ctx = document.getElementById('chartBar').getContext('2d');
+    if (chartInstance2) chartInstance2.destroy();
 
-    poidsChart = new Chart(ctx, {
+    // Compter les entrées par staff
+    const counts = {};
+    data.forEach(d => counts[d.staff] = (counts[d.staff] || 0) + 1);
+
+    chartInstance2 = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.map(d => d.staff),
+        labels: Object.keys(counts),
         datasets: [{
-          label: 'Notes obtenues',
-          data: data.map(d => d.note),
+          label: 'Nombre de tests effectués',
+          data: Object.values(counts),
           backgroundColor: '#185fa5'
         }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: { y: { min: 0, max: 10 } }
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false 
       }
     });
   }
-
-  function renderPieChart(data) {
-    const ctx = document.getElementById('chartPie').getContext('2d');
-    if (pieChart) pieChart.destroy();
-
-    // Comptage des tests par équipier
-    const stats = {};
-    data.forEach(d => { stats[d.staff] = (stats[d.staff] || 0) + 1; });
-
-    pieChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: Object.keys(stats),
-        datasets: [{
-          data: Object.values(stats),
-          backgroundColor: ['#f08a00', '#185fa5', '#067647', '#b42318', '#7b2cbf']
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'right' } }
-      }
-    });
-  }
-
-  // Lancement du Dashboard
-  init();
 </script>
 
 </body>
