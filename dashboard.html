@@ -513,15 +513,15 @@
         const trophy = isWinner ? `<span class="winner-trophy">🏆</span>` : '';
         const reason = isEliminated ? `<span class="elim-reason">${escapeHtml(elim.criteria || '')}${elim.comment ? ' — ' + escapeHtml(elim.comment) : ''}</span>` : '';
         return `
-          <tr class="${isEliminated ? 'eliminated' : ''}">
-            <td>${idx + 1}</td>
-            <td><span class="name-col">${escapeHtml(r.staff)}</span>${elimBadge}${trophy}${reason}</td>
-            <td><b>${r.avgScoreBoosted}</b></td>
-            <td>${r.productionBonus > 0 ? '+' + r.productionBonus : '—'}</td>
-            <td>${r.avgPct}%</td>
-            <td>${r.services}</td>
-          </tr>
-        `;
+  <tr style="${isEliminated ? 'background-color: #fef3f2 !important; color: #b42318 !important;' : ''}">
+    <td>${idx + 1}</td>
+    <td><span style="${isEliminated ? 'text-decoration: line-through;' : ''}">${escapeHtml(r.staff)}</span>${elimBadge}${trophy}${reason}</td>
+    <td><b>${r.avgScoreBoosted}</b></td>
+    <td>${r.productionBonus > 0 ? '+' + r.productionBonus : '—'}</td>
+    <td>${r.avgPct}%</td>
+    <td>${r.services}</td>
+  </tr>
+`;
       }).join('');
 
       if(allEliminated){
