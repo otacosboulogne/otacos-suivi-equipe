@@ -975,78 +975,38 @@
           return;
         }
 
-        showStatus('bottomStatus','ok','Récupération en cours...');
-        const month = date.substring(0, 7);
-        const res = await fetch(`${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`);
-        const data = await res.json();
+        showStatus('bottomStatus','ok','Récupération du brouillon...');
         
-        if(!data.ok || !data.latestEntries || !data.latestEntries.length){
-          showStatus('bottomStatus','err','Aucune évaluation trouvée.');
+        // Charger le brouillon depuis localStorage
+        const draft = loadDraft();
+        
+        if(!draft || !draft.membersData || Object.keys(draft.membersData).length === 0){
+          showStatus('bottomStatus','err','Aucun brouillon trouvé.');
           return;
         }
 
-        // Pour chaque équipier sélectionné, chercher son évaluation
-        selectedTeam.forEach(staff => {
-          let foundEntry = null;
-          
-          for(let entry of data.latestEntries){
-            if(entry.staff === staff && entry.services && entry.services[serviceType]){
-              const svc = entry.services[serviceType];
-              // Vérifier que la date correspond
-              if(entry.date === date){
-                foundEntry = entry;
-                break;
-              }
-            }
-          }
+        // Remplir les postes depuis le brouillon
+        staffPostes = draft.staffPostes || {};
 
-          if(foundEntry){
-            const svc = foundEntry.services[serviceType];
-            const postes = svc.postes || [];
-            const answers = svc.answers || {};
-
-            // Mémoriser les postes
-            staffPostes[staff] = postes;
-          }
-        });
-
-        // Mettre à jour le manager si on l'a trouvé
-        const firstEntry = data.latestEntries.find(e => 
-          selectedTeam.includes(e.staff) && e.services && e.services[serviceType] && e.date === date
-        );
-        if(firstEntry) qs('managerName').value = firstEntry.manager || '';
-
-        // Recréer l'étape 2 (les fiches équipiers)
+        // Récréer l'étape 2 (les fiches équipiers)
         renderStep2(selectedTeam);
         
-        // MAINTENANT remplir les réponses
+        // Remplir les réponses depuis le brouillon
         selectedTeam.forEach(staff => {
-          let foundEntry = null;
-          for(let entry of data.latestEntries){
-            if(entry.staff === staff && entry.services && entry.services[serviceType]){
-              if(entry.date === date){
-                foundEntry = entry;
-                break;
-              }
-            }
-          }
+          const memberData = draft.membersData[staff] || {};
+          const answers = memberData.answers || {};
 
-          if(foundEntry){
-            const svc = foundEntry.services[serviceType];
-            const answers = svc.answers || {};
-
-            // Remplir les réponses
-            Object.keys(answers).forEach(qKey => {
-              const answer = answers[qKey];
-              const elem = document.querySelector(`[data-staff="${staff}"][data-question="${qKey}"][value="${answer}"]`);
-              if(elem) elem.checked = true;
-            });
-          }
+          // Remplir les réponses
+          Object.keys(answers).forEach(qKey => {
+            const answer = answers[qKey];
+            const elem = document.querySelector(`[data-staff="${staff}"][data-question="${qKey}"][value="${answer}"]`);
+            if(elem) elem.checked = true;
+          });
         });
 
         showStep(3);
         window.scrollTo({top:qs('step3Section').offsetTop-20,behavior:'smooth'});
-        showStatus('bottomStatus','ok','Évaluations récupérées ! Modifie et enregistre.');
+        showStatus('bottomStatus','ok','Brouillon récupéré ! Modifie et enregistre.');
       }catch(err){
         showStatus('bottomStatus','err','Erreur récupération: '+err.message);
       }
