@@ -429,37 +429,45 @@
     function addMonthOption(sel, val){ const o=document.createElement('option'); o.value=val; o.textContent=val; sel.appendChild(o); }
 
     async function loadDashboard(){
-      const month = qs('monthSelect').value;
-      qs('selectedMonthLabel').textContent = month;
-      const adminLabel = qs('adminMonthLabel');
-      if(adminLabel) adminLabel.textContent = month;
+  const month = qs('monthSelect').value;
+  qs('selectedMonthLabel').textContent = month;
+  const adminLabel = qs('adminMonthLabel');
+  if(adminLabel) adminLabel.textContent = month;
 
-      try{
-        const [dashRes, elimRes] = await Promise.all([
-          fetch(`${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`),
-          fetch(`${APPS_SCRIPT_URL}?mode=eliminations&month=${encodeURIComponent(month)}`).catch(()=>null)
-        ]);
+  try{
+    // Charger TOUT en parallèle
+    const [dashRes, elimRes, prodRes] = await Promise.all([
+      fetch(`${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`),
+      fetch(`${APPS_SCRIPT_URL}?mode=eliminations&month=${encodeURIComponent(month)}`),
+      fetch(`${APPS_SCRIPT_URL}?mode=production&month=${encodeURIComponent(month)}`)
+    ]);
 
-        const data = await dashRes.json();
-        if(data.ok === false) throw new Error(data.error || 'Erreur backend');
+    const data = await dashRes.json();
+    if(!data.ok) throw new Error(data.error || 'Erreur dashboard');
 
-        let eliminations = [];
-        if(elimRes){
-          try{ const e=await elimRes.json(); if(e.ok!==false) eliminations = e.eliminations||[]; }catch{}
-        }
+    const elimData = await elimRes.json();
+    const eliminations = (elimData.ok !== false) ? (elimData.eliminations || []) : [];
 
-        currentEliminations = eliminations;
-        currentRanking = data.ranking || [];
-        currentLatestEntries = data.latestEntries || [];
+    const prodData = await prodRes.json();
+    const production = (prodData.ok !== false) ? (prodData.production || []) : [];
 
-        renderDashboard(data, month, eliminations);
-        renderProdRanking(data.productionRanking || []);
-        renderLatestEntries();
-      }catch(err){
-        renderEmpty(err.message);
-      }
-    }
+    currentEliminations = eliminations;
+    currentRanking = data.ranking || [];
+    currentLatestEntries = data.latestEntries || [];
+    allProductionData = production;
 
+    console.log('Eliminations chargées:', eliminations.length);
+    console.log('Production chargée:', production.length);
+
+    renderDashboard(data, month, eliminations);
+    renderProdRanking(data.productionRanking || []);
+    renderLatestEntries();
+  }catch(err){
+    console.error('Erreur loadDashboard:', err);
+    renderEmpty(err.message || 'Erreur');
+  }
+}
+    
     function renderEmpty(msg){
       qs('winnerName').textContent='—';
       qs('winnerScore').textContent='0';
