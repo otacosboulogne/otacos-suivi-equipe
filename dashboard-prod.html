@@ -2,34 +2,41 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Analytics Production - O'Tacos</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root { --orange: #f08a00; --blue: #185fa5; --bg: #f4f7f6; --card: #ffffff; --green: #2ecc71; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #2d3436; margin: 0; padding: 20px; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #2d3436; margin: 0; padding: 10px; }
     .container { max-width: 1400px; margin: 0 auto; }
     
-    .header { background: var(--card); padding: 15px 25px; border-radius: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 8px solid var(--orange); }
-    .logo-area { display: flex; align-items: center; gap: 20px; }
-    .logo-area img { width: 55px; height: 55px; border-radius: 8px; }
+    .header { background: var(--card); padding: 12px 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 6px solid var(--orange); }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-area img { width: 40px; height: 40px; border-radius: 6px; }
     
-    .status-badge { display: flex; align-items: center; gap: 8px; color: var(--green); font-size: 13px; font-weight: bold; background: #e8f8f0; padding: 6px 12px; border-radius: 20px; }
-    .dot { height: 8px; width: 8px; background-color: var(--green); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+    .status-badge { display: flex; align-items: center; gap: 6px; color: var(--green); font-size: 11px; font-weight: bold; background: #e8f8f0; padding: 4px 10px; border-radius: 20px; }
+    .dot { height: 6px; width: 6px; background-color: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
 
-    .controls { display: flex; gap: 15px; align-items: center; margin-bottom: 25px; flex-wrap: wrap; }
-    .btn-dashboard { background: var(--blue); color: white; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 6px rgba(24, 95, 165, 0.2); }
+    .controls { display: flex; gap: 10px; flex-direction: column; margin-bottom: 20px; }
+    .btn-dashboard { background: var(--blue); color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; text-align: center; box-shadow: 0 4px 6px rgba(24, 95, 165, 0.2); }
     
-    .filter-card { background: var(--card); padding: 15px 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee; }
-    select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 14px; outline: none; cursor: pointer; background: white; min-width: 150px; }
+    .filter-group { display: flex; gap: 10px; width: 100%; }
+    .filter-card { background: var(--card); padding: 10px; border-radius: 10px; flex: 1; display: flex; flex-direction: column; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee; }
+    .filter-card label { font-weight: bold; font-size: 11px; color: var(--blue); text-transform: uppercase; }
+    select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; width: 100%; background: white; outline: none; }
 
-    .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .chart-container { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 350px; border-top: 4px solid #eee; position: relative; }
-    .full-width { grid-column: span 2; height: 400px; }
+    .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    .chart-container { background: var(--card); padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 300px; border-top: 3px solid #eee; position: relative; }
     
-    h2 { font-size: 14px; color: var(--blue); margin-top: 0; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
-    
-    .loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #999; font-weight: bold; }
+    h2 { font-size: 12px; color: var(--blue); margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 10px; }
+
+    @media (min-width: 768px) {
+      .controls { flex-direction: row; align-items: center; }
+      .filter-group { width: auto; flex-grow: 1; }
+      .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+      .full-width { grid-column: span 2; height: 380px; }
+      .chart-container { height: 320px; }
+    }
 
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
   </style>
@@ -41,206 +48,129 @@
     <div class="logo-area">
       <img src="./otacos-logo.png" alt="Logo">
       <div>
-        <h1 style="margin:0; font-size: 20px;">Analytics Production</h1>
-        <p style="margin:0; font-size: 12px; color: #636e72;">Analyse Expert O'Tacos</p>
+        <h1 style="margin:0; font-size: 16px;">Analytics Prod</h1>
+        <p style="margin:0; font-size: 10px; color: #636e72;">Tableau de Bord Automatique</p>
       </div>
     </div>
-    <div class="status-badge"><span class="dot"></span> Connecté</div>
+    <div class="status-badge"><span class="dot"></span> CONNECTÉ</div>
   </div>
 
   <div class="controls">
-    <a href="dashboard.html" class="btn-dashboard">← RETOUR DASHBOARD</a>
-    
-    <div class="filter-card">
-      <label style="font-weight: bold; font-size: 12px;">ÉQUIPIER :</label>
-      <select id="staffSelect" onchange="updateDashboard()">
-        <option value="all">Tous (Moyenne)</option>
-      </select>
-    </div>
-
-    <div class="filter-card">
-      <label style="font-weight: bold; font-size: 12px;">MOIS :</label>
-      <select id="monthSelect" onchange="updateDashboard()">
-        <option value="all">Tous</option>
-      </select>
+    <a href="index.html" class="btn-dashboard">← RETOUR</a>
+    <div class="filter-group">
+      <div class="filter-card">
+        <label>Équipier</label>
+        <select id="staffSelect" onchange="updateDashboard()"><option value="all">Tous (Moyenne)</option></select>
+      </div>
+      <div class="filter-card">
+        <label>Mois</label>
+        <select id="monthSelect" onchange="updateDashboard()"><option value="all">Tout</option></select>
+      </div>
     </div>
   </div>
 
-  <div class="dashboard-grid">
-    <div class="chart-container full-width"><h2>📈 Évolution du Score Global (/10)</h2><div class="loading" id="loading0">Chargement...</div><canvas id="chartScore"></canvas></div>
-    <div class="chart-container"><h2>⚖️ Précision Poids (g)</h2><div class="loading" id="loading1">Chargement...</div><canvas id="chartPoids"></canvas></div>
-    <div class="chart-container"><h2>⏱️ Temps (sec)</h2><div class="loading" id="loading2">Chargement...</div><canvas id="chartTime"></canvas></div>
-    <div class="chart-container"><h2>📏 Longueur (cm)</h2><div class="loading" id="loading3">Chargement...</div><canvas id="chartLongueur"></canvas></div>
-    <div class="chart-container"><h2>↔️ Largeur (cm)</h2><div class="loading" id="loading4">Chargement...</div><canvas id="chartLargeur"></canvas></div>
-    <div class="chart-container full-width"><h2>↕️ Épaisseur (cm)</h2><div class="loading" id="loading5">Chargement...</div><canvas id="chartEpaisseur"></canvas></div>
+  <div class="dashboard-grid" id="mainGrid">
+    <!-- Les graphiques sont générés ici -->
   </div>
 </div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQzbs9zVUQXHpc1DmMXI4JAUlh2naT0dCLDIKVfas2UL3hmgXj8VOGJ51S2_phrbm3/exec"; 
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec"; 
   let rawData = [];
   let activeCharts = {};
 
+  const chartConfigs = [
+    { id: 'chartScore', key: 'note', label: 'Score Global (/10)', full: true },
+    { id: 'chartPoids', key: 'poids', label: 'Poids (g)', full: false },
+    { id: 'chartTime', key: 'tempsSec', label: 'Temps (sec)', full: false },
+    { id: 'chartTaille', key: 'taille', label: 'Longueur (cm)', full: false },
+    { id: 'chartLargeur', key: 'largeur', label: 'Largeur (cm)', full: false },
+    { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur (cm)', full: true }
+  ];
+
+  // Crée les conteneurs HTML automatiquement
+  const grid = document.getElementById('mainGrid');
+  chartConfigs.forEach(c => {
+    grid.innerHTML += `<div class="chart-container ${c.full ? 'full-width' : ''}"><h2>${c.label}</h2><canvas id="${c.id}"></canvas></div>`;
+  });
+
   async function init() {
     try {
-      console.log("Initialisation...");
-      const res = await fetch(`${APPS_SCRIPT_URL}?mode=production`);
+      const res = await fetch(`${APPS_SCRIPT_URL}?mode=getProduction`);
       const json = await res.json();
-      console.log("Réponse API complète:", JSON.stringify(json, null, 2));
-      
-      if (!json.ok || !json.production) {
-        console.error("Erreur API ou pas de données - OK:", json.ok, "Production:", json.production);
-        alert("Erreur API:\n" + JSON.stringify(json, null, 2));
-        return;
-      }
-      
+      if (!json.ok || !json.production) return;
       rawData = json.production;
-      console.log("Données reçues:", rawData.length, "tests");
-      console.log("Premier test:", rawData[0]);
-
-      // Remplir Équipiers
+      
       const selectStaff = document.getElementById('staffSelect');
-      const staffs = [...new Set(rawData.map(d => String(d.staff || '')).filter(s => s))].sort();
-      console.log("Équipiers trouvés:", staffs);
-      selectStaff.innerHTML = '<option value="all">Tous (Moyenne)</option>';
-      staffs.forEach(s => { 
-        selectStaff.innerHTML += `<option value="${s}">${s}</option>`; 
-      });
-
-      // Remplir Mois
+      const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s).sort();
+      staffs.forEach(s => { selectStaff.innerHTML += `<option value="${s}">${s}</option>`; });
+      
       const selectMonth = document.getElementById('monthSelect');
-      const periods = [...new Set(rawData.map(d => String(d.month || '')).filter(m => m))].sort().reverse();
-      console.log("Mois trouvés:", periods);
-      selectMonth.innerHTML = '<option value="all">Tous</option>';
-      periods.forEach(p => { 
-        selectMonth.innerHTML += `<option value="${p}">${p}</option>`; 
-      });
-
+      const periods = [...new Set(rawData.map(d => d.month))].filter(m => m).sort().reverse();
+      periods.forEach(p => { selectMonth.innerHTML += `<option value="${p}">${p}</option>`; });
+      
       updateDashboard();
-    } catch (e) { 
-      console.error("Erreur init:", e);
-      alert("Erreur: " + e.message);
-    }
+    } catch (e) { console.error("Erreur init:", e); }
+  }
+
+  function parseVal(val) {
+    if (val === undefined || val === null || val === "") return 0;
+    // Remplace la virgule par un point et force en nombre
+    let n = parseFloat(String(val).replace(',', '.'));
+    return isNaN(n) ? 0 : n;
   }
 
   function updateDashboard() {
     const staffVal = document.getElementById('staffSelect').value;
     const monthVal = document.getElementById('monthSelect').value;
-
-    console.log("Filtres:", staffVal, monthVal);
-
-    // 1. Filtrer par mois d'abord
-    let filtered = (monthVal === 'all') ? rawData : rawData.filter(d => String(d.month || '') === monthVal);
-    console.log("Après filtre mois:", filtered.length);
-
-    // 2. Traiter les données (Moyenne ou Individuel)
+    let filtered = (monthVal === 'all') ? rawData : rawData.filter(d => d.month === monthVal);
+    
     let finalData = [];
     if (staffVal === 'all') {
-      // Moyenne par date
-      const dates = [...new Set(filtered.map(d => String(d.date || '')))].sort();
+      const dates = [...new Set(filtered.map(d => d.date))].sort();
       finalData = dates.map(date => {
-        const tests = filtered.filter(d => String(d.date || '') === date);
-        const avg = (k) => tests.reduce((a, c) => a + (Number(c[k]) || 0), 0) / tests.length;
-        return { 
-          date, 
-          note: Number((avg('note') || 0).toFixed(1)),
-          poids: Number((avg('poids') || 0).toFixed(1)), 
-          tempsSec: Number((avg('tempsSec') || 0).toFixed(1)), 
-          longueur: Number((avg('longueur') || 0).toFixed(1)), 
-          largeur: Number((avg('largeur') || 0).toFixed(1)), 
-          epaisseur: Number((avg('epaisseur') || 0).toFixed(1)) 
-        };
+        const tests = filtered.filter(d => d.date === date);
+        const avg = (k) => tests.reduce((a, c) => a + parseVal(c[k]), 0) / tests.length;
+        return { date, note: avg('note'), poids: avg('poids'), tempsSec: avg('tempsSec'), taille: avg('taille'), largeur: avg('largeur'), epaisseur: avg('epaisseur') };
       });
     } else {
-      // Données individuelles
-      finalData = filtered.filter(d => String(d.staff || '') === staffVal)
-        .map(d => ({
-          date: String(d.date || ''),
-          note: Number(d.note || 0),
-          poids: Number(d.poids || 0),
-          tempsSec: Number(d.tempsSec || 0),
-          longueur: Number(d.longueur || 0),
-          largeur: Number(d.largeur || 0),
-          epaisseur: Number(d.epaisseur || 0)
-        }))
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+      finalData = filtered.filter(d => d.staff === staffVal).sort((a,b) => new Date(a.date) - new Date(b.date));
     }
 
-    console.log("Données finales:", finalData.length, finalData);
-
-    // 3. Mettre à jour TOUS les graphiques
-    const charts = [
-      { id: 'chartScore', key: 'note', label: 'Score', idx: 0 },
-      { id: 'chartPoids', key: 'poids', label: 'Poids', idx: 1 },
-      { id: 'chartTime', key: 'tempsSec', label: 'Temps', idx: 2 },
-      { id: 'chartLongueur', key: 'longueur', label: 'Longueur', idx: 3 },
-      { id: 'chartLargeur', key: 'largeur', label: 'Largeur', idx: 4 },
-      { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur', idx: 5 }
-    ];
-
-    charts.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all', c.idx));
+    chartConfigs.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all'));
   }
 
-  function renderChart(id, key, label, data, isGlobal, idx) {
-    const canvas = document.getElementById(id);
-    const loading = document.getElementById('loading' + idx);
-    
-    if (!canvas) {
-      console.error("Canvas non trouvé:", id);
-      return;
-    }
-
+  function renderChart(id, key, label, data, isGlobal) {
+    const ctx = document.getElementById(id).getContext('2d');
     if (activeCharts[id]) activeCharts[id].destroy();
     
-    // Convertir les données
-    const dataPoints = data.map(d => {
-      const val = Number(d[key] || 0);
-      return isNaN(val) ? 0 : val;
-    });
+    const values = data.map(d => parseVal(d[key]));
 
-    if (loading) loading.style.display = 'none';
-
-    const ctx = canvas.getContext('2d');
     activeCharts[id] = new Chart(ctx, {
       type: 'line',
       data: {
         labels: data.map(d => d.date),
         datasets: [{
-          label: isGlobal ? label + " (Moyenne)" : label,
-          data: dataPoints,
+          label: label,
+          data: values,
           borderColor: isGlobal ? '#185fa5' : '#f08a00',
           backgroundColor: isGlobal ? 'rgba(24, 95, 165, 0.1)' : 'rgba(240, 138, 0, 0.1)',
-          borderWidth: 3, 
-          tension: 0.4, 
-          fill: true, 
-          pointRadius: 5,
-          pointBackgroundColor: isGlobal ? '#185fa5' : '#f08a00',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2
+          borderWidth: 3, tension: 0.3, fill: true, pointRadius: 4
         }]
       },
       options: {
-        responsive: true, 
+        responsive: true,
         maintainAspectRatio: false,
-        plugins: { 
-          legend: { display: true, position: 'top' } 
-        },
         scales: { 
-          x: {
-            grid: { display: false },
-            ticks: { font: { size: 10 } }
-          },
           y: { 
-            beginAtZero: false,
+            beginAtZero: true, // L'échelle s'adapte toute seule à partir de 0
             grid: { color: '#f0f0f0' },
             ticks: { font: { weight: 'bold' } }
-          } 
+          }
         }
       }
     });
   }
-
-  // Initialiser au chargement
   init();
 </script>
 </body>
