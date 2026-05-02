@@ -392,7 +392,6 @@
   <div class="save-bar" id="saveBar" style="display:none">
     <div class="btns-left">
       <button class="btn btn-secondary" id="backStepBtn" type="button">← Retour</button>
-      <button class="btn btn-primary" id="recoverBtn" type="button" style="display:none">🔄 Récupérer</button>
       <button class="btn btn-danger" id="clearBtn" type="button" style="display:none">Effacer</button>
     </div>
     <div class="btns-right">
@@ -843,7 +842,6 @@
       const next = qs('nextStepBtn');
       const save = qs('saveBtn');
       const clear = qs('clearBtn');
-      const recover = qs('recoverBtn');
 
       if(n===1){
         bar.style.display='none';
@@ -853,7 +851,6 @@
         next.style.display='inline-flex';
         save.style.display='none';
         clear.style.display='none';
-        recover.style.display='inline-flex';
         next.textContent='Suivant — Évaluer →';
       } else if(n===3){
         bar.style.display='flex';
@@ -861,21 +858,9 @@
         next.style.display='none';
         save.style.display='inline-flex';
         clear.style.display='inline-flex';
-        recover.style.display='none';
-      }
-    }
-
-    function showRecoverBar(){
-      const date = qs('serviceDate').value;
-      const service = qs('serviceType').value;
-      const bar = qs('saveBar');
-      const recover = qs('recoverBtn');
-      
-      if(currentStep === 1 && date && service){
-        bar.style.display='flex';
-        recover.style.display='inline-flex';
-      } else {
-        bar.style.display='none';
+        
+        // Récupérer automatiquement le brouillon
+        setTimeout(()=>{ recoverLastEntry(); }, 100);
       }
     }
 
@@ -961,20 +946,6 @@
 
     async function recoverLastEntry(){
       try {
-        const date = qs('serviceDate').value;
-        const serviceType = qs('serviceType').value;
-        const selectedTeam = [...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
-        
-        if(!date || !serviceType){
-          showStatus('bottomStatus','err','Choisir une date et un service d\'abord.');
-          return;
-        }
-
-        if(!selectedTeam.length){
-          showStatus('bottomStatus','err','Choisir au moins un équipier.');
-          return;
-        }
-
         showStatus('bottomStatus','ok','Récupération du brouillon...');
         
         // Charger le brouillon depuis localStorage
@@ -985,6 +956,8 @@
           return;
         }
 
+        const selectedTeam = [...document.querySelectorAll('.team-check:checked')].map(i=>i.value);
+
         // Remplir les postes depuis le brouillon
         staffPostes = draft.staffPostes || {};
 
@@ -994,19 +967,30 @@
         // Remplir les réponses depuis le brouillon
         selectedTeam.forEach(staff => {
           const memberData = draft.membersData[staff] || {};
-          const answers = memberData.answers || {};
 
-          // Remplir les réponses
-          Object.keys(answers).forEach(qKey => {
-            const answer = answers[qKey];
+          // Remplir les réponses (anciennes valeurs: 'oui'/'non'/'na' → nouvelles: 'Oui'/'Non'/'N/A')
+          Object.keys(memberData).forEach(qKey => {
+            if(qKey === 'comment') return; // Skip commentaire
+            
+            let answer = memberData[qKey];
+            
+            // Convertir anciennes valeurs en nouvelles
+            if(answer === 'oui') answer = 'Oui';
+            else if(answer === 'non') answer = 'Non';
+            else if(answer === 'na') answer = 'N/A';
+            
             const elem = document.querySelector(`[data-staff="${staff}"][data-question="${qKey}"][value="${answer}"]`);
             if(elem) elem.checked = true;
           });
+
+          // Remplir le commentaire s'il existe
+          if(memberData.comment){
+            const commentArea = document.querySelector(`.member-card[data-staff="${staff}"] textarea[name="comment"]`);
+            if(commentArea) commentArea.value = memberData.comment;
+          }
         });
 
-        showStep(3);
-        window.scrollTo({top:qs('step3Section').offsetTop-20,behavior:'smooth'});
-        showStatus('bottomStatus','ok','Brouillon récupéré ! Modifie et enregistre.');
+        showStatus('bottomStatus','ok','Brouillon récupéré !');
       }catch(err){
         showStatus('bottomStatus','err','Erreur récupération: '+err.message);
       }
@@ -1344,7 +1328,6 @@
         });
 
         qs('saveBtn').addEventListener('click', submitService);
-        qs('recoverBtn').addEventListener('click', recoverLastEntry);
         qs('clearBtn').addEventListener('click', clearAll);
 
         // Settings
