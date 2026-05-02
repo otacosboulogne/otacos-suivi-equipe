@@ -138,22 +138,49 @@
     const ctx = document.getElementById(id).getContext('2d');
     if (activeCharts[id]) activeCharts[id].destroy();
     
+    // On s'assure que les valeurs sont bien des nombres pour que l'échelle s'adapte
+    const dataPoints = data.map(d => {
+      const val = parseFloat(d[key]);
+      return isNaN(val) ? 0 : val;
+    });
+
     activeCharts[id] = new Chart(ctx, {
       type: 'line',
       data: {
         labels: data.map(d => d.date),
         datasets: [{
           label: isGlobal ? label + " (Moyenne)" : label,
-          data: data.map(d => d[key] || 0),
+          data: dataPoints,
           borderColor: isGlobal ? '#185fa5' : '#f08a00',
           backgroundColor: isGlobal ? 'rgba(24, 95, 165, 0.1)' : 'rgba(240, 138, 0, 0.1)',
-          borderWidth: 3, tension: 0.4, fill: true, pointRadius: 4
+          borderWidth: 3, 
+          tension: 0.4, 
+          fill: true, 
+          pointRadius: 5,
+          pointBackgroundColor: isGlobal ? '#185fa5' : '#f08a00'
         }]
       },
       options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: true } },
-        scales: { y: { beginAtZero: true } }
+        responsive: true, 
+        maintainAspectRatio: false,
+        plugins: { 
+          legend: { display: true } 
+        },
+        scales: { 
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 10 } }
+          },
+          y: { 
+            beginAtZero: false, // Permet de mieux voir les variations
+            suggestedMin: 0,
+            grid: { color: '#f0f0f0' },
+            ticks: {
+              // Cette partie force l'affichage de nombres entiers si nécessaire
+              font: { weight: 'bold' }
+            }
+          } 
+        }
       }
     });
   }
