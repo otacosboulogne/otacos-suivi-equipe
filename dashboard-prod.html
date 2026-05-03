@@ -96,7 +96,7 @@
 </div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec"; 
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQzbs9zVUQXHpc1DmMXI4JAUlh2naT0dCLDIKVfas2UL3hmgXj8VOGJ51S2_phrbm3/exec"; 
   let rawData = [];
   let activeCharts = {};
   let allMonths = [];
@@ -348,7 +348,20 @@
             ticks: { font: { weight: 'bold' } }
           },
           x: {
-            grid: { display: false }
+            grid: { display: false },
+            ticks: {
+              callback: function(value, index, arr) {
+                // Afficher que certaines dates pour ne pas surcharger
+                const step = Math.ceil(arr.length / 5);
+                if (index % step === 0) {
+                  const date = new Date(data[index].date);
+                  return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' });
+                }
+                return '';
+              },
+              maxRotation: 0,
+              minRotation: 0
+            }
           }
         }
       }
