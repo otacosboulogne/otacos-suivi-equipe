@@ -30,6 +30,10 @@
     
     h2 { font-size: 12px; color: var(--blue); margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 10px; }
 
+    .error-box { padding: 20px; background: #fef3f2; border: 1px solid #fecdca; border-radius: 10px; color: #b42318; font-weight: bold; margin: 20px 0; }
+    .success-box { padding: 20px; background: #ecfdf3; border: 1px solid #abefc6; border-radius: 10px; color: #067647; font-weight: bold; }
+    .loading-box { padding: 20px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; color: #9a3412; text-align: center; }
+
     @media (min-width: 768px) {
       .controls { flex-direction: row; align-items: center; }
       .filter-group { width: auto; flex-grow: 1; }
@@ -70,7 +74,7 @@
   </div>
 
   <div class="dashboard-grid" id="mainGrid">
-    <!-- Les graphiques sont générés ici -->
+    <div class="loading-box">⏳ Chargement des données...</div>
   </div>
 </div>
 
@@ -88,29 +92,56 @@
     { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur (cm)', full: true }
   ];
 
-  // Crée les conteneurs HTML automatiquement
-  const grid = document.getElementById('mainGrid');
-  chartConfigs.forEach(c => {
-    grid.innerHTML += `<div class="chart-container ${c.full ? 'full-width' : ''}"><h2>${c.label}</h2><canvas id="${c.id}"></canvas></div>`;
-  });
-
   async function init() {
     try {
+      console.log("🔄 Chargement des données de production...");
       const res = await fetch(`${APPS_SCRIPT_URL}?mode=production`);
       const json = await res.json();
-      if (!json.ok || !json.production) return;
+      
+      console.log("📊 Réponse API reçue:", json);
+      
+      if (!json.ok) {
+        console.error("❌ API erreur:", json.error || "Erreur inconnue");
+        showError(`Erreur API: ${json.error || 'Erreur inconnue'}`);
+        return;
+      }
+      
+      if (!json.production || json.production.length === 0) {
+        console.warn("⚠️ Aucune donnée de production reçue");
+        showError("Aucune donnée de production disponible pour le moment. Vérifiez que des tests ont été saisis.");
+        return;
+      }
+      
       rawData = json.production;
+      console.log(`✅ ${rawData.length} enregistrements chargés`);
+      
+      // Créer les conteneurs HTML automatiquement
+      const grid = document.getElementById('mainGrid');
+      grid.innerHTML = '';
+      chartConfigs.forEach(c => {
+        grid.innerHTML += `<div class="chart-container ${c.full ? 'full-width' : ''}"><h2>${c.label}</h2><canvas id="${c.id}"></canvas></div>`;
+      });
       
       const selectStaff = document.getElementById('staffSelect');
       const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s).sort();
       staffs.forEach(s => { selectStaff.innerHTML += `<option value="${s}">${s}</option>`; });
+      console.log(`👥 ${staffs.length} équipiers trouvés:`, staffs);
       
       const selectMonth = document.getElementById('monthSelect');
       const periods = [...new Set(rawData.map(d => d.month))].filter(m => m).sort().reverse();
       periods.forEach(p => { selectMonth.innerHTML += `<option value="${p}">${p}</option>`; });
+      console.log(`📅 ${periods.length} mois trouvés:`, periods);
       
       updateDashboard();
-    } catch (e) { console.error("Erreur init:", e); }
+    } catch (e) { 
+      console.error("❌ Erreur complète:", e);
+      showError(`Erreur de chargement: ${e.message}<br><small>Vérifiez la console du navigateur (F12) pour plus de détails</small>`);
+    }
+  }
+  
+  function showError(msg) {
+    const grid = document.getElementById('mainGrid');
+    grid.innerHTML = `<div class="error-box">⚠️ ${msg}</div>`;
   }
 
   function parseVal(val) {
@@ -124,6 +155,8 @@
     const monthVal = document.getElementById('monthSelect').value;
     let filtered = (monthVal === 'all') ? rawData : rawData.filter(d => d.month === monthVal);
     
+    console.log(`🔍 Filtrage: staff=${staffVal}, month=${monthVal}, résultat=${filtered.length} lignes`);
+    
     let finalData = [];
     if (staffVal === 'all') {
       const dates = [...new Set(filtered.map(d => d.date))].sort();
@@ -136,16 +169,23 @@
       finalData = filtered.filter(d => d.staff === staffVal).sort((a,b) => new Date(a.date) - new Date(b.date));
     }
 
+    console.log(`📈 Données finales pour graphiques:`, finalData);
     chartConfigs.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all'));
   }
 
   function renderChart(id, key, label, data, isGlobal) {
-    const ctx = document.getElementById(id).getContext('2d');
+    const ctx = document.getElementById(id);
+    if (!ctx) {
+      console.warn(`⚠️ Canvas ${id} non trouvé`);
+      return;
+    }
+    
+    const canvasCtx = ctx.getContext('2d');
     if (activeCharts[id]) activeCharts[id].destroy();
     
     const values = data.map(d => parseVal(d[key]));
 
-    activeCharts[id] = new Chart(ctx, {
+    activeCharts[id] = new Chart(canvasCtx, {
       type: 'line',
       data: {
         labels: data.map(d => d.date),
@@ -170,6 +210,7 @@
       }
     });
   }
+  
   init();
 </script>
 </body>
