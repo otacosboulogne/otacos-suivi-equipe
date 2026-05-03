@@ -151,7 +151,7 @@
 
     <div class="main">
       <section class="card">
-        <div style="font-size:18px;font-weight:800;margin-bottom:10px">🏆Classement du mois <span class="badge" id="selectedMonthLabel">—</span></div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:10px">Classement du mois <span class="badge" id="selectedMonthLabel">—</span></div>
         <table>
           <thead>
             <tr><th>Rang</th><th>Équipier</th><th>Score moy.</th><th>Bonus prod</th><th>%</th><th>Services</th></tr>
@@ -161,13 +161,13 @@
       </section>
 
       <section class="card">
-        <div style="font-size:18px;font-weight:800;margin-bottom:10px"> Équipier du mois</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:10px">🏆 Équipier du mois</div>
         <div id="winnerCard" class="empty">Charge un mois pour voir les résultats.</div>
       </section>
     </div>
 
     <section class="card">
-      <div style="font-size:18px;font-weight:800;margin-bottom:10px">🏆 Classement Challenge production</div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:10px">🥙 Classement Challenge production</div>
       <div id="prodRanking"><div class="empty">Aucun test production ce mois.</div></div>
     </section>
 
@@ -290,6 +290,7 @@
     const POSTES_ZONE = { caisse:"caisse", ouverture:"caisse", fermeture_c:"caisse", friture:"cuisine", toaster:"cuisine", envoi:"cuisine", pliage:"cuisine", prepa_matin:"cuisine", prepa_soir:"cuisine", fermeture_k:"cuisine", reception:"cuisine" };
 
     const QUESTIONS_LIST = [
+      // QUESTIONS COMMUNES
       { key:"c_tenue", label:"Tenue propre et hygiène corporelle irréprochable", poste:"commun" },
       { key:"c_mains", label:"Lavage des mains systématique", poste:"commun" },
       { key:"c_concentre", label:"Resté concentré, pas de discussions inutiles", poste:"commun" },
@@ -302,6 +303,25 @@
       { key:"c_epack", label:"Validation Epack hygiène", poste:"commun" },
       { key:"c_dlc", label:"DLC posées sans qu'on lui demande", poste:"commun" },
       { key:"c_traca", label:"Traçabilité faite systématiquement", poste:"commun" },
+      
+      // QUESTIONS POSTES SPÉCIFIQUES
+      { key:"p_tempo", label:"Respect des tempo de production", poste:"preparation" },
+      { key:"p_qualite", label:"Qualité des préparations", poste:"preparation" },
+      { key:"p_presentation", label:"Présentation soignée", poste:"preparation" },
+      { key:"p_autonomie", label:"Autonomie sans demander de validation", poste:"preparation" },
+      
+      { key:"cs_argent", label:"Gestion correcte de l'argent", poste:"caisse" },
+      { key:"cs_courtoisie", label:"Courtoisie avec les clients", poste:"caisse" },
+      { key:"cs_rapidite", label:"Rapidité de service", poste:"caisse" },
+      { key:"cs_ticket", label:"Émission correcte des tickets", poste:"caisse" },
+      
+      { key:"l_stock", label:"Gestion du stock", poste:"livraison" },
+      { key:"l_rangement", label:"Rangement soigné", poste:"livraison" },
+      { key:"l_etiquette", label:"Étiquetage correct", poste:"livraison" },
+      
+      { key:"d_delegation", label:"Acceptation des tâches déléguées", poste:"direction" },
+      { key:"d_management", label:"Leadership et gestion d'équipe", poste:"direction" },
+      { key:"d_rigueur", label:"Rigueur administrative", poste:"direction" },
     ];
 
     let adminToken = null;
@@ -454,7 +474,7 @@
           <span style="font-weight:900;font-size:16px;color:var(--orange);min-width:30px">${idx+1}</span>
           <span style="flex:1;font-weight:700">${escapeHtml(r.staff)}</span>
           <span style="font-size:13px;color:var(--muted)">${r.tests} test${r.tests>1?'s':''}</span>
-          <span style="font-weight:900;color:var(--orange)"> ${r.avgNote} pts</span>
+          <span style="font-weight:900;color:var(--orange)">⭐ ${r.totalNote} pts</span>
         </div>
       `).join('');
     }
