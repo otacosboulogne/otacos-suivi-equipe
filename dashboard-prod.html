@@ -153,8 +153,8 @@
       populateFilters();
       
       // Charger avec le mois courant par défaut
-      const currentMonth = getCurrentMonth();
-      qs('monthSelect').value = currentMonth;
+      const lastMonth = allMonths.length > 0 ? allMonths[0] : getCurrentMonth();
+      qs('monthSelect').value = lastMonth;  // Charge le dernier mois saisi
       updateDashboard();
       
     } catch (e) { 
