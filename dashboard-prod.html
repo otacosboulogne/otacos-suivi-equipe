@@ -18,12 +18,13 @@
     .dot { height: 6px; width: 6px; background-color: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
 
     .controls { display: flex; gap: 10px; flex-direction: column; margin-bottom: 20px; }
-    .btn-dashboard { background: var(--blue); color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; text-align: center; box-shadow: 0 4px 6px rgba(24, 95, 165, 0.2); }
+    .btn-dashboard { background: var(--blue); color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; text-align: center; box-shadow: 0 4px 6px rgba(24, 95, 165, 0.2); cursor: pointer; border: none; }
+    .btn-dashboard:hover { background: #0d4a7f; }
     
     .filter-group { display: flex; gap: 10px; width: 100%; }
     .filter-card { background: var(--card); padding: 10px; border-radius: 10px; flex: 1; display: flex; flex-direction: column; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee; }
     .filter-card label { font-weight: bold; font-size: 11px; color: var(--blue); text-transform: uppercase; }
-    select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; width: 100%; background: white; outline: none; }
+    select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; width: 100%; background: white; outline: none; cursor: pointer; }
 
     .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
     .chart-container { background: var(--card); padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 300px; border-top: 3px solid #eee; position: relative; }
@@ -33,6 +34,12 @@
     .error-box { padding: 20px; background: #fef3f2; border: 1px solid #fecdca; border-radius: 10px; color: #b42318; font-weight: bold; margin: 20px 0; }
     .success-box { padding: 20px; background: #ecfdf3; border: 1px solid #abefc6; border-radius: 10px; color: #067647; font-weight: bold; }
     .loading-box { padding: 20px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; color: #9a3412; text-align: center; }
+    .info-box { padding: 15px; background: #e6f1fb; border: 1px solid #b5d4f4; border-radius: 10px; color: #185fa5; font-weight: bold; margin-bottom: 15px; }
+
+    .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .stat-card { background: var(--card); padding: 12px; border-radius: 10px; border-left: 4px solid var(--orange); }
+    .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: bold; }
+    .stat-value { font-size: 24px; font-weight: bold; color: var(--blue); margin-top: 5px; }
 
     @media (min-width: 768px) {
       .controls { flex-direction: row; align-items: center; }
@@ -64,14 +71,24 @@
     <div class="filter-group">
       <div class="filter-card">
         <label>Équipier</label>
-        <select id="staffSelect" onchange="updateDashboard()"><option value="all">Tous (Moyenne)</option></select>
+        <select id="staffSelect" onchange="updateDashboard()">
+          <option value="all">Tous (Moyenne)</option>
+        </select>
       </div>
       <div class="filter-card">
         <label>Mois</label>
-        <select id="monthSelect" onchange="updateDashboard()"><option value="all">Tout</option></select>
+        <select id="monthSelect" onchange="updateDashboard()">
+          <option value="">Chargement...</option>
+        </select>
+      </div>
+      <div class="filter-card">
+        <button class="btn-dashboard" onclick="resetFilters()" style="width: 100%; padding: 10px;">🔄 Réinitialiser</button>
       </div>
     </div>
   </div>
+
+  <div id="infoBox"></div>
+  <div class="stats-bar" id="statsBar"></div>
 
   <div class="dashboard-grid" id="mainGrid">
     <div class="loading-box">⏳ Chargement des données...</div>
@@ -82,6 +99,7 @@
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQzbs9zVUQXHpc1DmMXI4JAUlh2naT0dCLDIKVfas2UL3hmgXj8VOGJ51S2_phrbm3/exec"; 
   let rawData = [];
   let activeCharts = {};
+  let allMonths = [];
 
   const chartConfigs = [
     { id: 'chartScore', key: 'note', label: 'Score Global (/10)', full: true },
@@ -92,9 +110,18 @@
     { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur (cm)', full: true }
   ];
 
+  function qs(id) { return document.getElementById(id); }
+
+  function getCurrentMonth() {
+    const n = new Date();
+    return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}`;
+  }
+
   async function init() {
     try {
-      console.log("🔄 Chargement des données de production...");
+      console.log("🔄 Chargement initial de TOUTES les données...");
+      
+      // D'abord charger TOUTES les données (sans filtre mois)
       const res = await fetch(`${APPS_SCRIPT_URL}?mode=production`);
       const json = await res.json();
       
@@ -113,34 +140,47 @@
       }
       
       rawData = json.production;
-      console.log(`✅ ${rawData.length} enregistrements chargés`);
+      console.log(`✅ ${rawData.length} enregistrements chargés au total`);
       
       // Créer les conteneurs HTML automatiquement
-      const grid = document.getElementById('mainGrid');
+      const grid = qs('mainGrid');
       grid.innerHTML = '';
       chartConfigs.forEach(c => {
         grid.innerHTML += `<div class="chart-container ${c.full ? 'full-width' : ''}"><h2>${c.label}</h2><canvas id="${c.id}"></canvas></div>`;
       });
       
-      const selectStaff = document.getElementById('staffSelect');
-      const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s).sort();
-      staffs.forEach(s => { selectStaff.innerHTML += `<option value="${s}">${s}</option>`; });
-      console.log(`👥 ${staffs.length} équipiers trouvés:`, staffs);
+      // Remplir les dropdowns
+      populateFilters();
       
-      const selectMonth = document.getElementById('monthSelect');
-      const periods = [...new Set(rawData.map(d => d.month))].filter(m => m).sort().reverse();
-      periods.forEach(p => { selectMonth.innerHTML += `<option value="${p}">${p}</option>`; });
-      console.log(`📅 ${periods.length} mois trouvés:`, periods);
-      
+      // Charger avec le mois courant par défaut
+      const currentMonth = getCurrentMonth();
+      qs('monthSelect').value = currentMonth;
       updateDashboard();
+      
     } catch (e) { 
       console.error("❌ Erreur complète:", e);
       showError(`Erreur de chargement: ${e.message}<br><small>Vérifiez la console du navigateur (F12) pour plus de détails</small>`);
     }
   }
   
+  function populateFilters() {
+    console.log("📋 Remplissage des filtres...");
+    
+    // Mois uniques
+    allMonths = [...new Set(rawData.map(d => d.month))].filter(m => m).sort().reverse();
+    const selectMonth = qs('monthSelect');
+    selectMonth.innerHTML = allMonths.map(m => `<option value="${m}">${m}</option>`).join('');
+    console.log(`📅 ${allMonths.length} mois trouvés:`, allMonths);
+    
+    // Équipiers uniques
+    const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s).sort();
+    const selectStaff = qs('staffSelect');
+    selectStaff.innerHTML = '<option value="all">Tous (Moyenne)</option>' + staffs.map(s => `<option value="${s}">${s}</option>`).join('');
+    console.log(`👥 ${staffs.length} équipiers trouvés:`, staffs);
+  }
+  
   function showError(msg) {
-    const grid = document.getElementById('mainGrid');
+    const grid = qs('mainGrid');
     grid.innerHTML = `<div class="error-box">⚠️ ${msg}</div>`;
   }
 
@@ -151,30 +191,111 @@
   }
 
   function updateDashboard() {
-    const staffVal = document.getElementById('staffSelect').value;
-    const monthVal = document.getElementById('monthSelect').value;
-    let filtered = (monthVal === 'all') ? rawData : rawData.filter(d => d.month === monthVal);
+    const staffVal = qs('staffSelect').value;
+    const monthVal = qs('monthSelect').value;
     
-    console.log(`🔍 Filtrage: staff=${staffVal}, month=${monthVal}, résultat=${filtered.length} lignes`);
+    console.log(`🔍 Filtrage: staff=${staffVal}, month=${monthVal}`);
+    
+    let filtered = rawData;
+    
+    // Filtrer par mois
+    if (monthVal) {
+      filtered = filtered.filter(d => d.month === monthVal);
+    }
+    
+    console.log(`📊 Après filtre mois: ${filtered.length} enregistrements`);
     
     let finalData = [];
+    let stats = {};
+    
     if (staffVal === 'all') {
+      // Moyenne par date
       const dates = [...new Set(filtered.map(d => d.date))].sort();
       finalData = dates.map(date => {
         const tests = filtered.filter(d => d.date === date);
         const avg = (k) => tests.reduce((a, c) => a + parseVal(c[k]), 0) / tests.length;
-        return { date, note: avg('note'), poids: avg('poids'), tempsSec: avg('tempsSec'), longueur: avg('longueur'), largeur: avg('largeur'), epaisseur: avg('epaisseur') };
+        return { 
+          date, 
+          note: avg('note'), 
+          poids: avg('poids'), 
+          tempsSec: avg('tempsSec'), 
+          longueur: avg('longueur'), 
+          largeur: avg('largeur'), 
+          epaisseur: avg('epaisseur') 
+        };
       });
+      
+      const avgNote = finalData.length ? (finalData.reduce((a, c) => a + parseVal(c.note), 0) / finalData.length) : 0;
+      stats = {
+        tests: filtered.length,
+        avgNote: avgNote.toFixed(2),
+        staffCount: [...new Set(filtered.map(d => d.staff))].length
+      };
     } else {
-      finalData = filtered.filter(d => d.staff === staffVal).sort((a,b) => new Date(a.date) - new Date(b.date));
+      // Données individuelles pour un équipier
+      finalData = filtered.filter(d => d.staff === staffVal).sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      const notes = finalData.map(d => parseVal(d.note));
+      stats = {
+        tests: finalData.length,
+        avgNote: notes.length ? (notes.reduce((a, c) => a + c, 0) / notes.length).toFixed(2) : 0,
+        maxNote: notes.length ? Math.max(...notes) : 0,
+        minNote: notes.length ? Math.min(...notes) : 0
+      };
     }
 
-    console.log(`📈 Données finales pour graphiques:`, finalData);
+    console.log(`📈 Données finales: ${finalData.length} points, stats:`, stats);
+    
+    displayStats(stats, staffVal, monthVal);
     chartConfigs.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all'));
   }
 
+  function displayStats(stats, staffVal, monthVal) {
+    const box = qs('statsBar');
+    const staffText = staffVal === 'all' ? 'Tous les équipiers' : staffVal;
+    const monthText = monthVal ? monthVal : 'Tous les mois';
+    
+    let html = `
+      <div class="info-box">
+        📊 ${staffText} • ${monthText}
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tests</div>
+        <div class="stat-value">${stats.tests}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Score Moyen</div>
+        <div class="stat-value">${stats.avgNote}/10</div>
+      </div>
+    `;
+    
+    if (stats.maxNote) {
+      html += `
+        <div class="stat-card">
+          <div class="stat-label">Meilleur</div>
+          <div class="stat-value">${stats.maxNote}/10</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Moins bon</div>
+          <div class="stat-value">${stats.minNote}/10</div>
+        </div>
+      `;
+    }
+    
+    if (stats.staffCount) {
+      html += `
+        <div class="stat-card">
+          <div class="stat-label">Équipiers</div>
+          <div class="stat-value">${stats.staffCount}</div>
+        </div>
+      `;
+    }
+    
+    box.innerHTML = html;
+  }
+
   function renderChart(id, key, label, data, isGlobal) {
-    const ctx = document.getElementById(id);
+    const ctx = qs(id);
     if (!ctx) {
       console.warn(`⚠️ Canvas ${id} non trouvé`);
       return;
@@ -183,34 +304,65 @@
     const canvasCtx = ctx.getContext('2d');
     if (activeCharts[id]) activeCharts[id].destroy();
     
+    if (!data.length) {
+      console.warn(`⚠️ Pas de données pour ${id}`);
+      canvasCtx.fillStyle = '#999';
+      canvasCtx.font = '16px sans-serif';
+      canvasCtx.textAlign = 'center';
+      canvasCtx.fillText('Pas de données', ctx.width / 2, ctx.height / 2);
+      return;
+    }
+    
     const values = data.map(d => parseVal(d[key]));
+    const avgValue = values.length ? (values.reduce((a, c) => a + c, 0) / values.length).toFixed(1) : 0;
 
     activeCharts[id] = new Chart(canvasCtx, {
       type: 'line',
       data: {
         labels: data.map(d => d.date),
         datasets: [{
-          label: label,
+          label: `${label} (moy: ${avgValue})`,
           data: values,
           borderColor: isGlobal ? '#185fa5' : '#f08a00',
           backgroundColor: isGlobal ? 'rgba(24, 95, 165, 0.1)' : 'rgba(240, 138, 0, 0.1)',
-          borderWidth: 3, tension: 0.3, fill: true, pointRadius: 4
+          borderWidth: 3, 
+          tension: 0.3, 
+          fill: true, 
+          pointRadius: 4,
+          pointBackgroundColor: isGlobal ? '#185fa5' : '#f08a00'
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            labels: { usePointStyle: true }
+          }
+        },
         scales: { 
           y: { 
             beginAtZero: false,
             grid: { color: '#f0f0f0' },
             ticks: { font: { weight: 'bold' } }
+          },
+          x: {
+            grid: { display: false }
           }
         }
       }
     });
   }
+
+  function resetFilters() {
+    console.log("🔄 Réinitialisation des filtres");
+    qs('staffSelect').value = 'all';
+    qs('monthSelect').value = getCurrentMonth();
+    updateDashboard();
+  }
   
+  // Lancer au chargement
   init();
 </script>
 </body>
