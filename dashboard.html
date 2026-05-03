@@ -1,740 +1,176 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>ÉVALUATION EQUIPIER DU MOIS — Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Analytics Production - O'Tacos</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root{
-      --bg:#fff8f1;--card:#ffffff;--text:#1f2430;--muted:#6c7480;
-      --orange:#f08a00;--orange-2:#ffb347;--line:#ece2d6;
-      --shadow:0 16px 40px rgba(240,138,0,.12);
-      --danger:#b42318;--danger-bg:#fef3f2;--danger-border:#fecdca;
-      --blue:#185fa5;--blue-light:#e6f1fb;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
-         background:linear-gradient(180deg,#fff8f1 0%,#fffdf9 100%);color:var(--text);
-         font-size:16px;line-height:1.5}
-    .wrap{max-width:1280px;margin:0 auto;padding:18px}
-    .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
-    .hero{padding:18px;margin-bottom:14px;background:radial-gradient(circle at top right,rgba(240,138,0,.15),transparent 28%),linear-gradient(135deg,rgba(255,179,71,.16),rgba(255,255,255,.9))}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-    .logo-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .logo-title img{width:48px;height:48px;object-fit:contain;border-radius:12px;background:#fff;border:1px solid var(--line);padding:4px}
-    h1{margin:0;font-size:20px}
-    h2,h3{margin:0}
-    .grid-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
-    @media(min-width:760px){ .grid-stats{grid-template-columns:repeat(4,minmax(0,1fr))} }
-    .stat{padding:14px;border-radius:14px;background:#fff7ed;border:1px solid #ffe0b2}
-    .k{font-size:12px;color:var(--muted)}
-    .v{font-size:24px;font-weight:900;margin-top:6px}
-    .main{display:grid;grid-template-columns:1fr;gap:14px}
-    @media(min-width:980px){ .main{grid-template-columns:1.1fr .9fr} }
-    .card{padding:16px;margin-bottom:14px}
-    table{width:100%;border-collapse:collapse;margin-top:10px}
-    th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
-    th{color:#5e6570;font-size:12px;font-weight:700;background:#fafaf9}
-    select,input,textarea{padding:12px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;font-size:15px}
-    select{width:100%}
-    textarea{min-height:60px;resize:vertical;width:100%}
-    .empty{color:var(--muted);font-size:14px}
-    .entry{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;background:#fffdf9}
-    .btn{border:0;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:800;font:inherit;font-size:14px}
-    .btn-back{padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--text);text-decoration:none;font-weight:700;display:inline-flex;align-items:center;cursor:pointer;font-size:14px}
-    .btn-admin{padding:10px 14px;border-radius:12px;border:1px solid #ffd8a8;background:#fff4e6;color:#8a4b00;font-weight:700;cursor:pointer;font-size:14px}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff}
-    .btn-secondary{background:#fff4e6;color:#8a4b00;border:1px solid #ffd8a8}
-    .btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;font-weight:900;font-size:13px}
-    .prod-row{padding:10px 8px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-    .overlay{position:fixed;inset:0;background:rgba(16,21,29,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:14px}
-    .overlay.show{display:flex}
-    .modal{background:#fff;border-radius:18px;padding:20px;box-shadow:0 30px 70px rgba(0,0,0,.2);max-width:600px;width:100%;max-height:88vh;overflow-y:auto}
-    .modal h2{margin:0 0 14px 0;font-size:18px}
-    .modal-row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
-    .modal-row label{font-size:14px;font-weight:700}
-    .checks-grid{display:flex;flex-direction:column;gap:6px;margin-top:6px}
-    .check-row{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px;cursor:pointer}
-    .check-row input{width:18px;height:18px;flex-shrink:0}
-    .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
-    .status{padding:10px 12px;border-radius:12px;margin-top:10px;font-weight:700;font-size:13px}
-    .status.ok{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
-    .status.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
-    .elim-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#fecdca;color:#7f1d1d;margin-left:6px}
-    .elim-reason{display:block;font-size:11px;color:#991b1b;font-style:italic;margin-top:3px}
-    .elim-list{margin-top:14px}
-    .elim-item{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fffdf9;margin-bottom:6px}
-    .admin-tabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:1px solid var(--line);overflow-x:auto}
-    .admin-tab{padding:10px 14px;cursor:pointer;font-weight:700;font-size:13px;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap}
-    .admin-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
-    .admin-pane{display:none}
-    .admin-pane.active{display:block}
-    .filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-    .filter-bar select,.filter-bar input{flex:1;min-width:160px}
-    .eval-staff{font-size:18px;font-weight:800}
-    .eval-meta{font-size:13px;color:var(--muted);margin-top:2px;margin-bottom:10px}
-    .service-block{padding:14px;border-radius:14px;background:#fff;border:1px solid var(--line);margin-bottom:10px}
-    .service-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-    .service-label{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px}
-    .service-score{font-weight:900;font-size:14px;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;padding:4px 10px;border-radius:999px}
-    .service-postes{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
-    .post-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:#fff1dd;color:#8a4b00;border:1px solid #ffd8a8}
-    .post-tag.zone-caisse{background:var(--blue-light);color:var(--blue);border-color:#b5d4f4}
-    .strikethrough{text-decoration:line-through}
-    .answer-section{margin-top:8px}
-    .answer-section-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
-    .answer-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dashed #f0e8db;font-size:13px}
-    .answer-row:last-child{border-bottom:none}
-    .answer-text{flex:1;line-height:1.3}
-    .answer-pill{font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;flex-shrink:0}
-    .a-oui{background:#ecfdf3;color:#067647}
-    .a-non{background:#fef3f2;color:#b42318}
-    .a-na{background:var(--blue-light);color:var(--blue)}
-    .comment-box{margin-top:10px;padding:10px;background:#f8f3ee;border-radius:10px;font-size:13px}
-    .comment-box-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:3px}
-    .prod-history-row{padding:10px;border:1px solid var(--line);border-radius:12px;margin-bottom:6px;background:#fffdf9}
-    .prod-history-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
-    .prod-history-staff{font-weight:800;font-size:14px}
-    .prod-history-note{font-weight:900;color:var(--orange);font-size:14px}
-    .prod-history-meta{font-size:12px;color:var(--muted)}
-    .prod-history-detail{font-size:12px;color:var(--text);margin-top:6px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px 12px}
-  .btn-nav {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 18px;
-  background: #ffffff;
-  color: var(--orange); /* Ou #f08a00 */
-  border: 2px solid #f08a00;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  gap: 8px;
-}
+    :root { --orange: #f08a00; --blue: #185fa5; --bg: #f4f7f6; --card: #ffffff; --green: #2ecc71; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #2d3436; margin: 0; padding: 10px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    
+    .header { background: var(--card); padding: 12px 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 6px solid var(--orange); }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-area img { width: 40px; height: 40px; border-radius: 6px; }
+    
+    .status-badge { display: flex; align-items: center; gap: 6px; color: var(--green); font-size: 11px; font-weight: bold; background: #e8f8f0; padding: 4px 10px; border-radius: 20px; }
+    .dot { height: 6px; width: 6px; background-color: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
 
-.btn-nav:hover {
-  background: #f08a00;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(240, 138, 0, 0.2);
-}
+    .controls { display: flex; gap: 10px; flex-direction: column; margin-bottom: 20px; }
+    .btn-dashboard { background: var(--blue); color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; text-align: center; box-shadow: 0 4px 6px rgba(24, 95, 165, 0.2); }
+    
+    .filter-group { display: flex; gap: 10px; width: 100%; }
+    .filter-card { background: var(--card); padding: 10px; border-radius: 10px; flex: 1; display: flex; flex-direction: column; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee; }
+    .filter-card label { font-weight: bold; font-size: 11px; color: var(--blue); text-transform: uppercase; }
+    select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; width: 100%; background: white; outline: none; }
+
+    .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    .chart-container { background: var(--card); padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 300px; border-top: 3px solid #eee; position: relative; }
+    
+    h2 { font-size: 12px; color: var(--blue); margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 10px; }
+
+    @media (min-width: 768px) {
+      .controls { flex-direction: row; align-items: center; }
+      .filter-group { width: auto; flex-grow: 1; }
+      .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+      .full-width { grid-column: span 2; height: 380px; }
+      .chart-container { height: 320px; }
+    }
+
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <div class="top">
-        <div class="logo-title">
-          <img src="./otacos-logo.png" alt="Logo O'TACOS" />
-          <div>
-            <h1>ÉVALUATION EQUIPIER DU MOIS</h1>
-            <div style="color:var(--muted);font-size:13px;margin-top:2px">Dashboard</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center" id="topActions">
-          <a class="btn-nav" href="dashboard-prod.html">📈 Dashboard Prod</a>
-          <a class="btn-back" href="https://otacosboulogne.github.io/otacos-suivi-equipe/">↩ Retour saisie</a>
-          <button class="btn-admin" id="adminBtn" type="button">🔒 Accès administrateur</button>
-          <select id="monthSelect"></select>
-        </div>
+
+<div class="container">
+  <div class="header">
+    <div class="logo-area">
+      <img src="./otacos-logo.png" alt="Logo">
+      <div>
+        <h1 style="margin:0; font-size: 16px;">Analytics Prod</h1>
+        <p style="margin:0; font-size: 10px; color: #636e72;">Tableau de Bord Automatique</p>
       </div>
-    </section>
-
-    <div class="grid-stats">
-      <div class="stat"><div class="k">Gagnant (provisoire)</div><div class="v" id="winnerName">—</div></div>
-      <div class="stat"><div class="k">Score moyen gagnant</div><div class="v" id="winnerScore">0</div></div>
-      <div class="stat"><div class="k">Services évalués</div><div class="v" id="servicesCount">0</div></div>
-      <div class="stat"><div class="k">Équipiers évalués</div><div class="v" id="staffCount">0</div></div>
     </div>
-
-    <div class="main">
-      <section class="card">
-        <div style="font-size:18px;font-weight:800;margin-bottom:10px">Classement du mois <span class="badge" id="selectedMonthLabel">—</span></div>
-        <table>
-          <thead>
-            <tr><th>Rang</th><th>Équipier</th><th>Score moy.</th><th>Bonus prod</th><th>%</th><th>Services</th></tr>
-          </thead>
-          <tbody id="rankingBody"></tbody>
-        </table>
-      </section>
-
-      <section class="card">
-        <div style="font-size:18px;font-weight:800;margin-bottom:10px">🏆 Équipier du mois</div>
-        <div id="winnerCard" class="empty">Charge un mois pour voir les résultats.</div>
-      </section>
-    </div>
-
-    <section class="card">
-      <div style="font-size:18px;font-weight:800;margin-bottom:10px">🥙 Classement Challenge production</div>
-      <div id="prodRanking"><div class="empty">Aucun test production ce mois.</div></div>
-    </section>
-
-    <section class="card">
-      <div style="font-size:18px;font-weight:800;margin-bottom:10px">Dernière évaluation détaillée par équipier</div>
-      <div class="filter-bar">
-        <input type="text" id="filterStaff" placeholder="Filtrer par nom d'équipier..." />
-        <select id="filterServiceType">
-          <option value="">Tous les services</option>
-          <option value="Matin">Matin uniquement</option>
-          <option value="Soir">Soir uniquement</option>
-        </select>
-      </div>
-      <div id="latestEntries"></div>
-    </section>
+    <div class="status-badge"><span class="dot"></span> CONNECTÉ</div>
   </div>
 
-  <div class="overlay" id="loginOverlay">
-    <div class="modal">
-      <h2>🔒 Accès administrateur</h2>
-      <div class="modal-row">
-        <label for="adminPwd">Mot de passe</label>
-        <input type="password" id="adminPwd" placeholder="Mot de passe" autocomplete="off" />
+  <div class="controls">
+    <a href="index.html" class="btn-dashboard">← RETOUR</a>
+    <div class="filter-group">
+      <div class="filter-card">
+        <label>Équipier</label>
+        <select id="staffSelect" onchange="updateDashboard()"><option value="all">Tous (Moyenne)</option></select>
       </div>
-      <div class="modal-btns">
-        <button class="btn btn-secondary" id="cancelLoginBtn" type="button">Annuler</button>
-        <button class="btn btn-primary" id="confirmLoginBtn" type="button">Accéder</button>
-      </div>
-      <div id="loginStatus"></div>
-    </div>
-  </div>
-
-  <div class="overlay" id="adminOverlay">
-    <div class="modal" style="max-width:760px">
-      <h2>Espace administrateur — <span id="adminMonthLabel">—</span></h2>
-
-      <div class="admin-tabs">
-        <div class="admin-tab active" data-tab="elim">Éliminations</div>
-        <div class="admin-tab" data-tab="prodHistory">Historique production</div>
-        <div class="admin-tab" data-tab="security">Sécurité</div>
-      </div>
-
-      <div class="admin-pane active" data-pane="elim">
-        <div style="background:#fff7ed;border:1px solid #ffd8a8;border-radius:12px;padding:10px;margin-bottom:14px;font-size:13px;color:#8a4b00">
-          L'équipier éliminé apparaît en rouge dans le classement avec un badge "éliminé".
-        </div>
-        <div class="modal-row">
-          <label for="elimStaff">Équipier à éliminer</label>
-          <select id="elimStaff"><option value="">— Choisir —</option></select>
-        </div>
-        <div class="modal-row">
-          <label>Critères éliminatoires (cocher au moins un)</label>
-          <div class="checks-grid" id="elimCriteriaList">
-            <label class="check-row"><input type="checkbox" value="Refus de poste / insubordination"> Refus de poste / insubordination</label>
-            <label class="check-row"><input type="checkbox" value="Attitude grave envers client/collègue"> Attitude grave envers client/collègue</label>
-            <label class="check-row"><input type="checkbox" value="Absence non justifiée"> Absence non justifiée</label>
-            <label class="check-row"><input type="checkbox" value="Retard répétitif"> Retard répétitif</label>
-            <label class="check-row"><input type="checkbox" value="Absence justifiée +10 jours dans le mois"> Absence justifiée +10 jours dans le mois</label>
-          </div>
-        </div>
-        <div class="modal-row">
-          <label for="elimComment">Commentaire libre (optionnel)</label>
-          <textarea id="elimComment" placeholder="Précisions, dates, contexte..."></textarea>
-        </div>
-        <div class="modal-btns">
-          <button class="btn btn-primary" id="saveElimBtn" type="button">Enregistrer l'élimination</button>
-        </div>
-        <div id="adminStatus"></div>
-
-        <div style="margin-top:20px">
-          <h3 style="margin:0 0 8px 0;font-size:15px">Éliminations du mois</h3>
-          <div id="elimList" class="elim-list"></div>
-        </div>
-      </div>
-
-      <div class="admin-pane" data-pane="prodHistory">
-        <div class="filter-bar" style="margin-bottom:12px">
-          <select id="prodHistoryMonth"></select>
-          <input type="text" id="prodHistoryStaff" placeholder="Filtrer par nom..." />
-        </div>
-        <div id="prodHistoryList"></div>
-      </div>
-
-      <div class="admin-pane" data-pane="security">
-        <div style="background:#fff7ed;border:1px solid #ffd8a8;border-radius:12px;padding:10px;margin-bottom:14px;font-size:13px;color:#8a4b00">
-          Le directeur peut changer les mots de passe ici. Stockage hashé (SHA-256) côté serveur.
-        </div>
-        <div class="modal-row">
-          <label for="pwdType">Type de mot de passe</label>
-          <select id="pwdType">
-            <option value="admin">Administrateur (espace admin / paramètres)</option>
-            <option value="override">Override (modifier un service clôturé)</option>
-          </select>
-        </div>
-        <div class="modal-row">
-          <label for="newPwd">Nouveau mot de passe (6 caractères minimum)</label>
-          <input type="password" id="newPwd" placeholder="Nouveau mot de passe" />
-        </div>
-        <div class="modal-row">
-          <label for="newPwd2">Confirmer le mot de passe</label>
-          <input type="password" id="newPwd2" placeholder="Confirmation" />
-        </div>
-        <div class="modal-btns">
-          <button class="btn btn-primary" id="changePwdBtn" type="button">Changer le mot de passe</button>
-        </div>
-        <div id="securityStatus"></div>
-      </div>
-
-      <div class="modal-btns" style="margin-top:14px">
-        <button class="btn btn-secondary" id="closeAdminBtn" type="button">Fermer</button>
+      <div class="filter-card">
+        <label>Mois</label>
+        <select id="monthSelect" onchange="updateDashboard()"><option value="all">Tout</option></select>
       </div>
     </div>
   </div>
 
-  <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOeeL3oBcLkhZQEUvIwVMBrL62Y9N5zvNkjb_eoyGRabEX3Ht4I3VjrGGlmpDGErTN/exec";
-    const VIEW_MODE = "manager";
+  <div class="dashboard-grid" id="mainGrid">
+    <!-- Les graphiques sont générés ici -->
+  </div>
+</div>
 
-    const POSTES_LABELS = { caisse:"Caisse", ouverture:"Ouverture caisse", fermeture_c:"Fermeture caisse", friture:"Friture & cuisson", toaster:"Toaster", envoi:"Envoi", pliage:"Pliage", prepa_matin:"Prépa matin", prepa_soir:"Prépa soir", fermeture_k:"Fermeture cuisine", reception:"Réception livraison" };
-    const POSTES_ZONE = { caisse:"caisse", ouverture:"caisse", fermeture_c:"caisse", friture:"cuisine", toaster:"cuisine", envoi:"cuisine", pliage:"cuisine", prepa_matin:"cuisine", prepa_soir:"cuisine", fermeture_k:"cuisine", reception:"cuisine" };
+<script>
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQzbs9zVUQXHpc1DmMXI4JAUlh2naT0dCLDIKVfas2UL3hmgXj8VOGJ51S2_phrbm3/exec"; 
+  let rawData = [];
+  let activeCharts = {};
 
-    const QUESTIONS_LIST = [
-      { key:"c_tenue", label:"Tenue propre et hygiène corporelle irréprochable", poste:"commun" },
-      { key:"c_mains", label:"Lavage des mains systématique", poste:"commun" },
-      { key:"c_concentre", label:"Resté concentré, pas de discussions inutiles", poste:"commun" },
-      { key:"c_rythme", label:"Rythme de production soutenu et constant", poste:"commun" },
-      { key:"c_aide", label:"A aidé spontanément un collègue", poste:"commun" },
-      { key:"c_erreur", label:"Aucune erreur constatée", poste:"commun" },
-      { key:"c_energie", label:"Énergie et attitude positives pour l'équipe", poste:"commun" },
-      { key:"c_propre_fin", label:"Poste propre et rangé en fin de service", poste:"commun" },
-      { key:"c_poubelle", label:"Sortie poubelle (timing respecté)", poste:"commun" },
-      { key:"c_epack", label:"Validation Epack hygiène", poste:"commun" },
-      { key:"c_dlc", label:"DLC posées sans qu'on lui demande", poste:"commun" },
-      { key:"c_traca", label:"Traçabilité faite systématiquement", poste:"commun" },
-    ];
+  const chartConfigs = [
+    { id: 'chartScore', key: 'note', label: 'Score Global (/10)', full: true },
+    { id: 'chartPoids', key: 'poids', label: 'Poids (g)', full: false },
+    { id: 'chartTime', key: 'tempsSec', label: 'Temps (sec)', full: false },
+    { id: 'chartLongueur', key: 'longueur', label: 'Longueur (cm)', full: false },
+    { id: 'chartLargeur', key: 'largeur', label: 'Largeur (cm)', full: false },
+    { id: 'chartEpaisseur', key: 'epaisseur', label: 'Épaisseur (cm)', full: true }
+  ];
 
-    let adminToken = null;
-    let currentEliminations = [];
-    let currentRanking = [];
-    let currentLatestEntries = [];
-    let allProductionData = [];
+  // Crée les conteneurs HTML automatiquement
+  const grid = document.getElementById('mainGrid');
+  chartConfigs.forEach(c => {
+    grid.innerHTML += `<div class="chart-container ${c.full ? 'full-width' : ''}"><h2>${c.label}</h2><canvas id="${c.id}"></canvas></div>`;
+  });
 
-    function qs(id){ return document.getElementById(id); }
-    function escapeHtml(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
-    function showStatus(id, type, message){
-      const el = qs(id); if(!el) return;
-      el.innerHTML = `<div class="status ${type}">${escapeHtml(message)}</div>`;
-      setTimeout(()=>{ if(el.firstChild) el.innerHTML=''; }, 4000);
-    }
-    function getFingerprint_(){ return (navigator.userAgent + screen.width + screen.height).split('').reduce((a,c)=>{a=((a<<5)-a)+c.charCodeAt(0);return a&a},0).toString(36); }
-    function currentMonth(){ const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; }
-    function addMonthOption(sel, val){ const o=document.createElement('option'); o.value=val; o.textContent=val; sel.appendChild(o); }
+  async function init() {
+    try {
+      const res = await fetch(`${APPS_SCRIPT_URL}?mode=production`);
+      const json = await res.json();
+      if (!json.ok || !json.production) return;
+      rawData = json.production;
+      
+      const selectStaff = document.getElementById('staffSelect');
+      const staffs = [...new Set(rawData.map(d => d.staff))].filter(s => s).sort();
+      staffs.forEach(s => { selectStaff.innerHTML += `<option value="${s}">${s}</option>`; });
+      
+      const selectMonth = document.getElementById('monthSelect');
+      const periods = [...new Set(rawData.map(d => d.month))].filter(m => m).sort().reverse();
+      periods.forEach(p => { selectMonth.innerHTML += `<option value="${p}">${p}</option>`; });
+      
+      updateDashboard();
+    } catch (e) { console.error("Erreur init:", e); }
+  }
 
-    async function initMonths(){
-      const sel = qs('monthSelect');
-      sel.innerHTML = '';
-      try{
-        const res = await fetch(`${APPS_SCRIPT_URL}?mode=months`);
-        const data = await res.json();
-        const months = (data.months || []).sort().reverse();
-        if(!months.length){ const f=currentMonth(); addMonthOption(sel,f); sel.value=f; }
-        else{ months.forEach(m=>addMonthOption(sel,m)); sel.value=months[0]; }
-      }catch{ const f=currentMonth(); addMonthOption(sel,f); sel.value=f; }
-      sel.addEventListener('change', loadDashboard);
-      loadDashboard();
-    }
+  function parseVal(val) {
+    if (val === undefined || val === null || val === "") return 0;
+    let n = parseFloat(String(val).replace(',', '.'));
+    return isNaN(n) ? 0 : n;
+  }
 
-    async function loadDashboard(){
-      const month = qs('monthSelect').value;
-      qs('selectedMonthLabel').textContent = month;
-      const adminLabel = qs('adminMonthLabel');
-      if(adminLabel) adminLabel.textContent = month;
-
-      try{
-        const [dashRes, elimRes, prodRes] = await Promise.all([
-          fetch(`${APPS_SCRIPT_URL}?mode=dashboard&month=${encodeURIComponent(month)}`),
-          fetch(`${APPS_SCRIPT_URL}?mode=eliminations&month=${encodeURIComponent(month)}`),
-          fetch(`${APPS_SCRIPT_URL}?mode=production&month=${encodeURIComponent(month)}`)
-        ]);
-
-        const data = await dashRes.json();
-        if(!data.ok) throw new Error(data.error || 'Erreur dashboard');
-
-        const elimData = await elimRes.json();
-        const eliminations = (elimData.ok !== false) ? (elimData.eliminations || []) : [];
-
-        const prodData = await prodRes.json();
-        const production = (prodData.ok !== false) ? (prodData.production || []) : [];
-
-        currentEliminations = eliminations;
-        currentRanking = data.ranking || [];
-        currentLatestEntries = data.latestEntries || [];
-        allProductionData = production;
-
-        renderDashboard(data, eliminations);
-        renderProdRanking(data.productionRanking || []);
-        renderLatestEntries();
-      }catch(err){
-        console.error('Error:', err);
-        renderEmpty(err.message || 'Erreur');
-      }
+  function updateDashboard() {
+    const staffVal = document.getElementById('staffSelect').value;
+    const monthVal = document.getElementById('monthSelect').value;
+    let filtered = (monthVal === 'all') ? rawData : rawData.filter(d => d.month === monthVal);
+    
+    let finalData = [];
+    if (staffVal === 'all') {
+      const dates = [...new Set(filtered.map(d => d.date))].sort();
+      finalData = dates.map(date => {
+        const tests = filtered.filter(d => d.date === date);
+        const avg = (k) => tests.reduce((a, c) => a + parseVal(c[k]), 0) / tests.length;
+        return { date, note: avg('note'), poids: avg('poids'), tempsSec: avg('tempsSec'), longueur: avg('longueur'), largeur: avg('largeur'), epaisseur: avg('epaisseur') };
+      });
+    } else {
+      finalData = filtered.filter(d => d.staff === staffVal).sort((a,b) => new Date(a.date) - new Date(b.date));
     }
 
-    function renderEmpty(msg){
-      qs('winnerName').textContent='—';
-      qs('winnerScore').textContent='0';
-      qs('servicesCount').textContent='0';
-      qs('staffCount').textContent='0';
-      qs('rankingBody').innerHTML=`<tr><td colspan="6" class="empty">${escapeHtml(msg)}</td></tr>`;
-      qs('winnerCard').innerHTML=`<div class="empty">${escapeHtml(msg)}</div>`;
-      qs('prodRanking').innerHTML=`<div class="empty">${escapeHtml(msg)}</div>`;
-      qs('latestEntries').innerHTML=`<div class="empty">${escapeHtml(msg)}</div>`;
-    }
+    chartConfigs.forEach(c => renderChart(c.id, c.key, c.label, finalData, staffVal === 'all'));
+  }
 
-    function renderDashboard(data, eliminations){
-      const ranking = data.ranking || [];
-      const elimSet = new Map();
-      eliminations.forEach(e => elimSet.set(e.staff, e));
+  function renderChart(id, key, label, data, isGlobal) {
+    const ctx = document.getElementById(id).getContext('2d');
+    if (activeCharts[id]) activeCharts[id].destroy();
+    
+    const values = data.map(d => parseVal(d[key]));
 
-      const allEliminated = ranking.length > 0 && ranking.every(r => elimSet.has(r.staff));
-      const trueWinner = allEliminated ? null : ranking.find(r => !elimSet.has(r.staff));
-      const topRank = ranking[0];
-      const topRankIsEliminated = topRank && elimSet.has(topRank.staff);
-
-      if(allEliminated){
-        qs('winnerName').textContent = 'Aucun';
-        qs('winnerScore').textContent = '0';
-      } else {
-        qs('winnerName').textContent = trueWinner ? trueWinner.staff : '—';
-        qs('winnerScore').textContent = trueWinner ? (trueWinner.avgScoreBoosted + ' pts') : '0';
-      }
-      qs('servicesCount').textContent = String(data.totalServiceRows || 0);
-      qs('staffCount').textContent = String(ranking.length);
-
-      const body = qs('rankingBody');
-      if(!ranking.length){
-        body.innerHTML = `<tr><td colspan="6" class="empty">Aucune donnée.</td></tr>`;
-        qs('winnerCard').innerHTML = `<div class="empty">Aucune donnée.</div>`;
-        return;
-      }
-
-      body.innerHTML = ranking.map((r, idx) => {
-        const elim = elimSet.get(r.staff);
-        const isEliminated = !!elim;
-        const elimBadge = isEliminated ? `<span class="elim-badge">éliminé</span>` : '';
-        const reason = isEliminated ? `<span class="elim-reason">${escapeHtml(elim.criteria || '')}${elim.comment ? ' — ' + escapeHtml(elim.comment) : ''}</span>` : '';
-        return `
-          <tr style="${isEliminated ? 'background-color:#fef3f2;color:#b42318' : ''}">
-            <td>${idx + 1}</td>
-            <td><span class="${isEliminated ? 'strikethrough' : ''}">${escapeHtml(r.staff)}</span>${elimBadge}${reason}</td>
-            <td><b>${r.avgScoreBoosted}</b></td>
-            <td>${r.productionBonus > 0 ? '+' + r.productionBonus : '—'}</td>
-            <td>${r.avgPct}%</td>
-            <td>${r.services}</td>
-          </tr>
-        `;
-      }).join('');
-
-      if(allEliminated){
-        qs('winnerCard').innerHTML = `<div class="empty">Aucun équipier ne peut prétendre au trophée ce mois (tous éliminés).</div>`;
-      } else if(trueWinner){
-        const noteHtml = topRankIsEliminated
-          ? `<div style="font-size:12px;color:#8a4b00;font-style:italic;margin-top:10px;padding:8px 10px;background:#fff4e6;border:1px solid #ffd8a8;border-radius:10px">${escapeHtml(topRank.staff)} avait le meilleur score mais a été éliminé(e). Le trophée revient à ${escapeHtml(trueWinner.staff)}.</div>`
-          : '';
-        qs('winnerCard').innerHTML = `
-          <div style="font-size:26px;font-weight:900;margin-bottom:6px">🏆 ${escapeHtml(trueWinner.staff)}</div>
-          <div style="color:var(--muted);margin-bottom:14px;font-size:13px">${escapeHtml(qs('monthSelect').value)}</div>
-          <div style="display:grid;gap:10px;font-size:13px">
-            <div><div style="color:var(--muted)">Score moyen (avec bonus production)</div><div style="font-size:18px;font-weight:800">${trueWinner.avgScoreBoosted} pts</div></div>
-            <div><div style="color:var(--muted)">Bonus production</div><div style="font-size:18px;font-weight:800">${trueWinner.productionBonus > 0 ? '+' + trueWinner.productionBonus : '—'}</div></div>
-            <div><div style="color:var(--muted)">Pourcentage moyen</div><div style="font-size:18px;font-weight:800">${trueWinner.avgPct}%</div></div>
-            <div><div style="color:var(--muted)">Services évalués</div><div style="font-size:18px;font-weight:800">${trueWinner.services}</div></div>
-          </div>
-          ${noteHtml}
-        `;
-      }
-    }
-
-    function renderProdRanking(ranking){
-      const box = qs('prodRanking');
-      if(!ranking || !ranking.length){ box.innerHTML = `<div class="empty">Aucun test production ce mois.</div>`; return; }
-      box.innerHTML = ranking.map((r,idx)=>`
-        <div class="prod-row">
-          <span style="font-weight:900;font-size:16px;color:var(--orange);min-width:30px">${idx+1}</span>
-          <span style="flex:1;font-weight:700">${escapeHtml(r.staff)}</span>
-          <span style="font-size:13px;color:var(--muted)">${r.tests} test${r.tests>1?'s':''}</span>
-          <span style="font-weight:900;color:var(--orange)">⭐ ${r.totalNote} pts</span>
-        </div>
-      `).join('');
-    }
-
-    function renderLatestEntries(){
-      const filterStaff = qs('filterStaff').value.toLowerCase().trim();
-      const filterService = qs('filterServiceType').value;
-      const box = qs('latestEntries');
-      let entries = currentLatestEntries.slice();
-      if(filterStaff) entries = entries.filter(e=>e.staff.toLowerCase().includes(filterStaff));
-      if(!entries.length){ box.innerHTML = `<div class="empty">Aucune dernière saisie disponible.</div>`; return; }
-
-      box.innerHTML = entries.map(entry => {
-        const matin = entry.services?.Matin;
-        const soir = entry.services?.Soir;
-        const showM = (!filterService || filterService === 'Matin') && matin;
-        const showS = (!filterService || filterService === 'Soir') && soir;
-        if(!showM && !showS) return '';
-        return `
-          <div class="entry">
-            <div class="eval-staff">${escapeHtml(entry.staff)}</div>
-            <div class="eval-meta">Date : ${escapeHtml(entry.date)} • Manager : ${escapeHtml(entry.manager || '—')}</div>
-            ${showM ? renderServiceBlock('Matin', matin) : ''}
-            ${showS ? renderServiceBlock('Soir', soir) : ''}
-          </div>
-        `;
-      }).join('');
-    }
-
-    function renderServiceBlock(label, s){
-      const postesHtml = (s.postes || []).map(pid=>{
-        const lbl = POSTES_LABELS[pid] || pid;
-        const zone = POSTES_ZONE[pid] || 'cuisine';
-        return `<span class="post-tag zone-${zone}">${escapeHtml(lbl)}</span>`;
-      }).join('');
-
-      const commonQs = QUESTIONS_LIST.filter(q=>q.poste==='commun');
-      const commonHtml = commonQs.map(q => answerRow(q, s.answers)).join('');
-
-      const posteSections = (s.postes||[]).map(pid=>{
-        const pQs = QUESTIONS_LIST.filter(q=>q.poste===pid);
-        if(!pQs.length) return '';
-        const lbl = POSTES_LABELS[pid] || pid;
-        return `<div class="answer-section"><div class="answer-section-title">Poste : ${escapeHtml(lbl)}</div>${pQs.map(q=>answerRow(q, s.answers)).join('')}</div>`;
-      }).join('');
-
-      return `
-        <div class="service-block">
-          <div class="service-head">
-            <div class="service-label">${label==='Matin'?'☀️':'🌙'} ${escapeHtml(label)}</div>
-            <div class="service-score">${s.score} / ${s.max} pts (${s.pct}%)</div>
-          </div>
-          ${postesHtml ? `<div class="service-postes">${postesHtml}</div>` : ''}
-          <div class="answer-section"><div class="answer-section-title">Questions communes</div>${commonHtml}</div>
-          ${posteSections}
-          ${s.comment ? `<div class="comment-box"><div class="comment-box-label">Commentaire manager</div>${escapeHtml(s.comment)}</div>` : ''}
-        </div>
-      `;
-    }
-
-    function answerRow(q, answers){
-      const val = answers && answers[q.key];
-      let pill = `<span class="answer-pill" style="background:#f3f4f6;color:#9ca3af">—</span>`;
-      if(val==='oui') pill=`<span class="answer-pill a-oui">Oui</span>`;
-      else if(val==='non') pill=`<span class="answer-pill a-non">Non</span>`;
-      else if(val==='na') pill=`<span class="answer-pill a-na">N/A</span>`;
-      return `<div class="answer-row"><div class="answer-text">${escapeHtml(q.label)}</div>${pill}</div>`;
-    }
-
-    function showLoginModal(){
-      qs('adminPwd').value=''; qs('loginStatus').innerHTML='';
-      qs('loginOverlay').classList.add('show');
-      setTimeout(()=>qs('adminPwd').focus(), 100);
-    }
-    function hideLoginModal(){ qs('loginOverlay').classList.remove('show'); }
-
-    async function tryLogin(){
-      const pwd = qs('adminPwd').value;
-      if(!pwd) return;
-      try{
-        const res = await fetch(APPS_SCRIPT_URL, {
-          method:'POST',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body: JSON.stringify({ action:'login', type:'admin', password: pwd, fingerprint: getFingerprint_() })
-        });
-        const data = JSON.parse(await res.text());
-        if(!data.ok) throw new Error(data.error || 'Échec authentification.');
-        adminToken = data.token;
-        setTimeout(()=>{ adminToken = null; }, (data.expiresIn-30)*1000);
-        hideLoginModal();
-        showAdminModal();
-      }catch(err){
-        showStatus('loginStatus','err', err.message);
-      }
-    }
-
-    function showAdminModal(){
-      populateStaffSelect();
-      renderEliminationsList();
-      loadProductionHistory();
-      qs('adminOverlay').classList.add('show');
-    }
-    function hideAdminModal(){ qs('adminOverlay').classList.remove('show'); }
-
-    function populateStaffSelect(){
-      const sel = qs('elimStaff');
-      sel.innerHTML = '<option value="">— Choisir —</option>';
-      currentRanking.forEach(r=>{
-        if(!currentEliminations.some(e=>e.staff===r.staff)){
-          const o=document.createElement('option'); o.value=r.staff; o.textContent=r.staff; sel.appendChild(o);
+    activeCharts[id] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.map(d => d.date),
+        datasets: [{
+          label: label,
+          data: values,
+          borderColor: isGlobal ? '#185fa5' : '#f08a00',
+          backgroundColor: isGlobal ? 'rgba(24, 95, 165, 0.1)' : 'rgba(240, 138, 0, 0.1)',
+          borderWidth: 3, tension: 0.3, fill: true, pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { 
+          y: { 
+            beginAtZero: false,
+            grid: { color: '#f0f0f0' },
+            ticks: { font: { weight: 'bold' } }
+          }
         }
-      });
-    }
-
-    function renderEliminationsList(){
-      const box = qs('elimList');
-      if(!currentEliminations.length){
-        box.innerHTML = '<div class="empty">Aucune élimination enregistrée pour ce mois.</div>';
-        return;
       }
-      box.innerHTML = currentEliminations.map(e=>`
-        <div class="elim-item">
-          <div style="flex:1">
-            <div style="font-weight:800;font-size:14px">${escapeHtml(e.staff)}</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">Enregistré le ${escapeHtml(e.timestamp || '')}</div>
-            <div style="font-size:12px;margin-top:4px"><b>Critères :</b> ${escapeHtml(e.criteria || '—')}</div>
-            ${e.comment ? `<div style="font-size:11px;color:#666;margin-top:3px;font-style:italic">"${escapeHtml(e.comment)}"</div>` : ''}
-          </div>
-          <button class="btn btn-danger" onclick="cancelElimination('${escapeHtml(e.staff).replace(/'/g,"\\'")}')">Annuler</button>
-        </div>
-      `).join('');
-    }
-
-    async function saveElimination(){
-      if(!adminToken){ showStatus('adminStatus','err','Session expirée. Reconnectez-vous.'); return; }
-      const staff = qs('elimStaff').value;
-      const checks = [...qs('elimCriteriaList').querySelectorAll('input:checked')].map(c=>c.value);
-      const comment = qs('elimComment').value.trim();
-      const month = qs('monthSelect').value;
-      if(!staff){ showStatus('adminStatus','err','Choisissez un équipier.'); return; }
-      if(!checks.length){ showStatus('adminStatus','err','Cochez au moins un critère.'); return; }
-      try{
-        const res = await fetch(APPS_SCRIPT_URL, {
-          method:'POST',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body: JSON.stringify({ action:'addElimination', token: adminToken, month, staff, criteria: checks.join(' • '), comment })
-        });
-        const data = JSON.parse(await res.text());
-        if(!data.ok) throw new Error(data.error || 'Enregistrement impossible.');
-        showStatus('adminStatus','ok','Élimination enregistrée.');
-        qs('elimStaff').value = '';
-        qs('elimCriteriaList').querySelectorAll('input:checked').forEach(c=>c.checked=false);
-        qs('elimComment').value = '';
-        populateStaffSelect();
-        renderEliminationsList();
-        await loadDashboard();
-      }catch(err){
-        showStatus('adminStatus','err', err.message);
-      }
-    }
-
-    async function cancelElimination(staff){
-      if(!adminToken){ alert('Session expirée. Reconnectez-vous.'); return; }
-      if(!confirm(`Annuler l'élimination de ${staff} ?`)) return;
-      try{
-        const res = await fetch(APPS_SCRIPT_URL, {
-          method:'POST',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body: JSON.stringify({ action:'cancelElimination', token: adminToken, month: qs('monthSelect').value, staff })
-        });
-        const data = JSON.parse(await res.text());
-        if(!data.ok) throw new Error(data.error || 'Annulation impossible.');
-        showStatus('adminStatus','ok','Élimination annulée.');
-        populateStaffSelect();
-        renderEliminationsList();
-        await loadDashboard();
-      }catch(err){
-        showStatus('adminStatus','err', err.message);
-      }
-    }
-
-    async function loadProductionHistory(){
-      try{
-        const res = await fetch(`${APPS_SCRIPT_URL}?mode=production`);
-        const data = await res.json();
-        if(!data.ok) throw new Error(data.error||'Erreur');
-        allProductionData = data.production || [];
-        renderProdHistoryFilters();
-        renderProdHistory();
-      }catch(err){
-        qs('prodHistoryList').innerHTML = `<div class="empty">${escapeHtml(err.message)}</div>`;
-      }
-    }
-
-    function renderProdHistoryFilters(){
-      const months = [...new Set(allProductionData.map(p=>p.month))].sort().reverse();
-      const sel = qs('prodHistoryMonth');
-      sel.innerHTML = '<option value="">Tous les mois</option>' + months.map(m=>`<option value="${m}">${m}</option>`).join('');
-    }
-
-    function renderProdHistory(){
-      const month = qs('prodHistoryMonth').value;
-      const staffFilter = qs('prodHistoryStaff').value.toLowerCase().trim();
-      let filtered = allProductionData.slice();
-      if(month) filtered = filtered.filter(p=>p.month===month);
-      if(staffFilter) filtered = filtered.filter(p=>p.staff.toLowerCase().includes(staffFilter));
-      const box = qs('prodHistoryList');
-      if(!filtered.length){ box.innerHTML = '<div class="empty">Aucun test production trouvé.</div>'; return; }
-      filtered.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-      box.innerHTML = filtered.map(p=>`
-        <div class="prod-history-row">
-          <div class="prod-history-head">
-            <div class="prod-history-staff">${escapeHtml(p.staff)}</div>
-            <div class="prod-history-note">⭐ ${p.note}/10</div>
-          </div>
-          <div class="prod-history-meta">${escapeHtml(p.date || '')} • Manager : ${escapeHtml(p.manager || '—')}</div>
-          <div class="prod-history-detail">
-            <div>Poids : ${p.poids}g</div>
-            <div>L : ${p.longueur}</div>
-            <div>l : ${p.largeur}</div>
-            <div>Ép : ${p.epaisseur}</div>
-            <div>Temps : ${p.tempsSec}s</div>
-          </div>
-          ${p.comment ? `<div style="font-size:12px;color:#666;font-style:italic;margin-top:6px">"${escapeHtml(p.comment)}"</div>` : ''}
-        </div>
-      `).join('');
-    }
-
-    async function changePassword(){
-      if(!adminToken){ showStatus('securityStatus','err','Session expirée.'); return; }
-      const type = qs('pwdType').value;
-      const newPwd = qs('newPwd').value;
-      const newPwd2 = qs('newPwd2').value;
-      if(!newPwd || newPwd.length < 6){ showStatus('securityStatus','err','Mot de passe trop court (6 min).'); return; }
-      if(newPwd !== newPwd2){ showStatus('securityStatus','err','Les mots de passe ne correspondent pas.'); return; }
-      try{
-        const res = await fetch(APPS_SCRIPT_URL, {
-          method:'POST',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body: JSON.stringify({ action:'changePassword', token: adminToken, type, newPassword: newPwd })
-        });
-        const data = JSON.parse(await res.text());
-        if(!data.ok) throw new Error(data.error||'Erreur');
-        showStatus('securityStatus','ok', `Mot de passe ${type} mis à jour.`);
-        qs('newPwd').value = ''; qs('newPwd2').value = '';
-      }catch(err){
-        showStatus('securityStatus','err', err.message);
-      }
-    }
-
-    if(VIEW_MODE === 'manager'){
-      qs('adminBtn').addEventListener('click', () => {
-        if(adminToken) showAdminModal(); else showLoginModal();
-      });
-      qs('cancelLoginBtn').addEventListener('click', hideLoginModal);
-      qs('confirmLoginBtn').addEventListener('click', tryLogin);
-      qs('adminPwd').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
-      qs('closeAdminBtn').addEventListener('click', hideAdminModal);
-      qs('saveElimBtn').addEventListener('click', saveElimination);
-      qs('changePwdBtn').addEventListener('click', changePassword);
-      qs('loginOverlay').addEventListener('click', e=>{ if(e.target===qs('loginOverlay')) hideLoginModal(); });
-      qs('adminOverlay').addEventListener('click', e=>{ if(e.target===qs('adminOverlay')) hideAdminModal(); });
-
-      document.querySelectorAll('.admin-tab').forEach(tab=>{
-        tab.addEventListener('click', ()=>{
-          document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
-          document.querySelectorAll('.admin-pane').forEach(p=>p.classList.remove('active'));
-          tab.classList.add('active');
-          document.querySelector(`.admin-pane[data-pane="${tab.dataset.tab}"]`).classList.add('active');
-        });
-      });
-
-      qs('prodHistoryMonth').addEventListener('change', renderProdHistory);
-      qs('prodHistoryStaff').addEventListener('input', renderProdHistory);
-    }
-
-    qs('filterStaff').addEventListener('input', renderLatestEntries);
-    qs('filterServiceType').addEventListener('change', renderLatestEntries);
-
-    initMonths();
-  </script>
+    });
+  }
+  init();
+</script>
 </body>
 </html>
