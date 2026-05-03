@@ -152,9 +152,11 @@
       // Remplir les dropdowns
       populateFilters();
       
-      // Charger avec le mois courant par défaut
+      // Charger avec le DERNIER mois disponible (pas le mois courant)
+      // pour détecter les nouveaux mois saisis
       const lastMonth = allMonths.length > 0 ? allMonths[0] : getCurrentMonth();
-      qs('monthSelect').value = lastMonth;  // Charge le dernier mois saisi
+      console.log(`📅 Chargement du dernier mois disponible: ${lastMonth}`);
+      qs('monthSelect').value = lastMonth;
       updateDashboard();
       
     } catch (e) { 
@@ -371,9 +373,40 @@
   function resetFilters() {
     console.log("🔄 Réinitialisation des filtres");
     qs('staffSelect').value = 'all';
-    qs('monthSelect').value = getCurrentMonth();
+    // Utiliser le dernier mois disponible au lieu du mois courant
+    const lastMonth = allMonths.length > 0 ? allMonths[0] : getCurrentMonth();
+    qs('monthSelect').value = lastMonth;
     updateDashboard();
   }
+  
+  // Rafraîchir les données toutes les 30 secondes pour détecter les nouveaux mois
+  async function autoRefresh() {
+    try {
+      const res = await fetch(`${APPS_SCRIPT_URL}?mode=production`);
+      const json = await res.json();
+      
+      if (json.ok && json.production && json.production.length > 0) {
+        const newMonths = [...new Set(json.production.map(d => d.month))].filter(m => m).sort().reverse();
+        
+        // Vérifier si un nouveau mois a été ajouté
+        if (newMonths.length > allMonths.length || (newMonths.length > 0 && newMonths[0] !== allMonths[0])) {
+          console.log("🔄 Nouveau mois détecté! Rechargement...");
+          rawData = json.production;
+          populateFilters();
+          
+          // Charger le dernier mois
+          const lastMonth = newMonths[0];
+          qs('monthSelect').value = lastMonth;
+          updateDashboard();
+        }
+      }
+    } catch (e) {
+      console.log("ℹ️ Pas de mise à jour disponible");
+    }
+  }
+  
+  // Lancer le rafraîchissement automatique
+  setInterval(autoRefresh, 30000);
   
   // Lancer au chargement
   init();
