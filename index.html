@@ -238,7 +238,7 @@
         <div class="modal-row">
           <label>Poids du tacos (g)</label>
           <input type="number" id="prodPoids" placeholder="Ex : 350" />
-          <div class="help">Conforme entre 335 et 365 g (±15 g)</div>
+          <div class="help">Conforme entre 340 et 360 g (±10 g)</div>
         </div>
       </div>
 
@@ -1151,7 +1151,7 @@
       let note=0; const details={};
 
       const poids=parseFloat(qs('prodPoids').value);
-      if(!isNaN(poids) && poids>=335 && poids<=365){ note+=2; details.poids='2/2'; } else { details.poids='0/2'; }
+      if(!isNaN(poids) && poids>=340 && poids<=360){ note+=2; details.poids='2/2'; } else { details.poids='0/2'; }
 
       let longueur=parseFloat(qs('prodLongueur').value);
       if(qs('prodLongueurUnit').value==='mm') longueur=longueur/10;
