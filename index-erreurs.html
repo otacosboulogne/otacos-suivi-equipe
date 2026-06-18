@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Saisie erreurs salariés</title>
+
+  <style>
+    :root{
+      --card:#ffffff;
+      --text:#1f2430;
+      --muted:#6c7480;
+      --orange:#f08a00;
+      --orange-2:#ffb347;
+      --line:#e9e0d3;
+      --shadow:0 16px 40px rgba(240,138,0,.12);
+      --danger:#b42318;
+      --ok:#067647;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
+      background:linear-gradient(180deg,#fff8f1 0%,#fffdf9 100%);
+      color:var(--text);
+      font-size:16px;
+    }
+
+    .wrap{max-width:900px;margin:0 auto;padding:16px}
+
+    .hero,.card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero{
+      padding:18px;
+      margin-bottom:14px;
+      background:radial-gradient(circle at top right,rgba(240,138,0,.15),transparent 30%),
+      linear-gradient(135deg,rgba(255,179,71,.16),rgba(255,255,255,.9));
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .logo-title{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .logo-title img{
+      width:48px;
+      height:48px;
+      object-fit:contain;
+      border-radius:12px;
+      background:#fff;
+      border:1px solid var(--line);
+      padding:4px;
+    }
+
+    h1{margin:0;font-size:22px}
+
+    .sub{
+      color:var(--muted);
+      font-size:14px;
+      margin-top:3px;
+    }
+
+    .card{padding:18px;margin-bottom:14px}
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-bottom:14px;
+    }
+
+    label{font-size:14px;font-weight:800}
+
+    input,select,textarea,button{font:inherit}
+
+    input,select,textarea{
+      width:100%;
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      color:var(--text);
+      font-size:16px;
+    }
+
+    textarea{min-height:100px;resize:vertical}
+
+    .radio-box{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:#fffdf9;
+      margin-bottom:10px;
+    }
+
+    .radio-line{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+      font-weight:700;
+    }
+
+    .radio-line input{
+      width:20px;
+      height:20px;
+    }
+
+    .btn{
+      border:0;
+      border-radius:14px;
+      padding:14px 18px;
+      cursor:pointer;
+      font-weight:900;
+      min-height:48px;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:white;
+      width:100%;
+    }
+
+    .btn-nav{
+      background:#fff;
+      color:var(--orange);
+      border:2px solid var(--orange);
+      border-radius:12px;
+      padding:10px 16px;
+      text-decoration:none;
+      font-weight:900;
+    }
+
+    .status{
+      padding:12px 14px;
+      border-radius:14px;
+      margin-top:12px;
+      font-weight:800;
+      display:none;
+    }
+
+    .status.ok{
+      display:block;
+      background:#ecfdf3;
+      color:var(--ok);
+      border:1px solid #abefc6;
+    }
+
+    .status.err{
+      display:block;
+      background:#fef3f2;
+      color:var(--danger);
+      border:1px solid #fecdca;
+    }
+
+    .help{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    @media(max-width:650px){
+      .grid-2{grid-template-columns:1fr}
+      h1{font-size:18px}
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <section class="hero">
+    <div class="top">
+      <div class="logo-title">
+        <img src="./otacos-logo.png" alt="Logo O'TACOS">
+        <div>
+          <h1>Saisie erreurs salariés</h1>
+          <div class="sub">O'TACOS — Suivi des erreurs</div>
+        </div>
+      </div>
+
+      <a class="btn-nav" href="dashboard-erreurs.html">Dashboard erreurs</a>
+    </div>
+  </section>
+
+  <section class="card">
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="dateErreur">
+      </div>
+
+      <div class="field">
+        <label>Responsable de service</label>
+        <select id="responsable">
+          <option value="">Chargement...</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Salarié concerné</label>
+        <select id="salarie">
+          <option value="">Chargement...</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Type d’erreur</label>
+        <select id="typeErreur" onchange="toggleAutreErreur()">
+          <option value="">Chargement...</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field" id="autreErreurBox" style="display:none">
+      <label>Préciser l’erreur</label>
+      <input type="text" id="autreErreur" placeholder="Ex : oubli supplément cheddar">
+      <div class="help">Cette erreur sera ajoutée automatiquement à la liste pour les prochaines fois.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Mode commande</label>
+        <select id="modeCommande">
+          <option value="Sur place">Sur place</option>
+          <option value="À emporter">À emporter</option>
+          <option value="C&C">C&C</option>
+          <option value="UBER/DELIVEROO">UBER/DELIVEROO</option> 
+        </select>
+      </div>
+
+      <div class="field">
+        <label>l'origine de l'erreur</label>
+        <select id="service">
+          <option value="Caisse">Caisse</option>
+          <option value="Cuisine">Cuisine</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Calcul du CA perdu</label>
+
+      <div class="radio-box">
+        <label class="radio-line">
+          <input type="radio" name="typeMontant" value="prix_vente" checked>
+          Prix de vente du produit
+        </label>
+
+        <label class="radio-line">
+          <input type="radio" name="typeMontant" value="cout_fabrication">
+          Coût de fabrication du produit
+        </label>
+
+        <div class="help">
+          Prix de vente à sélectionner si on connaît le de vente sur les bornes/caisse/menubord.<br>
+          Coût fabrication à sélectionner si le prix de vente n'est connu il faut mettre les produits sur Inpulse en perte et mettre le coût affiché.
+        </div>
+      </div>
+
+      <input type="number" id="montantErreur" step="0.01" placeholder="Montant en € — Ex : 4.50">
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <textarea id="description" placeholder="Décrire l’erreur constatée..."></textarea>
+    </div>
+
+    <button class="btn btn-primary" onclick="saveErreur()">💾 Enregistrer l’erreur</button>
+
+    <div id="status" class="status"></div>
+
+  </section>
+
+</div>
+
+<script>
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG6PChMQpu9MDyI4x6fcgDEHURd-PMSWgcakuP_n3t52f_llVwMdhRWm7wH7IcIdgI/exec";
+
+  function qs(id){
+    return document.getElementById(id);
+  }
+
+  function today(){
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  async function init(){
+    const currentDate = qs("dateErreur").value || today();
+    qs("dateErreur").value = currentDate;
+
+    try {
+      const res = await fetch(`${APPS_SCRIPT_URL}?mode=params`);
+      const json = await res.json();
+
+      if(!json.ok){
+        showStatus("Erreur de chargement des paramètres.", "err");
+        return;
+      }
+
+      qs("responsable").innerHTML = '<option value="">Choisir un responsable</option>';
+      json.responsables.forEach(r => {
+        qs("responsable").innerHTML += `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`;
+      });
+
+      qs("salarie").innerHTML = '<option value="">Choisir un salarié</option>';
+      json.salaries.forEach(s => {
+        qs("salarie").innerHTML += `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`;
+      });
+
+      qs("typeErreur").innerHTML = '<option value="">Choisir une erreur</option>';
+      json.typesErreur.forEach(t => {
+        qs("typeErreur").innerHTML += `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`;
+      });
+
+    } catch(e) {
+      showStatus("Erreur de chargement des paramètres : " + e.message, "err");
+      console.error(e);
+    }
+  }
+
+  function toggleAutreErreur(){
+    const value = qs("typeErreur").value;
+
+    if(value === "Autre"){
+      qs("autreErreurBox").style.display = "flex";
+    } else {
+      qs("autreErreurBox").style.display = "none";
+      qs("autreErreur").value = "";
+    }
+  }
+
+  async function saveErreur(){
+    const data = {
+      date: qs("dateErreur").value,
+      responsable: qs("responsable").value,
+      salarie: qs("salarie").value,
+      typeErreur: qs("typeErreur").value,
+      autreErreur: qs("autreErreur").value,
+      modeCommande: qs("modeCommande").value,
+      service: qs("service").value,
+      typeMontant: document.querySelector('input[name="typeMontant"]:checked').value,
+      montantErreur: qs("montantErreur").value,
+      description: qs("description").value
+    };
+
+    if(
+      !data.date ||
+      !data.responsable ||
+      !data.salarie ||
+      !data.typeErreur ||
+      !data.montantErreur ||
+      (data.typeErreur === "Autre" && !data.autreErreur)
+    ){
+      showStatus("Merci de remplir tous les champs obligatoires.", "err");
+      return;
+    }
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method:"POST",
+        body:JSON.stringify(data)
+      });
+
+      const json = await res.json();
+
+      if(!json.ok){
+        showStatus(json.error || "Erreur lors de l’enregistrement.", "err");
+        return;
+      }
+
+      showStatus("✅ Erreur enregistrée avec succès.", "ok");
+
+      qs("salarie").value = "";
+      qs("typeErreur").value = "";
+      qs("autreErreur").value = "";
+      qs("autreErreurBox").style.display = "none";
+      qs("montantErreur").value = "";
+      qs("description").value = "";
+      document.querySelector('input[name="typeMontant"][value="prix_vente"]').checked = true;
+
+      await init();
+
+    } catch(e) {
+      showStatus("Erreur serveur : " + e.message, "err");
+      console.error(e);
+    }
+  }
+
+  function showStatus(msg, type){
+    const el = qs("status");
+    el.className = `status ${type}`;
+    el.textContent = msg;
+  }
+
+  function escapeHtml(str){
+    return String(str || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  init();
+</script>
+
+</body>
+</html>

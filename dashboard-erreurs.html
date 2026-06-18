@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Dashboard erreurs salariés</title>
+
+  <style>
+    :root{
+      --card:#ffffff;
+      --text:#1f2430;
+      --muted:#6c7480;
+      --orange:#f08a00;
+      --orange-2:#ffb347;
+      --line:#ece2d6;
+      --shadow:0 16px 40px rgba(240,138,0,.12);
+      --danger:#b42318;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;
+      background:linear-gradient(180deg,#fff8f1 0%,#fffdf9 100%);
+      color:var(--text);
+      font-size:16px;
+    }
+
+    .wrap{max-width:1280px;margin:0 auto;padding:18px}
+
+    .hero,.card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero{
+      padding:18px;
+      margin-bottom:14px;
+      background:radial-gradient(circle at top right,rgba(240,138,0,.15),transparent 28%),
+      linear-gradient(135deg,rgba(255,179,71,.16),rgba(255,255,255,.9));
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .logo-title{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .logo-title img{
+      width:48px;
+      height:48px;
+      object-fit:contain;
+      border-radius:12px;
+      background:#fff;
+      border:1px solid var(--line);
+      padding:4px;
+    }
+
+    h1{margin:0;font-size:20px}
+
+    .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:2px;
+    }
+
+    .btn-nav{
+      display:inline-flex;
+      align-items:center;
+      padding:10px 18px;
+      background:#fff;
+      color:var(--orange);
+      border:2px solid var(--orange);
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:900;
+      font-size:14px;
+    }
+
+    select,input{
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      font:inherit;
+    }
+
+    .grid-stats{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    @media(min-width:760px){
+      .grid-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+    }
+
+    .stat{
+      padding:14px;
+      border-radius:14px;
+      background:#fff7ed;
+      border:1px solid #ffe0b2;
+    }
+
+    .k{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .v{
+      font-size:24px;
+      font-weight:900;
+      margin-top:6px;
+    }
+
+    .main{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+
+    @media(min-width:980px){
+      .main{grid-template-columns:1fr 1fr}
+    }
+
+    .card{
+      padding:16px;
+      margin-bottom:14px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+    }
+
+    th,td{
+      padding:10px 8px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      font-size:14px;
+    }
+
+    th{
+      color:#5e6570;
+      font-size:12px;
+      background:#fafaf9;
+      text-transform:uppercase;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:#fff;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .rank{
+      font-weight:900;
+      color:var(--orange);
+    }
+
+    .empty{
+      color:var(--muted);
+      font-size:14px;
+      padding:12px;
+    }
+
+    .filter-bar{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:14px;
+    }
+
+    .filter-bar select,.filter-bar input{
+      flex:1;
+      min-width:180px;
+    }
+
+    .error-card{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      margin-bottom:8px;
+      background:#fffdf9;
+    }
+
+    .error-head{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      flex-wrap:wrap;
+      font-weight:900;
+    }
+
+    .error-meta{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .error-desc{
+      font-size:13px;
+      margin-top:8px;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#fff4e6;
+      color:#8a4b00;
+      font-size:12px;
+      font-weight:800;
+      margin-right:4px;
+    }
+
+    .danger{
+      color:var(--danger);
+      font-weight:900;
+    }
+
+    @media(max-width:650px){
+      h1{font-size:18px}
+      .grid-stats{grid-template-columns:1fr 1fr}
+      th,td{font-size:13px}
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <section class="hero">
+    <div class="top">
+      <div class="logo-title">
+        <img src="./otacos-logo.png" alt="Logo O'TACOS">
+        <div>
+          <h1>Dashboard erreurs salariés</h1>
+          <div class="sub">Classement mensuel — Top 3</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <a class="btn-nav" href="index-erreurs.html">↩ Retour saisie</a>
+        <select id="monthSelect" onchange="updateDashboard()"></select>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid-stats">
+    <div class="stat">
+      <div class="k">Total erreurs</div>
+      <div class="v" id="totalErreurs">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="k">CA perdu estimé</div>
+      <div class="v" id="totalCa">0 €</div>
+    </div>
+
+    <div class="stat">
+      <div class="k">Salariés concernés</div>
+      <div class="v" id="staffCount">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="k">Erreur principale</div>
+      <div class="v" id="mainError">—</div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <section class="card">
+      <div style="font-size:18px;font-weight:900">
+        🏆 Top 3 — Nombre d’erreurs <span class="badge" id="selectedMonthLabel">—</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Rang</th>
+            <th>Salarié</th>
+            <th>Nombre d’erreurs</th>
+          </tr>
+        </thead>
+        <tbody id="rankingErrors"></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div style="font-size:18px;font-weight:900">
+        💰 Top 3 — CA perdu estimé
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Rang</th>
+            <th>Salarié</th>
+            <th>CA perdu estimé</th>
+          </tr>
+        </thead>
+        <tbody id="rankingCa"></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div style="font-size:18px;font-weight:900">
+        🔁 Top 3 — Erreurs récurrentes
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Rang</th>
+            <th>Type d’erreur</th>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+        <tbody id="rankingRecurring"></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div style="font-size:18px;font-weight:900">
+        👤 Top 3 — Responsables de service
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Rang</th>
+            <th>Responsable</th>
+            <th>Erreurs sur service</th>
+          </tr>
+        </thead>
+        <tbody id="rankingResponsables"></tbody>
+      </table>
+    </section>
+
+  </div>
+
+  <section class="card">
+    <div style="font-size:18px;font-weight:900;margin-bottom:10px">
+      Dernières erreurs du mois
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" id="filterStaff" placeholder="Filtrer par salarié..." oninput="renderLatest()">
+
+      <select id="filterResponsable" onchange="renderLatest()">
+        <option value="">Tous les responsables</option>
+      </select>
+
+      <select id="filterService" onchange="renderLatest()">
+        <option value="">Tous les services</option>
+        <option value="Caisse">Caisse</option>
+        <option value="Cuisine">Cuisine</option>
+      </select>
+
+      <select id="filterMode" onchange="renderLatest()">
+        <option value="">Tous les modes</option>
+        <option value="Sur place">Sur place</option>
+        <option value="À emporter">À emporter</option>
+        <option value="C&C">C&C</option>
+        <option value="UBER/DELIVEROO">UBER/DELIVEROO</option>
+      </select>
+    </div>
+
+    <div id="latestErrors"></div>
+  </section>
+
+</div>
+
+ <script>
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG6PChMQpu9MDyI4x6fcgDEHURd-PMSWgcakuP_n3t52f_llVwMdhRWm7wH7IcIdgI/exec";
+
+  let rawData = [];
+  let allMonths = [];
+
+  function qs(id){
+    return document.getElementById(id);
+  }
+
+  async function init(){
+    try {
+      const res = await fetch(`${APPS_SCRIPT_URL}?mode=erreurs`);
+      const json = await res.json();
+
+      if(!json.ok){
+        showError("Erreur API.");
+        return;
+      }
+
+      rawData = json.erreurs || [];
+
+      rawData = rawData.map(e => ({
+        ...e,
+        month: normalizeMonth(e.month)
+      }));
+
+      allMonths = [...new Set(rawData.map(e => e.month))]
+        .filter(Boolean)
+        .sort()
+        .reverse();
+
+      const select = qs("monthSelect");
+
+      if(allMonths.length === 0){
+        select.innerHTML = `<option value="">Aucune donnée</option>`;
+        updateDashboard();
+        return;
+      }
+
+      select.innerHTML = allMonths
+        .map(m => `<option value="${escapeHtml(m)}">${formatMonthLabel(m)}</option>`)
+        .join("");
+
+      select.value = allMonths[0];
+
+      populateResponsableFilter();
+      updateDashboard();
+
+    } catch(e) {
+      showError("Erreur de chargement : " + e.message);
+      console.error(e);
+    }
+  }
+
+  function normalizeMonth(value){
+    if(!value) return "";
+
+    const str = String(value).trim();
+
+    if(/^\d{4}-\d{2}$/.test(str)){
+      return str;
+    }
+
+    if(/^\d{4}-\d{2}-\d{2}/.test(str)){
+      return str.substring(0, 7);
+    }
+
+    const d = new Date(str);
+
+    if(!isNaN(d.getTime())){
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    return str;
+  }
+
+  function formatMonthLabel(month){
+    if(!month) return "—";
+
+    const cleanMonth = normalizeMonth(month);
+
+    if(/^\d{4}-\d{2}$/.test(cleanMonth)){
+      const parts = cleanMonth.split("-");
+      return `${parts[1]}/${parts[0]}`;
+    }
+
+    return cleanMonth;
+  }
+
+  function populateResponsableFilter(){
+    const responsables = [...new Set(rawData.map(e => e.responsable))]
+      .filter(Boolean)
+      .sort();
+
+    const select = qs("filterResponsable");
+    select.innerHTML = `<option value="">Tous les responsables</option>`;
+
+    responsables.forEach(r => {
+      select.innerHTML += `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`;
+    });
+  }
+
+  function updateDashboard(){
+    const month = normalizeMonth(qs("monthSelect").value);
+
+    qs("selectedMonthLabel").textContent = formatMonthLabel(month);
+
+    const data = rawData.filter(e => normalizeMonth(e.month) === month);
+
+    qs("totalErreurs").textContent = data.length;
+
+    const totalCa = data.reduce((sum,e) => sum + Number(e.caPerdu || 0), 0);
+    qs("totalCa").textContent = `${totalCa.toFixed(2)} €`;
+
+    const staffs = [...new Set(data.map(e => e.salarie))];
+    qs("staffCount").textContent = staffs.length;
+
+    qs("mainError").textContent = getMainError(data);
+
+    renderRankingErrors(data);
+    renderRankingCa(data);
+    renderRecurringErrors(data);
+    renderResponsables(data);
+    renderLatest();
+  }
+
+  function buildStats(data){
+    const stats = {};
+
+    data.forEach(e => {
+      const salarie = e.salarie || "Non précisé";
+
+      if(!stats[salarie]){
+        stats[salarie] = {
+          salarie:salarie,
+          count:0,
+          caPerdu:0
+        };
+      }
+
+      stats[salarie].count++;
+      stats[salarie].caPerdu += Number(e.caPerdu || 0);
+    });
+
+    return Object.values(stats);
+  }
+
+  function renderRankingErrors(data){
+    const tbody = qs("rankingErrors");
+
+    const stats = buildStats(data)
+      .sort((a,b) => b.count - a.count)
+      .slice(0,3);
+
+    if(stats.length === 0){
+      tbody.innerHTML = `<tr><td colspan="3" class="empty">Aucune erreur ce mois.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = stats.map((s,i) => `
+      <tr>
+        <td class="rank">#${i+1}</td>
+        <td>${escapeHtml(s.salarie)}</td>
+        <td class="danger">${s.count}</td>
+      </tr>
+    `).join("");
+  }
+
+  function renderRankingCa(data){
+    const tbody = qs("rankingCa");
+
+    const stats = buildStats(data)
+      .sort((a,b) => b.caPerdu - a.caPerdu)
+      .slice(0,3);
+
+    if(stats.length === 0){
+      tbody.innerHTML = `<tr><td colspan="3" class="empty">Aucune donnée ce mois.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = stats.map((s,i) => `
+      <tr>
+        <td class="rank">#${i+1}</td>
+        <td>${escapeHtml(s.salarie)}</td>
+        <td class="danger">${s.caPerdu.toFixed(2)} €</td>
+      </tr>
+    `).join("");
+  }
+
+  function renderRecurringErrors(data){
+    const tbody = qs("rankingRecurring");
+    const stats = {};
+
+    data.forEach(e => {
+      const type = e.typeErreur || "Non précisé";
+
+      if(!stats[type]){
+        stats[type] = {
+          typeErreur:type,
+          count:0
+        };
+      }
+
+      stats[type].count++;
+    });
+
+    const result = Object.values(stats)
+      .sort((a,b) => b.count - a.count)
+      .slice(0,3);
+
+    if(result.length === 0){
+      tbody.innerHTML = `<tr><td colspan="3" class="empty">Aucune erreur récurrente ce mois.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = result.map((e,i) => `
+      <tr>
+        <td class="rank">#${i+1}</td>
+        <td>${escapeHtml(e.typeErreur)}</td>
+        <td class="danger">${e.count}</td>
+      </tr>
+    `).join("");
+  }
+
+  function renderResponsables(data){
+    const tbody = qs("rankingResponsables");
+    const stats = {};
+
+    data.forEach(e => {
+      const responsable = e.responsable || "Non précisé";
+
+      if(!stats[responsable]){
+        stats[responsable] = {
+          responsable:responsable,
+          count:0
+        };
+      }
+
+      stats[responsable].count++;
+    });
+
+    const result = Object.values(stats)
+      .sort((a,b) => b.count - a.count)
+      .slice(0,3);
+
+    if(result.length === 0){
+      tbody.innerHTML = `<tr><td colspan="3" class="empty">Aucune donnée responsable ce mois.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = result.map((r,i) => `
+      <tr>
+        <td class="rank">#${i+1}</td>
+        <td>${escapeHtml(r.responsable)}</td>
+        <td class="danger">${r.count}</td>
+      </tr>
+    `).join("");
+  }
+
+  function renderLatest(){
+    const month = normalizeMonth(qs("monthSelect").value);
+    const staffFilter = qs("filterStaff").value.toLowerCase();
+    const responsableFilter = qs("filterResponsable").value;
+    const serviceFilter = qs("filterService").value;
+    const modeFilter = qs("filterMode").value;
+
+    let data = rawData.filter(e => normalizeMonth(e.month) === month);
+
+    if(staffFilter){
+      data = data.filter(e => String(e.salarie || "").toLowerCase().includes(staffFilter));
+    }
+
+    if(responsableFilter){
+      data = data.filter(e => e.responsable === responsableFilter);
+    }
+
+    if(serviceFilter){
+      data = data.filter(e => e.service === serviceFilter);
+    }
+
+    if(modeFilter){
+      data = data.filter(e => e.modeCommande === modeFilter);
+    }
+
+    data = data.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+    const box = qs("latestErrors");
+
+    if(data.length === 0){
+      box.innerHTML = `<div class="empty">Aucune erreur trouvée.</div>`;
+      return;
+    }
+
+    box.innerHTML = data.map(e => `
+      <div class="error-card">
+        <div class="error-head">
+          <div>${escapeHtml(e.salarie)}</div>
+          <div>${formatDate(e.date)}</div>
+        </div>
+
+        <div class="error-meta">
+          Responsable : <b>${escapeHtml(e.responsable)}</b>
+        </div>
+
+        <div class="error-meta">
+          <span class="pill">${escapeHtml(e.typeErreur)}</span>
+          <span class="pill">${escapeHtml(e.service)}</span>
+          <span class="pill">${escapeHtml(e.modeCommande)}</span>
+        </div>
+
+        <div class="error-desc">
+          ${escapeHtml(e.description || "Aucune description")}
+        </div>
+
+        <div class="error-meta" style="margin-top:8px">
+          CA perdu estimé : <b>${Number(e.caPerdu || 0).toFixed(2)} €</b>
+          <br>
+          Montant saisi masqué dans le classement.
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function getMainError(data){
+    if(data.length === 0) return "—";
+
+    const counts = {};
+
+    data.forEach(e => {
+      const type = e.typeErreur || "Non précisé";
+      counts[type] = (counts[type] || 0) + 1;
+    });
+
+    return Object.entries(counts).sort((a,b) => b[1] - a[1])[0][0];
+  }
+
+  function formatDate(dateStr){
+    if(!dateStr) return "";
+
+    const str = String(dateStr).trim();
+
+    if(/^\d{4}-\d{2}-\d{2}/.test(str)){
+      return `${str.substring(8,10)}/${str.substring(5,7)}/${str.substring(0,4)}`;
+    }
+
+    const d = new Date(str);
+
+    if(!isNaN(d.getTime())){
+      return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+    }
+
+    return str;
+  }
+
+  function escapeHtml(str){
+    return String(str || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function showError(msg){
+    qs("latestErrors").innerHTML = `<div class="empty">${msg}</div>`;
+  }
+
+  init();
+</script>
+
+</body>
+</html>
