@@ -291,115 +291,115 @@
     const POSTES_ZONE = { caisse:"caisse", ouverture:"caisse", fermeture_c:"caisse", friture:"cuisine", toaster:"cuisine", envoi:"cuisine", pliage:"cuisine", prepa_matin:"cuisine", prepa_soir:"cuisine", fermeture_k:"cuisine", reception:"cuisine" };
 
     const QUESTIONS_LIST = [
-      { key:"c_tenue", label:"Tenue propre et hygiène corporelle irréprochable", poste:"commun" },
-      { key:"c_mains", label:"Lavage des mains systématique", poste:"commun" },
-      { key:"c_concentre", label:"Resté concentré, pas de discussions inutiles", poste:"commun" },
-      { key:"c_rythme", label:"Rythme de production soutenu et constant", poste:"commun" },
-      { key:"c_aide", label:"A aidé spontanément un collègue", poste:"commun" },
-      { key:"c_erreur", label:"Aucune erreur constatée", poste:"commun" },
-      { key:"c_energie", label:"Énergie et attitude positives pour l'équipe", poste:"commun" },
-      { key:"c_propre_fin", label:"Poste propre et rangé en fin de service", poste:"commun" },
-      { key:"c_poubelle", label:"Sortie poubelle (timing respecté)", poste:"commun" },
-      { key:"c_epack", label:"Validation Epack hygiène", poste:"commun" },
-      { key:"c_dlc", label:"DLC posées sans qu'on lui demande", poste:"commun" },
-      { key:"c_traca", label:"Traçabilité faite systématiquement", poste:"commun" },
-      
-      // ===== CAISSE (12) =====
-      { key:"cs_accueil", label:"Il a accueilli chaque client avec le discours O'Tacos", poste:"caisse" },
-      { key:"cs_boisson", label:"La boisson a été remise sans que le client ait à revenir", poste:"caisse" },
-      { key:"cs_fidelite", label:"Le programme de fidélité a été proposé aux bornes", poste:"caisse" },
-      { key:"cs_erreur_commande", label:"Aucune erreur dans les commandes Uber, Deliveroo ou C&C", poste:"caisse" },
-      { key:"cs_livraison_rapidite", label:"Les commandes Uber/Deliveroo données rapidement et bien filmées", poste:"caisse" },
-      { key:"cs_bornes", label:"Les bornes ont été surveillées et les clients en difficulté guidés", poste:"caisse" },
-      { key:"cs_vente_add", label:"Vente additionnelle proposée (boisson, dessert, menu)", poste:"caisse" },
-      { key:"cs_sac", label:"Aucune commande donnée à un livreur sans sac", poste:"caisse" },
-      { key:"cs_erreur_caisse", label:"Aucune erreur de caisse (mauvais mode de paiement = erreur)", poste:"caisse" },
-      { key:"cs_glace_shake", label:"La préparation de la glace & O'Shake est conforme", poste:"caisse" },
-      { key:"cs_priorite", label:"L'ordre de priorité respecté (WC propre, salle...)", poste:"caisse" },
-      { key:"cs_avis", label:"Avis Google 5★ obtenu sur le service", poste:"caisse" },
-      
-      // ===== OUVERTURE CAISSE (7) =====
-      { key:"oc_vitrine", label:"La vitrine était remplie et bien présentée", poste:"ouverture" },
-      { key:"oc_lumieres", label:"Lumières, écrans, vitrine, bornes allumés", poste:"ouverture" },
-      { key:"oc_glace", label:"Machine à glace propre + température prise", poste:"ouverture" },
-      { key:"oc_devant", label:"Devant le restaurant propre", poste:"ouverture" },
-      { key:"oc_drapeau", label:"Drapeau sorti", poste:"ouverture" },
-      { key:"oc_terrasse", label:"Terrasse mise et propre (été)", poste:"ouverture" },
-      { key:"oc_dlc", label:"DLC conformes", poste:"ouverture" },
-      
-      // ===== FERMETURE CAISSE (7) =====
-      { key:"fc_terrasse", label:"Terrasse rangée (été)", poste:"fermeture_c" },
-      { key:"fc_ecrans", label:"Écrans, enseigne éteints + bornes en veille + tablette en charge", poste:"fermeture_c" },
-      { key:"fc_plateau", label:"Plateau propre et frigo boisson rempli", poste:"fermeture_c" },
-      { key:"fc_drapeau", label:"Drapeau rentré", poste:"fermeture_c" },
-      { key:"fc_dlc", label:"DLC conformes", poste:"fermeture_c" },
-      { key:"fc_glace_veille", label:"Machine à glace en veille + tapping couvert", poste:"fermeture_c" },
-      { key:"fc_timing", label:"Timing fermeture conforme", poste:"fermeture_c" },
-      
-      // ===== FRITURE & CUISSON (5) =====
-      { key:"fr_programmes", label:"Programmes appropriés respectés", poste:"friture" },
-      { key:"fr_rupture", label:"Pas de rupture de fritures / blocage de production", poste:"friture" },
-      { key:"fr_viandes", label:"Viandes/fromagère lancées en temps", poste:"friture" },
-      { key:"fr_tickets", label:"Tickets regardés régulièrement", poste:"friture" },
-      { key:"fr_appro", label:"Approvisionnement frigo / suppléments sans bloquer la prod", poste:"friture" },
-      
-      // ===== TOASTER (8) =====
-      { key:"to_qualite", label:"Tacos bien toastés, croisillons visibles", poste:"toaster" },
-      { key:"to_rythme", label:"Le rythme au toaster ne bloque pas la ligne", poste:"toaster" },
-      { key:"to_gratinage", label:"Gratinage conforme", poste:"toaster" },
-      { key:"to_emballage", label:"Emballages propres, présentation soignée", poste:"toaster" },
-      { key:"to_nettoyage", label:"Toaster et zone nettoyés régulièrement", poste:"toaster" },
-      { key:"to_discours", label:"Discours client (regard, sourire à la remise)", poste:"toaster" },
-      { key:"to_appel", label:"Appel caisse dès commande Uber/Deliveroo/C&C prête", poste:"toaster" },
-      { key:"to_verification", label:"Vérification commande avant remise client", poste:"toaster" },
-      
-      // ===== ENVOI (7) =====
-      { key:"en_rythme", label:"Rythme à l'envoi sans blocage de la ligne", poste:"envoi" },
-      { key:"en_communication", label:"Bonne communication avec pliage / friture", poste:"envoi" },
-      { key:"en_ordre", label:"Ordre des tickets respecté (C&C / Uber / restaurant)", poste:"envoi" },
-      { key:"en_louche", label:"Pas de surdosage des louches", poste:"envoi" },
-      { key:"en_lancer", label:"Regarde ce qu'il faut lancer (finger food / fritures)", poste:"envoi" },
-      { key:"en_previent", label:"Prévient le responsable des niveaux de viandes", poste:"envoi" },
-      { key:"en_gratinage", label:"Avance les gratinages + pots de sauces", poste:"envoi" },
-      
-      // ===== PLIAGE (6) =====
-      { key:"pl_qualite", label:"Tacos bien pliés", poste:"pliage" },
-      { key:"pl_rythme", label:"Le rythme au pliage ne crée pas de goulot", poste:"pliage" },
-      { key:"pl_nettoyage", label:"Zone de pliage nettoyée régulièrement", poste:"pliage" },
-      { key:"pl_louche", label:"Louche bleue utilisée pour suppléments/petit tacos", poste:"pliage" },
-      { key:"pl_avance_frites", label:"Avance les frites et finger food au toaster", poste:"pliage" },
-      { key:"pl_surdosage", label:"Pas de surdosage frites/fromagère", poste:"pliage" },
-      
-      // ===== PRÉPA MATIN (5) =====
-      { key:"pm_dlc", label:"DLC posées sur tous les produits dès l'ouverture", poste:"prepa_matin" },
-      { key:"pm_epack", label:"Epack hygiène à jour (T°, traçabilité, refroidissement)", poste:"prepa_matin" },
-      { key:"pm_stocks", label:"Stocks préparés et vérifiés avant ouverture", poste:"prepa_matin" },
-      { key:"pm_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_matin" },
-      { key:"pm_decongelation", label:"Process de décongélation respecté", poste:"prepa_matin" },
-      
-      // ===== PRÉPA SOIR (7) =====
-      { key:"ps_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_soir" },
-      { key:"ps_plonge", label:"Plonge faite, plateaux gastro rangés", poste:"prepa_soir" },
-      { key:"ps_dlc", label:"DLC et traçabilités à jour", poste:"prepa_soir" },
-      { key:"ps_decongelation", label:"Process de décongélation respecté", poste:"prepa_soir" },
-      { key:"ps_frigo", label:"Frigo, emballages, suppléments remplis", poste:"prepa_soir" },
-      { key:"ps_epack", label:"Epack hygiène à jour", poste:"prepa_soir" },
-      { key:"ps_zone", label:"Zone cuisine et plonge propres", poste:"prepa_soir" },
-      
-      // ===== FERMETURE CUISINE (4) =====
-      { key:"fk_cellophane", label:"Produits cellophanés et DLC conformes", poste:"fermeture_k" },
-      { key:"fk_timing", label:"Timing fermeture conforme", poste:"fermeture_k" },
-      { key:"fk_decongelation", label:"Process de décongélation respecté", poste:"fermeture_k" },
-      { key:"fk_rangement", label:"Produits rangés en chambre + et −", poste:"fermeture_k" },
-      
-      // ===== RÉCEPTION LIVRAISON (5) =====
-      { key:"rl_verification", label:"Livraison vérifiée (quantités, état, T°)", poste:"reception" },
-      { key:"rl_fifo", label:"Rangement immédiat selon FIFO", poste:"reception" },
-      { key:"rl_cartons", label:"Cartons pliés et mis en poubelle", poste:"reception" },
-      { key:"rl_sol", label:"Aucun produit au sol, tout sur cailloutis", poste:"reception" },
-      { key:"rl_signalement", label:"Produit non conforme signalé au manager immédiatement", poste:"reception" },
-    ];
+      // ===== QUESTIONS COMMUNES =====
+  { key:"c_tenue", label:"Tenue propre et hygiène corporelle irréprochable", poste:"commun" },
+  { key:"c_mains", label:"Lavage des mains systématique", poste:"commun" },
+  { key:"c_concentre", label:"Resté concentré, pas de discussions inutiles", poste:"commun" },
+  { key:"c_rythme", label:"Rythme de production soutenu et constant", poste:"commun" },
+  { key:"c_aide", label:"A aidé spontanément un collègue", poste:"commun" },
+  { key:"c_erreur", label:"Aucune erreur constatée", poste:"commun" },
+  { key:"c_energie", label:"Énergie et attitude positives pour l'équipe", poste:"commun" },
+  { key:"c_propre_fin", label:"Poste propre et rangé en fin de service", poste:"commun" },
+  { key:"c_poubelle", label:"Sortie poubelle (timing respecté)", poste:"commun" },
+  { key:"c_epack", label:"Validation Epack hygiène", poste:"commun" },
+  { key:"c_dlc", label:"DLC posées sans qu'on lui demande", poste:"commun" },
+  { key:"c_traca", label:"Traçabilité faite systématiquement", poste:"commun" },
 
+  // ===== CAISSE =====
+  { key:"p_caisse_accueil", label:"Il a accueilli chaque client avec le discours O'Tacos", poste:"caisse" },
+  { key:"p_caisse_boisson", label:"La boisson a été remise sans que le client ait à revenir", poste:"caisse" },
+  { key:"p_caisse_fidelite", label:"Le programme de fidélité a été proposé aux bornes", poste:"caisse" },
+  { key:"p_caisse_aucune_err", label:"Aucune erreur dans les commandes Uber, Deliveroo ou C&C", poste:"caisse" },
+  { key:"p_caisse_uber", label:"Les commandes Uber/Deliveroo données rapidement et bien filmées", poste:"caisse" },
+  { key:"p_caisse_borne", label:"Les bornes ont été surveillées et les clients en difficulté guidés", poste:"caisse" },
+  { key:"p_caisse_vente", label:"Vente additionnelle proposée (boisson, dessert, menu)", poste:"caisse" },
+  { key:"p_caisse_sac", label:"Aucune commande donnée à un livreur sans sac", poste:"caisse" },
+  { key:"p_caisse_aucune_err_ck", label:"Aucune erreur de caisse (mauvais mode de paiement = erreur)", poste:"caisse" },
+  { key:"p_caisse_glace", label:"La préparation de la glace & O'Shake est conforme", poste:"caisse" },
+  { key:"p_caisse_priorite", label:"L'ordre de priorité respecté (WC propre, salle...)", poste:"caisse" },
+  { key:"p_caisse_avis", label:"Avis Google 5★ obtenu sur le service", poste:"caisse" },
+
+  // ===== OUVERTURE CAISSE =====
+  { key:"p_ouv_vitrine", label:"La vitrine était remplie et bien présentée", poste:"ouverture" },
+  { key:"p_ouv_lumieres", label:"Lumières, écrans, vitrine, bornes allumés", poste:"ouverture" },
+  { key:"p_ouv_machine", label:"Machine à glace propre + température prise", poste:"ouverture" },
+  { key:"p_ouv_devant", label:"Devant le restaurant propre", poste:"ouverture" },
+  { key:"p_ouv_drapeau", label:"Drapeau sorti", poste:"ouverture" },
+  { key:"p_ouv_terrasse", label:"Terrasse mise et propre (été)", poste:"ouverture" },
+  { key:"p_ouv_dlc", label:"DLC conformes", poste:"ouverture" },
+
+  // ===== FERMETURE CAISSE =====
+  { key:"p_ferm_c_terrasse", label:"Terrasse rangée (été)", poste:"fermeture_c" },
+  { key:"p_ferm_c_extinction", label:"Écrans, enseigne éteints + bornes en veille + tablette en charge", poste:"fermeture_c" },
+  { key:"p_ferm_c_plateau", label:"Plateau propre et frigo boisson rempli", poste:"fermeture_c" },
+  { key:"p_ferm_c_drapeau", label:"Drapeau rentré", poste:"fermeture_c" },
+  { key:"p_ferm_c_dlc", label:"DLC conformes", poste:"fermeture_c" },
+  { key:"p_ferm_c_machine", label:"Machine à glace en veille + tapping couvert", poste:"fermeture_c" },
+  { key:"p_ferm_c_timing", label:"Timing fermeture conforme", poste:"fermeture_c" },
+
+  // ===== FRITURE =====
+  { key:"p_frit_programmes", label:"Programmes appropriés respectés", poste:"friture" },
+  { key:"p_frit_rupture", label:"Pas de rupture de fritures / blocage de production", poste:"friture" },
+  { key:"p_frit_viande", label:"Viandes/fromagère lancées en temps", poste:"friture" },
+  { key:"p_frit_tickets", label:"Tickets regardés régulièrement", poste:"friture" },
+  { key:"p_frit_appro", label:"Approvisionnement frigo / suppléments sans bloquer la prod", poste:"friture" },
+
+  // ===== TOASTER =====
+  { key:"p_toast_qualite", label:"Tacos bien toastés, croisillons visibles", poste:"toaster" },
+  { key:"p_toast_rythme", label:"Le rythme au toaster ne bloque pas la ligne", poste:"toaster" },
+  { key:"p_toast_gratin", label:"Gratinage conforme", poste:"toaster" },
+  { key:"p_toast_emballage", label:"Emballages propres, présentation soignée", poste:"toaster" },
+  { key:"p_toast_propre", label:"Toaster et zone nettoyés régulièrement", poste:"toaster" },
+  { key:"p_toast_discours", label:"Discours client (regard, sourire à la remise)", poste:"toaster" },
+  { key:"p_toast_appel", label:"Appel caisse dès commande Uber/Deliveroo/C&C prête", poste:"toaster" },
+  { key:"p_toast_verif", label:"Vérification commande avant remise client", poste:"toaster" },
+
+  // ===== ENVOI =====
+  { key:"p_envoi_rythme", label:"Rythme à l'envoi sans blocage de la ligne", poste:"envoi" },
+  { key:"p_envoi_commu", label:"Bonne communication avec pliage / friture", poste:"envoi" },
+  { key:"p_envoi_ordre", label:"Ordre des tickets respecté (C&C / Uber / restaurant)", poste:"envoi" },
+  { key:"p_envoi_louches", label:"Pas de surdosage des louches", poste:"envoi" },
+  { key:"p_envoi_lance", label:"Regarde ce qu'il faut lancer (finger food / fritures)", poste:"envoi" },
+  { key:"p_envoi_viande", label:"Prévient le responsable des niveaux de viandes", poste:"envoi" },
+  { key:"p_envoi_avance", label:"Avance les gratinages + pots de sauces", poste:"envoi" },
+
+  // ===== PLIAGE =====
+  { key:"p_pliage_qualite", label:"Tacos bien pliés", poste:"pliage" },
+  { key:"p_pliage_rythme", label:"Le rythme au pliage ne crée pas de goulot", poste:"pliage" },
+  { key:"p_pliage_propre", label:"Zone de pliage nettoyée régulièrement", poste:"pliage" },
+  { key:"p_pliage_louche", label:"Louche bleue utilisée pour suppléments/petit tacos", poste:"pliage" },
+  { key:"p_pliage_avance", label:"Avance les frites et finger food au toaster", poste:"pliage" },
+  { key:"p_pliage_dose", label:"Pas de surdosage frites/fromagère", poste:"pliage" },
+
+  // ===== PREPA MATIN =====
+  { key:"p_prepa_m_dlc", label:"DLC posées sur tous les produits dès l'ouverture", poste:"prepa_matin" },
+  { key:"p_prepa_m_epack", label:"Epack hygiène à jour (T°, traçabilité, refroidissement)", poste:"prepa_matin" },
+  { key:"p_prepa_m_stock", label:"Stocks préparés et vérifiés avant ouverture", poste:"prepa_matin" },
+  { key:"p_prepa_m_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_matin" },
+  { key:"p_prepa_m_decong", label:"Process de décongélation respecté", poste:"prepa_matin" },
+
+  // ===== PREPA SOIR =====
+  { key:"p_prepa_s_feuille", label:"Feuille de production utilisée et remplie", poste:"prepa_soir" },
+  { key:"p_prepa_s_plonge", label:"Plonge faite, plateaux gastro rangés", poste:"prepa_soir" },
+  { key:"p_prepa_s_dlc", label:"DLC et traçabilités à jour", poste:"prepa_soir" },
+  { key:"p_prepa_s_decong", label:"Process de décongélation respecté", poste:"prepa_soir" },
+  { key:"p_prepa_s_frigo", label:"Frigo, emballages, suppléments remplis", poste:"prepa_soir" },
+  { key:"p_prepa_s_epack", label:"Epack hygiène à jour", poste:"prepa_soir" },
+  { key:"p_prepa_s_propre", label:"Zone cuisine et plonge propres", poste:"prepa_soir" },
+
+  // ===== FERMETURE CUISINE =====
+  { key:"p_ferm_k_cello", label:"Produits cellophanés et DLC conformes", poste:"fermeture_k" },
+  { key:"p_ferm_k_timing", label:"Timing fermeture conforme", poste:"fermeture_k" },
+  { key:"p_ferm_k_decong", label:"Process de décongélation respecté", poste:"fermeture_k" },
+  { key:"p_ferm_k_chambre", label:"Produits rangés en chambre + et −", poste:"fermeture_k" },
+
+  // ===== RECEPTION LIVRAISON =====
+  { key:"p_recep_verif", label:"Livraison vérifiée (quantités, état, T°)", poste:"reception" },
+  { key:"p_recep_fifo", label:"Rangement immédiat selon FIFO", poste:"reception" },
+  { key:"p_recep_carton", label:"Cartons pliés et mis en poubelle", poste:"reception" },
+  { key:"p_recep_sol", label:"Aucun produit au sol, tout sur cailloutis", poste:"reception" },
+  { key:"p_recep_signal", label:"Produit non conforme signalé au manager immédiatement", poste:"reception" },
+];
     let adminToken = null;
     let currentEliminations = [];
     let currentRanking = [];
