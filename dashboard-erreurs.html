@@ -735,13 +735,21 @@
   function formatDate(dateStr){
   if(!dateStr) return "";
 
-  const parts = String(dateStr).split("-");
+  const str = String(dateStr).trim();
 
-  if(parts.length === 3){
+  // Format attendu : 2026-06-18
+  if(/^\d{4}-\d{2}-\d{2}/.test(str)){
+    const parts = str.substring(0,10).split("-");
     return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
-  return dateStr;
+  // Format Google/JS : Thu Jun 18 2026...
+  const d = new Date(str);
+  if(!isNaN(d.getTime())){
+    return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+  }
+
+  return str;
 }
 
   function escapeHtml(str){
