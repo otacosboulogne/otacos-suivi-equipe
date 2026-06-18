@@ -737,16 +737,17 @@
 
   const str = String(dateStr).trim();
 
-  // Format attendu : 2026-06-18
+  // Format propre : 2026-06-18
   if(/^\d{4}-\d{2}-\d{2}/.test(str)){
     const parts = str.substring(0,10).split("-");
     return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
-  // Format Google/JS : Thu Jun 18 2026...
-  const d = new Date(str);
-  if(!isNaN(d.getTime())){
-    return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+  // Format français déjà existant : 18/06/2000 ou 18/06/2026
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(str)){
+    const parts = str.split("/");
+    const year = parts[2] === "2000" ? "2026" : parts[2];
+    return `${parts[0]}/${parts[1]}/${year}`;
   }
 
   return str;
