@@ -250,23 +250,24 @@
 <div class="wrap">
 
   <section class="hero">
-    <div class="top">
-      <a class="btn-nav" href="index.html">↩ Retour Acceuil - saisie prime équipier</a>
-      <a class="btn-nav" href="index-erreurs.html">↩ Retour saisie erreurs</a>
-      <div class="logo-title">
-        <img src="./otacos-logo.png" alt="Logo O'TACOS">
-        <div>
-          <h1>Dashboard erreurs salariés</h1>
-          <div class="sub">Classement mensuel — Top 3</div>
-        </div>
-      </div>
+  <div class="top">
 
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <a class="btn-nav" href="index-erreurs.html">↩ Retour saisie</a>
-        <select id="monthSelect" onchange="updateDashboard()"></select>
+    <div class="logo-title">
+      <img src="./otacos-logo.png" alt="Logo O'TACOS">
+      <div>
+        <h1>Dashboard erreurs salariés</h1>
+        <div class="sub">Classement mensuel — Top 3</div>
       </div>
     </div>
-  </section>
+
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <a class="btn-nav" href="index.html">🏠 Accueil</a>
+      <a class="btn-nav" href="index-erreurs.html">📝 Saisie erreurs</a>
+      <select id="monthSelect" onchange="updateDashboard()"></select>
+    </div>
+
+  </div>
+</section>
 
   <div class="grid-stats">
     <div class="stat">
